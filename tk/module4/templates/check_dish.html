@@ -1,0 +1,15 @@
+<h1>Pending Dishes</h1>
+<ul>
+  {% for dish in pending_dishes %}
+    <li>
+      <strong>{{ dish.name }}</strong> - {{ dish.restaurant_name }} - {{ dish.price }}<br>
+      <form method="POST" action="{% url 'module4:approve_dish' dish.id %}">
+        {% csrf_token %}
+        <button type="submit" name="action" value="approve">Approve</button>
+        <button type="submit" name="action" value="delete">Delete</button>
+      </form>
+    </li>
+  {% empty %}
+    <p>No pending dishes.</p>
+  {% endfor %}
+</ul>
