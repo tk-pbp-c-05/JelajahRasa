@@ -1,0 +1,58 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" class="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    {% block meta %} {% endblock meta %}
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{% static 'css/global.css' %}"/>
+    <script>
+      tailwind.config = {
+        darkMode: 'class', // Aktifkan dark mode berbasis class
+        theme: {
+          extend: {},
+        }
+      }
+    </script>
+  </head>
+
+  <body style="background-color:#e0a85e">
+    {% block content %} {% endblock content %}
+    
+    <!-- Theme Toggle Script -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+          // Ambil tombol switch tema
+          const themeToggle = document.getElementById('theme-toggle');
+          const currentTheme = localStorage.getItem('theme') || 'light';
+      
+          // Terapkan tema saat ini pada elemen <html>
+          if (currentTheme === 'dark') {
+            document.documentElement.classList.add('dark');
+            if (themeToggle) themeToggle.textContent = 'Switch to Day Mode';
+          } else {
+            document.documentElement.classList.add('light');
+            if (themeToggle) themeToggle.textContent = 'Switch to Night Mode';
+          }
+      
+          // Mengubah tema ketika tombol diklik
+          if (themeToggle) {
+            themeToggle.addEventListener('click', function () {
+              if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                document.documentElement.classList.add('light');
+                localStorage.setItem('theme', 'light');
+                themeToggle.textContent = 'Switch to Night Mode';
+              } else {
+                document.documentElement.classList.remove('light');
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+                themeToggle.textContent = 'Switch to Day Mode';
+              }
+            });
+          }
+        });
+    </script>
+  </body>
+</html>
