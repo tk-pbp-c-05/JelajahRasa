@@ -1,14 +1,18 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block meta %}
 <title>Register</title>
 {% endblock meta %}
 
 {% block content %}
-<div class="min-h-screen flex items-center justify-center bg-[#202121] py-12 px-4 sm:px-6 lg:px-8">
-  <div class="max-w-md w-full space-y-8 form-style bg-gray-800 p-8 rounded-lg shadow-lg">
+<div class="min-h-screen flex items-center justify-center bg-white py-4 px-4 sm:px-6 lg:px-8">
+  <img src="{% static 'image/register_pict.jpg' %}" alt="Food Pict" class="h-screen object-cover rounded-lg shadow-md">
+  <div class="max-w-md w-full h-screen space-y-8 form-style bg-white p-8 rounded-lg shadow-lg">
     <div>
-      <h2 class="mt-6 text-center text-3xl font-extrabold text-white">
+      <h2 class="mt-6 text-center text-3xl font-extrabold text-[#F18F73]">
+        Jelajah Rasa
+      </h2>
+      <h2 class="mt-6 text-center text-3xl font-extrabold text-black">
         Create your account
       </h2>
     </div>
@@ -18,11 +22,11 @@
       <div class="rounded-md shadow-sm -space-y-px">
         {% for field in form %}
           <div class="{% if not forloop.first %}mt-4{% endif %}">
-            <label for="{{ field.id_for_label }}" class="mb-2 font-semibold text-white">
+            <label for="{{ field.id_for_label }}" class="mb-2 font-semibold text-black">
               {{ field.label }}
             </label>
             <div class="relative">
-              {{ field }}
+              <input type="{{ field.field.widget.type }}" class="w-full border-b-2 border-[#F18F73] px-1 focus:outline-none" name="{{ field.name }}" id="{{ field.id_for_label }}" placeholder="{{ field.field.widget.attrs.placeholder }}">
               <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
                 {% if field.errors %}
                   <svg class="h-5 w-5 text-red-500" fill="currentColor" viewBox="0 0 20 20">
@@ -41,7 +45,7 @@
       </div>
 
       <div>
-        <button type="submit" class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+        <button type="submit" class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-[#F18F73] hover:bg-[#F18F73] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
           Register
         </button>
       </div>
@@ -60,9 +64,6 @@
     <div class="text-center mt-4">
       <p class="text-sm text-gray-400">
         Already have an account?
-        <a href="{% url 'main:login' %}" class="font-medium text-indigo-400 hover:text-indigo-300">
-          Login here
-        </a>
       </p>
     </div>
   </div>
