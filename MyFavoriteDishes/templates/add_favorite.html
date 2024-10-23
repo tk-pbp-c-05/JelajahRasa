@@ -1,0 +1,23 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Favorite Dish</title>
+<body>
+    <div class="container">
+        <h1>Add Favorite Dish</h1>
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="food">Select Food:</label>
+                {{ form.food }}  <!-- Render the food selection dropdown -->
+            </div>
+            <button type="submit" class="btn btn-primary">Add to Favorites</button>
+        </form>
+        <a href="{% url 'MyFavoriteDishes:view_favorite_dishes' %}">Back to My Favorites</a>
+    </div>
+</body>
+</html>

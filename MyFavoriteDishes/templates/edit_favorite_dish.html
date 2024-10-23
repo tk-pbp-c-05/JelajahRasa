@@ -1,0 +1,14 @@
+<h1>Edit Favorite Dish</h1>
+
+<form method="POST">
+    {% csrf_token %}
+    <table>
+        {{ form.as_table }}
+        <tr>
+            <td></td>
+            <td>
+                <input type="submit" value="Edit Dish"/>
+            </td>
+        </tr>
+    </table>
+</form>
