@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<h1>Jelajah Rasa</h1>
+<p>{{ JelajahRasa }}<p>
+
+<a href="{% url 'main:logout' %}">
+    <button>Logout</button>
+  </a>
+{% endblock content %}
+{% include 'navbar.html' %}
