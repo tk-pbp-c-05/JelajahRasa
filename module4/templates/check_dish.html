@@ -38,7 +38,6 @@
             <td class="border px-4 py-2" style="width: 100px;">{{ dish.category }}</td>
             <td class="border px-4 py-2">{{ dish.address }}</td>
             <td class="border px-4 py-2 text-center" style="width: 80px;">
-              <!-- Tombol Approve -->
               <form method="POST" action="{% url 'module4:approve_dish' dish.id %}" style="display: inline;">
                 {% csrf_token %}
                 <button type="submit" name="action" value="approve" class="bg-green-500 hover:bg-green-700 text-white rounded-full p-2 transition duration-300 shadow-md">
@@ -49,7 +48,6 @@
               </form>
             </td>
             <td class="border px-4 py-2 text-center">
-              <!-- Tombol Delete -->
               <form method="POST" action="{% url 'module4:approve_dish' dish.id %}" style="display: inline;">
                 {% csrf_token %}
                 <button type="submit" name="action" value="delete" class="bg-red-500 hover:bg-red-700 text-white rounded-full p-2 transition duration-300 shadow-md">
@@ -67,22 +65,29 @@
 {% else %}
   <p>No pending dishes.</p>
 {% endif %}
-{% endblock content %}
 
 <script>
-  //JavaScript buat search
-  document.getElementById('searchInput').addEventListener('keyup', function () {
-    const searchValue = this.value.toLowerCase();
-    const tableRows = document.querySelectorAll('#dishesTable tr');
-
-    tableRows.forEach(row => {
-      const dishName = row.querySelector('td').textContent.toLowerCase();
-
-      if (dishName.includes(searchValue)) {
-        row.style.display = '';
-      } else {
-        row.style.display = 'none';
-      }
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchInput');
+    searchInput.addEventListener('input', function() {
+        const searchValue = this.value.toLowerCase().trim();
+        const rows = document.querySelectorAll('#dishesTable tr');
+        
+        rows.forEach(row => {
+            const nameCell = row.querySelector('td:first-child');
+            if (nameCell) {
+                const name = nameCell.textContent.toLowerCase().trim();
+                if (name.startsWith(searchValue)) {
+                    row.style.display = '';
+                } 
+                
+                else {
+                    row.style.display = 'none';
+                }
+            }
+        });
     });
-  });
+});
 </script>
+
+{% endblock content %}  

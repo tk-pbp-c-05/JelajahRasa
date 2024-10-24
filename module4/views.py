@@ -31,7 +31,6 @@ def add_dish(request):
         
         new_dish.is_approved = False
         new_dish.save()
-        print(new_dish.nama)
         messages.success(request, 'Dish added successfully! Please wait for our admin to approve it.')
         return redirect('module4:show_home')
     
