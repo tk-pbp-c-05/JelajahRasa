@@ -1,0 +1,77 @@
+<div class="relative break-inside-avoid">
+  <!-- Card Container -->
+  <div class="bg-white shadow-md rounded-lg mb-6 flex flex-col border-2 border-[#F18F73] transition-transform duration-300">
+    
+   
+    <div class="flex justify-between p-4">
+    
+      <div class="flex-grow">
+        <h3 class="font-bold text-xl mb-2">{{ dish.name }}</h3>
+        <p class="text-gray-700 mb-2">Rp{{ dish.price }}</p>
+        <p class="text-gray-700 mb-2">Flavor: {{ dish.flavor }}</p>
+        <p class="text-gray-700 mb-2">Category: Makanan</p>
+        <p class="text-gray-700 mb-2">Vendor: {{ dish.vendor_name }}</p>
+        <p class="text-gray-700 mb-2">Map Link: <a href="{{ dish.map_link }}" class="text-blue-500 hover:underline">{{ dish.map_link }}</a></p>
+        <p class="text-gray-700 mb-2">Address: {{ dish.address }}</p>
+      </div>
+      
+      
+      <div class="flex-shrink-0">
+        <button id="favorite-button-{{ dish.pk }}" class="favorite-button" data-dish-id="{{ dish.pk }}">
+            {% if dish.is_favorite %}
+              <svg id="heart-icon-{{ dish.pk }}" xmlns="http://www.w3.org/2000/svg" fill="#3C3837" viewBox="0 0 24 24" width="35" height="35" class="filled-heart">
+                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+              </svg>
+            {% else %}
+              <svg id="heart-icon-{{ dish.pk }}" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="#3C3837" width="35" height="35" class="unfilled-heart">
+                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+              </svg>
+            {% endif %}
+        </button>
+      </div>
+    </div>
+
+   
+    <div class="flex justify-end p-4">
+      <a href="{% url 'MyFavoriteDishes:edit_favorite_dish' dish.pk %}">
+        <button class="bg-[#F18F73] hover:bg-[#F18F73] text-white font-bold py-2 px-4 rounded-full">
+            Edit
+        </button>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- JavaScript to handle heart toggle and delete favorite -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const favoriteButton = document.getElementById('favorite-button-{{ dish.pk }}');
+  const heartIcon = document.getElementById('heart-icon-{{ dish.pk }}');
+  const dishId = favoriteButton.getAttribute('data-dish-id');  
+
+  favoriteButton.addEventListener('click', function() {
+      const isFavorite = heartIcon.classList.contains('filled-heart'); 
+
+      if (isFavorite) {
+          fetch(`{% url 'MyFavoriteDishes:delete_favorite_dish' dish.pk %}`, {  
+              method: 'POST',
+              headers: {
+                  'X-CSRFToken': '{{ csrf_token }}',  
+                  'Content-Type': 'application/json',
+              },
+          })
+          .then(response => {
+              if (response.ok) {
+                  const cardContainer = favoriteButton.closest('.relative'); 
+                  cardContainer.remove();
+              } else {
+                  console.error('Failed to remove favorite');
+              }
+          })
+          .catch(error => console.error('Error:', error));
+      } else {
+          console.log('Add to favorite');
+      }
+  });
+});
+</script>

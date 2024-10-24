@@ -1,0 +1,36 @@
+<div class="relative break-inside-avoid">
+    <!-- Card Container -->
+    <div class="relative top-5 bg-white shadow-md rounded-lg mb-6 break-inside-avoid flex flex-col border-2 border-[#f5cac2] transform rotate-1 hover:rotate-0 transition-transform duration-300">
+      
+      <!-- Product Body -->
+      <div class="p-4 flex-grow"> <!-- Added flex-grow to allow the product body to take available space -->
+        <h3 class="font-bold text-xl mb-2">{{ dish.name }}</h3>
+        <p class="text-gray-700 mb-2">Rp{{ dish.price }}</p>
+
+        <!-- Flavor -->
+        <p class="text-gray-700 mb-2">Flavor: {{ dish.flavor }}</p>
+        
+        <!-- Category -->
+        <p class="text-gray-700 mb-2">Category: Makanan</p>
+
+        <!-- Vendor -->
+        <p class="text-gray-700 mb-2">Vendor: {{ dish.vendor_name }}</p>
+
+        <!-- Map Link -->
+        <p class="text-gray-700 mb-2">Map Link: <a href="{{ dish.map_link }}" class="text-blue-500 hover:underline">{{ dish.map_link }}</a></p>
+
+        <!-- Address -->
+        <p class="text-gray-700 mb-2">Address: {{ dish.address }}</p>
+      </div>
+      
+      <!-- Edit and Delete Buttons at Bottom Right -->
+      <div class="flex justify-end space-x-1 mb-2"> <!-- Use flex to align buttons to the right -->
+          <a href="{% url 'MyFavoriteDishes:edit_favorite_dish' dish.pk %}" class="bg-[#ed7966] hover:bg-[#ed7966]/80 text-white rounded-full p-2 transition duration-300 shadow-md">
+              Edit
+          </a>
+          <a href="{% url 'MyFavoriteDishes:delete_favorite_dish' dish.pk %}" class="bg-[#303179] hover:bg-[#141850] text-white rounded-full p-2 transition duration-300 shadow-md">
+              Delete
+          </a>
+      </div>
+    </div>
+</div>
