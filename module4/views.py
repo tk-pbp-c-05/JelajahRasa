@@ -41,26 +41,26 @@ def check_dish(request):
 
 # Fungsi untuk approve atau delete dish dengan AJAX
 def approve_dish(request, dish_id):
-    print("Approve/Delete view called")  # Tambah ini
+    print("Approve/Delete view called")
     if not request.user.is_staff:
-        print("User not authorized")  # Tambah ini
+        print("User not authorized")
         return JsonResponse({'status': 'forbidden'}, status=403)
 
     dish = get_object_or_404(NewDish, id=dish_id)
-    print(f"Dish found: {dish.name}")  # Tambah ini
+    print(f"Dish found: {dish.name}")
 
     if request.method == 'POST':
         action = request.POST.get('action')
-        print(f"Action received: {action}")  # Tambah ini
+        print(f"Action received: {action}")
         if action == 'approve':
             dish.is_approved = True
             dish.save()
-            print("Dish approved")  # Tambah ini
+            print("Dish approved")
             return JsonResponse({'status': 'approved', 'dish_id': dish_id})
         elif action == 'delete':
             dish.delete()
-            print("Dish deleted")  # Tambah ini
+            print("Dish deleted")
             return JsonResponse({'status': 'deleted', 'dish_id': dish_id})
 
-    print("Invalid request method")  # Tambah ini
+    print("Invalid request method")
     return JsonResponse({'status': 'error'}, status=400)

@@ -5,4 +5,4 @@ from module4.models import NewDish
 class NewDishForm(ModelForm):
     class Meta:
         model = NewDish
-        fields = ['name', 'taste', 'category', 'restaurant_name', 'price', 'link_gmaps', 'address']
+        fields = ['name', 'flavor', 'category', 'vendor_name', 'price', 'map_link', 'address']

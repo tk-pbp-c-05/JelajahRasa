@@ -3,12 +3,12 @@ from django.contrib.auth.models import User
 
 # Create your models here.
 class NewDish(models.Model):
-    name = models.CharField(max_length=155)
-    taste = models.CharField(max_length=6)
-    category = models.CharField(max_length=7)
-    restaurant_name = models.TextField()
-    price = models.IntegerField()
-    link_gmaps = models.URLField()
-    address = models.TextField()
+    name = models.CharField(max_length=100)
+    flavor = models.CharField(max_length=100)
+    category = models.CharField(max_length=50)
+    vendor_name = models.CharField(max_length=100, default="Unknown Vendor")
+    price = models.IntegerField() 
+    map_link = models.CharField(max_length=255, default="")
+    address = models.CharField(max_length=255, default="")
     is_approved = models.BooleanField(default=False)  # Status approval oleh admin
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)

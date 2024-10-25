@@ -24,7 +24,7 @@
       <thead class="rounded-t-lg">
         <tr class="bg-gray-200 text-gray-600 text-sm leading-normal">
           <th class="px-4 py-2">Name</th>
-          <th class="px-4 py-2">Restaurant Name</th>
+          <th class="px-4 py-2">Vendor Name</th>
           <th class="px-4 py-2">Price</th>
           <th class="px-4 py-2" style="width: 100px;">Category</th>
           <th class="px-4 py-2">Address</th>
@@ -36,7 +36,7 @@
         {% for dish in pending_dishes %}
           <tr id="dish-row-{{ dish.id }}" class="hover:bg-gray-100 border-b border-gray-200">
             <td class="border px-4 py-2">{{ dish.name }}</td>
-            <td class="border px-4 py-2">{{ dish.restaurant_name }}</td>
+            <td class="border px-4 py-2">{{ dish.vendor_name }}</td>
             <td class="border px-4 py-2">{{ dish.price }}</td>
             <td class="border px-4 py-2" style="width: 100px;">{{ dish.category }}</td>
             <td class="border px-4 py-2">{{ dish.address }}</td>
