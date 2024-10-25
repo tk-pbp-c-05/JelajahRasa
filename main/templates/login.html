@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block meta %}
+<title>Login</title>
+{% endblock meta %}
+
+{% block content %}
+<div class="bg-[#FFFFFF]">
+
+    <div class="w-full flex flex-wrap">
+
+        <!-- Image Section -->
+        <div class="w-1/2 shadow-2xl hidden md:block">
+            <img class="object-cover w-full h-screen" src="{% static 'image/register_pict.jpg' %}">
+        </div>
+
+        <!-- Login Section -->
+        <div class="w-full md:w-1/2 flex flex-col">
+
+            <div class="flex justify-center md:justify-start pt-12 md:pl-12 md:-mb-24">
+            </div>
+
+            <div class="flex flex-col justify-center md:justify-start my-auto pt-8 md:pt-0 px-8 md:px-24 lg:px-32">
+                <p class="text-center text-4xl font-bold text-[#F18F73]">Jelajah Rasa</p>
+                <br/>
+                <p class="text-center text-3xl text-[#3C3837]">Login to your Account</p>
+
+                <form class="flex flex-col pt-3 md:pt-8" method="POST" action="">
+                    {% csrf_token %}
+                    <div class="flex flex-col pt-4">
+                        <label for="username" class="text-lg text-[#3C3837]">Username</label>
+                        <input id="username" name="username" type="text" placeholder="Username" required class="shadow appearance-none border border-[#F18F73] rounded w-full py-2 px-3 text-gray-700 mt-1 leading-tight focus:outline-none focus:shadow-outline focus:border-[#FFFFFF]">
+                    </div>
+
+                    <div class="flex flex-col pt-4">
+                        <label for="password" class="text-lg text-[#141850]">Password</label>
+                        <input id="password" name="password" type="password" placeholder="Password" required class="shadow appearance-none border border-[#F18F73] rounded w-full py-2 px-3 text-gray-700 mt-1 leading-tight focus:outline-none focus:shadow-outline focus:border-[#FFFFFF]">
+                    </div>
+
+                    <input type="submit" value="Log In" class="bg-[#F18F73] text-white font-bold text-lg hover:bg-[#F18F73] p-2 mt-8">
+                </form>
+
+                {% if messages %}
+                <div class="mt-4">
+                    {% for message in messages %}
+                        {% if message.tags == "success" %}
+                            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
+                                <span class="block sm:inline">{{ message }}</span>
+                            </div>
+                        {% elif message.tags == "error" %}
+                            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                                <span class="block sm:inline">{{ message }}</span>
+                            </div>
+                        {% else %}
+                            <div class="bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded relative" role="alert">
+                                <span class="block sm:inline">{{ message }}</span>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <div class="text-center pt-12 pb-12">
+                    <p class="text-[#3C3837]">Don't have an account? <a href="{% url 'main:register' %}" class="underline font-semibold text-[#ed7966] hover:text-[#F18F73]">Register here.</a></p>
+                </div>
+            </div>
+
+        </div>
+
+        
+    </div>
+</body>
+{% endblock content %}

@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block meta %}
+<title>Add Favorite Dish</title>
+{% endblock meta %}
+
+{% block content %}
+
+<div class="flex flex-col min-h-screen bg-white">
+  <div class="container mx-auto px-4 py-8 mt-16 max-w-xl">
+    <h1 class="text-3xl font-bold text-center mb-8 text-[#3C3837]">Add Favorite Dish</h1> 
+  
+    <div class="bg-white shadow-md rounded-lg p-6 form-style">
+      <form method="POST" class="space-y-6">
+        {% csrf_token %}
+        {% for field in form %}
+          <div class="flex flex-col">
+            <label for="{{ field.id_for_label }}" class="mb-2 font-semibold text-[#3C3837]"> 
+              {{ field.label }}
+            </label>
+            <div class="w-full">
+              {{ field }}
+            </div>
+            {% if field.help_text %}
+              <p class="mt-1 text-sm text-[#FDEDDA]">{{ field.help_text }}</p> 
+            {% endif %}
+            {% for error in field.errors %}
+              <p class="mt-1 text-sm text-[#F18F73]">{{ error }}</p> 
+            {% endfor %}
+          </div>
+        {% endfor %}
+        <div class="flex justify-center mt-6">
+          <button type="submit" class="bg-[#F18F73] text-white font-semibold px-6 py-3 rounded-lg hover:bg-[#141850] transition duration-300 ease-in-out w-full"> 
+            Add Favorite Dish
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <div class="flex justify-center mt-6">
+      <a href="{% url 'MyFavoriteDishes:show_favorite' %}" class="text-[#3C3837] hover:underline">Back to My Favorites</a> 
+    </div>
+  </div>
+</div>
+
+{% endblock %}

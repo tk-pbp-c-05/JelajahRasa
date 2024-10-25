@@ -39,6 +39,11 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "main",
+<<<<<<< HEAD
+=======
+    "MyFavoriteDishes",
+    "review"
+>>>>>>> a984e0818e0efe6b613c10e94ed7790a8b47f1be
 ]
 
 MIDDLEWARE = [
