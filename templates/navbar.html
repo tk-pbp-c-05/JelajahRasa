@@ -8,32 +8,32 @@
   
     <div class="hidden md:flex items-center justify-center h-16 space-x-4 mx-auto">
         <!-- Links -->
-        <a href="{% url 'module4:show_home' %}" class="text-gray-300 font-bold py-2 px-4 rounded-lg transition duration-300" style="background-color: #983132;" onmouseover="this.style.backgroundColor='#e0a85e';" onmouseout="this.style.backgroundColor='#983132';">
+        <a href="{% url 'main:show_main' %}" class="text-gray-300 font-bold py-2 px-4 rounded-lg transition duration-300" style="background-color: #983132;" onmouseover="this.style.backgroundColor='#e0a85e';" onmouseout="this.style.backgroundColor='#983132';">
             Home
         </a>
 
-        <a href="{% url 'module4:show_home' %}" class="text-gray-300 font-bold py-2 px-4 rounded-lg transition duration-300" style="background-color: #983132;" onmouseover="this.style.backgroundColor='#e0a85e';" onmouseout="this.style.backgroundColor='#983132';">
+        <a href="{% url 'main:show_main' %}" class="text-gray-300 font-bold py-2 px-4 rounded-lg transition duration-300" style="background-color: #983132;" onmouseover="this.style.backgroundColor='#e0a85e';" onmouseout="this.style.backgroundColor='#983132';">
             Food Catalogue
         </a>
 
-        <a href="{% url 'module4:show_home' %}" class="text-gray-300 font-bold py-2 px-4 rounded-lg transition duration-300" style="background-color: #983132;" onmouseover="this.style.backgroundColor='#e0a85e';" onmouseout="this.style.backgroundColor='#983132';">
+        <a href="{% url 'main:show_main' %}" class="text-gray-300 font-bold py-2 px-4 rounded-lg transition duration-300" style="background-color: #983132;" onmouseover="this.style.backgroundColor='#e0a85e';" onmouseout="this.style.backgroundColor='#983132';">
             My Favorites
         </a>
 
-        <a href="{% url 'module4:show_home' %}" class="text-gray-300 font-bold py-2 px-4 rounded-lg transition duration-300" style="background-color: #983132;" onmouseover="this.style.backgroundColor='#e0a85e';" onmouseout="this.style.backgroundColor='#983132';">
+        <a href="{% url 'main:show_main' %}" class="text-gray-300 font-bold py-2 px-4 rounded-lg transition duration-300" style="background-color: #983132;" onmouseover="this.style.backgroundColor='#e0a85e';" onmouseout="this.style.backgroundColor='#983132';">
             Reviews and Ratings
         </a>
 
-        <a href="{% url 'module4:add_dish' %}" class="text-gray-300 font-bold py-2 px-4 rounded-lg transition duration-300" style="background-color: #983132;" onmouseover="this.style.backgroundColor='#e0a85e';" onmouseout="this.style.backgroundColor='#983132';">
+        <a href="{% url 'main:show_main' %}" class="text-gray-300 font-bold py-2 px-4 rounded-lg transition duration-300" style="background-color: #983132;" onmouseover="this.style.backgroundColor='#e0a85e';" onmouseout="this.style.backgroundColor='#983132';">
             Add New Dish
         </a>
 
         <!-- Tampilkan Cek Dish jika admin -->
-        {% if request.user.is_staff %}
+        {% comment %} {% if request.user.is_staff %}
         <a href="{% url 'module4:check_dish' %}" class="text-gray-300 font-bold py-2 px-4 rounded-lg transition duration-300" style="background-color: #983132;" onmouseover="this.style.backgroundColor='#e0a85e';" onmouseout="this.style.backgroundColor='#983132';">
             Cek Dish
         </a>
-        {% endif %}
+        {% endif %} {% endcomment %}
 
         <!-- Dropdown for Welcome User in Desktop Menu -->
         <div class="relative inline-block text-left">
@@ -51,7 +51,7 @@
       
           <!-- Dropdown content (hidden by default) -->
           <div id="desktopDropdownMenu" class="dropdown-content absolute left-0 mt-2 w-48 rounded-md shadow-lg py-1 hidden" style="z-index: 50; background-color:#fad68a">
-              <a href="{% url 'module4:show_home' %}" class="text-gray-300 font-bold py-2 px-4 rounded-lg transition duration-300 w-full block text-center" style="background-color: #983132;" onmouseover="this.style.backgroundColor='#e0a85e';" onmouseout="this.style.backgroundColor='#983132';">
+              <a href="{% url 'main:show_main' %}" class="text-gray-300 font-bold py-2 px-4 rounded-lg transition duration-300 w-full block text-center" style="background-color: #983132;" onmouseover="this.style.backgroundColor='#e0a85e';" onmouseout="this.style.backgroundColor='#983132';">
                 Logout
               </a>
           </div>
@@ -72,32 +72,33 @@
     <div class="mobile-menu hidden md:hidden px-4 w-full md:max-w-full">
       <div class="pt-2 pb-3 space-y-1 mx-auto">  
           <!-- Mobile Links -->
-          <a href="{% url 'module4:show_home' %}" class="text-gray-300 font-bold py-2 px-4 rounded-lg w-full transition duration-300" style="background-color: #983132;" onmouseover="this.style.backgroundColor='#e0a85e';" onmouseout="this.style.backgroundColor='#983132';">
+          <a href="{% url 'main:show_main' %}" class="text-gray-300 font-bold py-2 px-4 rounded-lg w-full transition duration-300" style="background-color: #983132;" onmouseover="this.style.backgroundColor='#e0a85e';" onmouseout="this.style.backgroundColor='#983132';">
               Home
           </a>
 
-          <a href="{% url 'module4:show_home' %}" class="text-gray-300 font-bold py-2 px-4 rounded-lg transition duration-300" style="background-color: #983132;" onmouseover="this.style.backgroundColor='#e0a85e';" onmouseout="this.style.backgroundColor='#983132';">
+          <a href="{% url 'main:show_main' %}" class="text-gray-300 font-bold py-2 px-4 rounded-lg transition duration-300" style="background-color: #983132;" onmouseover="this.style.backgroundColor='#e0a85e';" onmouseout="this.style.backgroundColor='#983132';">
             Food Catalogue
           </a>
   
-          <a href="{% url 'module4:show_home' %}" class="text-gray-300 font-bold py-2 px-4 rounded-lg transition duration-300" style="background-color: #983132;" onmouseover="this.style.backgroundColor='#e0a85e';" onmouseout="this.style.backgroundColor='#983132';">
+          <a href="{% url 'main:show_main' %}" class="text-gray-300 font-bold py-2 px-4 rounded-lg transition duration-300" style="background-color: #983132;" onmouseover="this.style.backgroundColor='#e0a85e';" onmouseout="this.style.backgroundColor='#983132';">
             My Favorites
           </a>
   
-          <a href="{% url 'module4:show_home' %}" class="text-gray-300 font-bold py-2 px-4 rounded-lg transition duration-300" style="background-color: #983132;" onmouseover="this.style.backgroundColor='#e0a85e';" onmouseout="this.style.backgroundColor='#983132';">
+          <a href="{% url 'main:show_main' %}" class="text-gray-300 font-bold py-2 px-4 rounded-lg transition duration-300" style="background-color: #983132;" onmouseover="this.style.backgroundColor='#e0a85e';" onmouseout="this.style.backgroundColor='#983132';">
             Reviews and Ratings
           </a>
 
-          <a href="{% url 'module4:add_dish' %}" class="text-gray-300 font-bold py-2 px-4 rounded-lg w-full transition duration-300" style="background-color: #983132;" onmouseover="this.style.backgroundColor='#e0a85e';" onmouseout="this.style.backgroundColor='#983132';">
+          {% comment %} <a href="{% url 'module4:add_dish' %}" class="text-gray-300 font-bold py-2 px-4 rounded-lg w-full transition duration-300" style="background-color: #983132;" onmouseover="this.style.backgroundColor='#e0a85e';" onmouseout="this.style.backgroundColor='#983132';"> {% endcomment %}
+          <a href="{% url 'main:show_main' %}" class="text-gray-300 font-bold py-2 px-4 rounded-lg w-full transition duration-300" style="background-color: #983132;" onmouseover="this.style.backgroundColor='#e0a85e';" onmouseout="this.style.backgroundColor='#983132';">
               Add New Dish
           </a>
 
           <!-- Tampilkan Cek Dish jika admin di mobile view -->
-          {% if request.user.is_staff %}
+          {% comment %} {% if request.user.is_staff %}
           <a href="{% url 'module4:check_dish' %}" class="text-gray-300 font-bold py-2 px-4 rounded-lg w-full transition duration-300" style="background-color: #983132;" onmouseover="this.style.backgroundColor='#e0a85e';" onmouseout="this.style.backgroundColor='#983132';">
               Cek Dish
           </a>
-          {% endif %}
+          {% endif %} {% endcomment %}
 
           <!-- Dropdown for Welcome User in Mobile Menu -->
           <div class="relative inline-block text-left">
@@ -116,7 +117,7 @@
             <!-- Dropdown content (hidden by default) -->
             <div id="mobileDropdownMenu" class="dropdown-content absolute left-0 mt-2 w-48 rounded-md shadow-lg py-1 hidden" style="z-index: 50; background-color:#fad68a">
                 <span class="block px-4 py-2 text-gray-700">Welcome, {{ user.username }}</span>
-                <a href="{% url 'module4:show_home' %}" class="text-gray-300 font-bold py-2 px-4 rounded-lg transition duration-300 w-full block text-center" style="background-color: #983132;" onmouseover="this.style.backgroundColor='#e0a85e';" onmouseout="this.style.backgroundColor='#983132';">
+                <a href="{% url 'main:show_main' %}" class="text-gray-300 font-bold py-2 px-4 rounded-lg transition duration-300 w-full block text-center" style="background-color: #983132;" onmouseover="this.style.backgroundColor='#e0a85e';" onmouseout="this.style.backgroundColor='#983132';">
                   Logout
                 </a>
             </div>

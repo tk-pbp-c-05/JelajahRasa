@@ -7,13 +7,10 @@ from django.contrib.auth.decorators import login_required
 # Create your views here.
 # Fungsi untuk menghubungkan user ke landing page berdasarkan usernya
 def show_main(request):
-    # if request.user.is_authenticated():
-    #     context = {
-    #         'name' : request.user.username
-    #     }
-    #     return render(request, 'logged_in_main.html', context)
-    # else:
-    return render(request, 'guest_main.html')
+    context = {
+        "user": request.user
+    }
+    return render(request, 'main.html', context)
 
 # Fitur login
 def register(request):  
