@@ -2,33 +2,33 @@
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16 w-full">
     <!-- Logo mentok ke kiri -->
     <div class="flex items-center space-x-2 absolute left-7 pr-4">
-        <h1 class="text-2xl font-bold dark:text-purple-300" style="color:#e0a85e">JelajahRasa</h1>
+        <h1 class="text-2xl font-bold dark:text-purple-300" style="color:#E1A85F">JelajahRasa</h1>
     </div>
   
     <div class="hidden items-center justify-center h-6 space-x-4 mx-auto menu-links">
         <!-- Links -->
-        <a href="{% url 'module4:show_home' %}" class="text-gray-300 font-bold py-2 px-4 rounded-lg transition duration-300" style="background-color: #983132;" onmouseover="this.style.backgroundColor='#e0a85e';" onmouseout="this.style.backgroundColor='#983132';">
+        <a href="{% url 'module4:show_home' %}" class="font-bold py-2 px-4 rounded-lg transition duration-300" style="background-color: #983132; color:#E1A85F" onmouseover="this.style.backgroundColor='#AB4A2F';" onmouseout="this.style.backgroundColor='#983132';">
           Home
         </a>
         
-        <a href="{% url 'module4:show_home' %}" class="text-gray-300 font-bold py-2 px-4 rounded-lg transition duration-300" style="background-color: #983132;" onmouseover="this.style.backgroundColor='#e0a85e';" onmouseout="this.style.backgroundColor='#983132';">
+        <a href="{% url 'module4:show_home' %}" class="font-bold py-2 px-4 rounded-lg transition duration-300" style="background-color: #983132; color:#E1A85F" onmouseover="this.style.backgroundColor='#AB4A2F';" onmouseout="this.style.backgroundColor='#983132';">
           Food Catalogue
         </a>
         
-        <a href="{% url 'module4:show_home' %}" class="text-gray-300 font-bold py-2 px-4 rounded-lg transition duration-300" style="background-color: #983132;" onmouseover="this.style.backgroundColor='#e0a85e';" onmouseout="this.style.backgroundColor='#983132';">
+        <a href="{% url 'module4:show_home' %}" class="font-bold py-2 px-4 rounded-lg transition duration-300" style="background-color: #983132; color:#E1A85F" onmouseover="this.style.backgroundColor='#AB4A2F';" onmouseout="this.style.backgroundColor='#983132';">
           Reviews and Ratings
         </a>
         {% if user.is_authenticated %}
-          <a href="{% url 'module4:show_home' %}" class="text-gray-300 font-bold py-2 px-4 rounded-lg transition duration-300" style="background-color: #983132;" onmouseover="this.style.backgroundColor='#e0a85e';" onmouseout="this.style.backgroundColor='#983132';">
+          <a href="{% url 'module4:show_home' %}" class="font-bold py-2 px-4 rounded-lg transition duration-300" style="background-color: #983132; color:#E1A85F" onmouseover="this.style.backgroundColor='#AB4A2F';" onmouseout="this.style.backgroundColor='#983132';">
             My Favorites
           </a>
 
-          <a href="{% url 'module4:add_dish' %}" class="text-gray-300 font-bold py-2 px-4 rounded-lg transition duration-300" style="background-color: #983132;" onmouseover="this.style.backgroundColor='#e0a85e';" onmouseout="this.style.backgroundColor='#983132';">
+          <a href="{% url 'module4:add_dish' %}" class="font-bold py-2 px-4 rounded-lg transition duration-300" style="background-color: #983132; color:#E1A85F" onmouseover="this.style.backgroundColor='#AB4A2F';" onmouseout="this.style.backgroundColor='#983132';">
             Add New Dish
           </a> 
           <!-- Tampilkan Cek Dish jika admin -->
           {% comment %} {% if request.user.is_staff %} {% endcomment %}
-          <a href="{% url 'module4:check_dish' %}" class="text-gray-300 font-bold py-2 px-4 rounded-lg transition duration-300" style="background-color: #983132;" onmouseover="this.style.backgroundColor='#e0a85e';" onmouseout="this.style.backgroundColor='#983132';">
+          <a href="{% url 'module4:check_dish' %}" class="font-bold py-2 px-4 rounded-lg transition duration-300" style="background-color: #983132; color:#E1A85F" onmouseover="this.style.backgroundColor='#AB4A2F';" onmouseout="this.style.backgroundColor='#983132';">
             Check New Dish
           </a>
           {% comment %} {% endif %} {% endcomment %} 
@@ -39,11 +39,11 @@
       <div class="hidden absolute right-2 pr-4 dropdown-desktop">
         <button id="desktopDropdownButton" class="inline-flex items-center">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M18 18.7023C18 15.6706 14.5 15 12 15C9.5 15 6 15.6706 6 18.7023M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12ZM15 9C15 10.6569 13.6569 12 12 12C10.3431 12 9 10.6569 9 9C9 7.34315 10.3431 6 12 6C13.6569 6 15 7.34315 15 9Z" stroke="#D1D5DB" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M18 18.7023C18 15.6706 14.5 15 12 15C9.5 15 6 15.6706 6 18.7023M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12ZM15 9C15 10.6569 13.6569 12 12 12C10.3431 12 9 10.6569 9 9C9 7.34315 10.3431 6 12 6C13.6569 6 15 7.34315 15 9Z" stroke="#e0a85e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
     
             <!-- Arrow down SVG -->
-            <svg class="w-5 h-5 ml-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="#D1D5DB">
+            <svg class="w-5 h-5 ml-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="#e0a85e">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
             </svg>
         </button>
@@ -67,12 +67,10 @@
         {% endif %}
       </div>
 
-  
-
     <!-- Mobile menu button -->
     <div class="mobile-menu-button-container flex items-center ml-auto">
         <button class="mobile-menu-button">
-          <svg class="w-6 h-6 text-gray-300 " fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
+          <svg class="w-6 h-6 " fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
             <path d="M4 6h16M4 12h16M4 18h16"/>
           </svg>
         </button>
@@ -86,11 +84,11 @@
         <div class="relative inline-block text-left">
           <button id="mobileDropdownButton" class="inline-flex items-center">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M18 18.7023C18 15.6706 14.5 15 12 15C9.5 15 6 15.6706 6 18.7023M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12ZM15 9C15 10.6569 13.6569 12 12 12C10.3431 12 9 10.6569 9 9C9 7.34315 10.3431 6 12 6C13.6569 6 15 7.34315 15 9Z" stroke="#D1D5DB" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M18 18.7023C18 15.6706 14.5 15 12 15C9.5 15 6 15.6706 6 18.7023M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12ZM15 9C15 10.6569 13.6569 12 12 12C10.3431 12 9 10.6569 9 9C9 7.34315 10.3431 6 12 6C13.6569 6 15 7.34315 15 9Z" stroke="#e0a85e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
       
               <!-- Arrow down SVG -->
-              <svg class="w-5 h-5 ml-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="#D1D5DB">
+              <svg class="w-5 h-5 ml-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="#e0a85e">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
               </svg>
           </button>
@@ -114,30 +112,30 @@
           {% endif %}
         </div>
           <!-- Mobile Links -->
-          <a href="{% url 'module4:show_home' %}" class="text-gray-300 font-bold py-2 px-4 rounded-lg w-full transition duration-300" style="background-color: #983132;" onmouseover="this.style.backgroundColor='#e0a85e';" onmouseout="this.style.backgroundColor='#983132';">
+          <a href="{% url 'module4:show_home' %}" class="font-bold py-2 px-4 rounded-lg w-full transition duration-300" style="background-color: #E1A85F; color:#e0a85e" onmouseover="this.style.backgroundColor='#AB4A2F';" onmouseout="this.style.backgroundColor='#983132';">
               Home
           </a>
 
-          <a href="{% url 'module4:show_home' %}" class="text-gray-300 font-bold py-2 px-4 rounded-lg transition duration-300" style="background-color: #983132;" onmouseover="this.style.backgroundColor='#e0a85e';" onmouseout="this.style.backgroundColor='#983132';">
+          <a href="{% url 'module4:show_home' %}" class="font-bold py-2 px-4 rounded-lg transition duration-300" style="background-color: #E1A85F; color:#e0a85e" onmouseover="this.style.backgroundColor='#AB4A2F';" onmouseout="this.style.backgroundColor='#983132';">
             Food Catalogue
           </a>
   
           
-          <a href="{% url 'module4:show_home' %}" class="text-gray-300 font-bold py-2 px-4 rounded-lg transition duration-300" style="background-color: #983132;" onmouseover="this.style.backgroundColor='#e0a85e';" onmouseout="this.style.backgroundColor='#983132';">
+          <a href="{% url 'module4:show_home' %}" class="font-bold py-2 px-4 rounded-lg transition duration-300" style="background-color: #E1A85F; color:#e0a85e" onmouseover="this.style.backgroundColor='#AB4A2F';" onmouseout="this.style.backgroundColor='#983132';">
             Reviews and Ratings
           </a>
           {% if user.is_authenticated %}
-            <a href="{% url 'module4:show_home' %}" class="text-gray-300 font-bold py-2 px-4 rounded-lg transition duration-300" style="background-color: #983132;" onmouseover="this.style.backgroundColor='#e0a85e';" onmouseout="this.style.backgroundColor='#983132';">
+            <a href="{% url 'module4:show_home' %}" class="font-bold py-2 px-4 rounded-lg transition duration-300" style="background-color: #E1A85F; color:#e0a85e" onmouseover="this.style.backgroundColor='#AB4A2F';" onmouseout="this.style.backgroundColor='#983132';">
               My Favorites
             </a>
 
-            <a href="{% url 'module4:add_dish' %}" class="text-gray-300 font-bold py-2 px-4 rounded-lg w-full transition duration-300" style="background-color: #983132;" onmouseover="this.style.backgroundColor='#e0a85e';" onmouseout="this.style.backgroundColor='#983132';">
+            <a href="{% url 'module4:add_dish' %}" class="font-bold py-2 px-4 rounded-lg w-full transition duration-300" style="background-color: #E1A85F; color:#e0a85e" onmouseover="this.style.backgroundColor='#AB4A2F';" onmouseout="this.style.backgroundColor='#983132';">
                 Add New Dish
             </a>
 
             <!-- Tampilkan Cek Dish jika admin di mobile view -->
             {% if request.user.is_staff %}
-            <a href="{% url 'module4:check_dish' %}" class="text-gray-300 font-bold py-2 px-4 rounded-lg w-full transition duration-300" style="background-color: #983132;" onmouseover="this.style.backgroundColor='#e0a85e';" onmouseout="this.style.backgroundColor='#983132';">
+            <a href="{% url 'module4:check_dish' %}" class="font-bold py-2 px-4 rounded-lg w-full transition duration-300" style="background-color: #E1A85F; color:#e0a85e" onmouseover="this.style.backgroundColor='#AB4A2F';" onmouseout="this.style.backgroundColor='#983132';">
                 Check New Dish
             </a>
             {% endif %}
