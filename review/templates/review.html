@@ -13,8 +13,7 @@
             <ul>
                 {% for review in reviews %}
                     <li class="mb-4 p-4 border-b border-gray-300">
-                        <!-- <strong>{{ review.user.username }}</strong>  -->
-                        <strong>Dummy username</strong>
+                        <strong>{{ review.user.username }}</strong> 
                         <span class="text-yellow-500">
                             {% for i in "12345"|slice:":review.rating" %}
                                 &#9733;
@@ -80,8 +79,7 @@
             // Create a new review entry in HTML
             const newReview = `
                 <li class="mb-4 p-4 border-b border-gray-300">
-                    // <strong>${data.user}</strong> 
-                    <strong>Dummy user</strong>
+                    <strong>${data.user}</strong> 
                     <span class="text-yellow-500">
                         ${'★'.repeat(data.rating)}${'☆'.repeat(5 - data.rating)}
                     </span>

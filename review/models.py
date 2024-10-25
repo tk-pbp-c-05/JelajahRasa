@@ -1,8 +1,10 @@
 from django.db import models
-from main.models import Food, User
+from main.models import Food
+from django.contrib.auth import get_user_model
 
 # Create your models here.
 class Review(models.Model):
+    User = get_user_model()
     RATING_CHOICES = [(i, str(i)) for i in range(1, 6)]
 
     food = models.ForeignKey(Food, related_name='reviews', on_delete=models.CASCADE)
