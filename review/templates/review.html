@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block meta %}
+<title>Review & Ratings</title>
+{% endblock meta %}
+
+{% block content %}
+<div class="flex flex-col w-full h-screen max-w-4xl mx-auto my-8">
+    <!-- Reviews Section (Top) -->
+    <div id="reviewsContainer" class="w-full bg-gray-200 p-6">
+        <h2 class="text-2xl font-semibold mb-4">Past Reviews</h2>
+        {% if reviews %}
+            <ul>
+                {% for review in reviews %}
+                    <li class="mb-4 p-4 border-b border-gray-300">
+                        <!-- <strong>{{ review.user.username }}</strong>  -->
+                        <strong>Dummy username</strong>
+                        <span class="text-yellow-500">
+                            {% for i in "12345"|slice:":review.rating" %}
+                                &#9733;
+                            {% endfor %}
+                            {% for i in "12345"|slice:":5-review.rating" %}
+                                &#9734;
+                            {% endfor %}
+                        </span>
+                        <p class="mt-2">{{ review.comment }}</p>
+                        <span class="text-gray-500 text-sm">{{ review.timestamp|date:"F j, Y, g:i a" }}</span>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No reviews yet. Be the first to leave one!</p>
+        {% endif %}
+    </div>
+
+    <!-- Form Section (Bottom) -->
+    <div class="w-full bg-gray-100 p-6 mt-auto">
+        <h2 class="text-2xl font-bold mb-4">Leave a Review</h2>
+        <form id="reviewForm" method="POST" action="{% url 'create_review' food.id %}" class="w-full">
+            {% csrf_token %}
+            <div class="mb-4">
+                <textarea name="comment" placeholder="Leave a review..." class="w-full p-2 border rounded" required></textarea>
+            </div>
+            
+            <!-- Star Rating -->
+            <div class="star-rating mb-4">
+                <input type="radio" id="5-stars" name="rating" value="5" required />
+                <label for="5-stars" class="star">&#9733;</label>
+                <input type="radio" id="4-stars" name="rating" value="4" required />
+                <label for="4-stars" class="star">&#9733;</label>
+                <input type="radio" id="3-stars" name="rating" value="3" required />
+                <label for="3-stars" class="star">&#9733;</label>
+                <input type="radio" id="2-stars" name="rating" value="2" required />
+                <label for="2-stars" class="star">&#9733;</label>
+                <input type="radio" id="1-stars" name="rating" value="1" required />
+                <label for="1-stars" class="star">&#9733;</label>
+            </div>
+            
+            <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded">Submit Review</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.getElementById('reviewForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent the default form submission
+        const formData = new FormData(this); // Gather form data
+
+        fetch("{% url 'create_review' food.id %}", {
+            method: 'POST',
+            body: formData,
+        })
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(data => { throw new Error(data.error); });
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Create a new review entry in HTML
+            const newReview = `
+                <li class="mb-4 p-4 border-b border-gray-300">
+                    // <strong>${data.user}</strong> 
+                    <strong>Dummy user</strong>
+                    <span class="text-yellow-500">
+                        ${'★'.repeat(data.rating)}${'☆'.repeat(5 - data.rating)}
+                    </span>
+                    <p class="mt-2">${data.comment}</p>
+                    <span class="text-gray-500 text-sm">${data.timestamp}</span>
+                </li>
+            `;
+            document.getElementById('reviewsContainer').insertAdjacentHTML('afterbegin', newReview);
+            // Reset the form after submission
+            document.getElementById('reviewForm').reset();
+        })
+        .catch(error => alert('Error: ' + error.message)); // Handle errors
+    });
+</script>
+
+{% endblock content %}
