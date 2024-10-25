@@ -1,29 +1,27 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from module4.models import NewDish
 from module4.forms import NewDishForm
-from django.shortcuts import get_object_or_404
+from django.http import JsonResponse
 from django.contrib import messages
 
-# Create your views here.
+# Tampilkan home dengan hanya dish yang sudah di-approve
 def show_home(request):
-    # Tampilkan hanya dish yang sudah di-approve
     approved_dishes = NewDish.objects.filter(is_approved=True)
     return render(request, 'home.html', {'dishes': approved_dishes})
 
+# Form untuk menambahkan dish
 def add_dish(request):
     form = NewDishForm(request.POST, request.FILES or None)
     if form.is_valid() and request.method == 'POST':
         new_dish = form.save(commit=False)
         new_dish.user = request.user
         
-        # Jika admin, dish langsung di-approve
         if request.user.is_superuser:
             new_dish.is_approved = True
             new_dish.save()
             messages.success(request, 'Dish added successfully!')
             return redirect('module4:show_home')  # Redirect ke home setelah approve
         else:
-            # Jika user, dish belum di-approve dan disimpan untuk dicek oleh admin
             new_dish.is_approved = False
             new_dish.save()
             messages.success(request, 'Dish added successfully! Please wait for our admin to approve it.')
@@ -32,28 +30,37 @@ def add_dish(request):
     context = {"form": form}
     return render(request, 'add_dish.html', context)
 
+# Menampilkan dish yang belum di-approve
 def check_dish(request):
     if not request.user.is_staff:
         return redirect('module4:show_home')  # Hanya admin yang bisa mengakses halaman ini
 
-    # Tampilkan dish yang belum di-approve
     pending_dishes = NewDish.objects.filter(is_approved=False)
-    print(f"Pending dishes: {pending_dishes}")
     context = {'pending_dishes': pending_dishes}
     return render(request, 'check_dish.html', context)
 
+# Fungsi untuk approve atau delete dish dengan AJAX
 def approve_dish(request, dish_id):
+    print("Approve/Delete view called")  # Tambah ini
     if not request.user.is_staff:
-        return redirect('module4:show_home')  # Hanya admin yang bisa melakukan ini
+        print("User not authorized")  # Tambah ini
+        return JsonResponse({'status': 'forbidden'}, status=403)
 
     dish = get_object_or_404(NewDish, id=dish_id)
+    print(f"Dish found: {dish.name}")  # Tambah ini
 
     if request.method == 'POST':
         action = request.POST.get('action')
+        print(f"Action received: {action}")  # Tambah ini
         if action == 'approve':
             dish.is_approved = True
-            dish.save()  # Approve dish
+            dish.save()
+            print("Dish approved")  # Tambah ini
+            return JsonResponse({'status': 'approved', 'dish_id': dish_id})
         elif action == 'delete':
-            dish.delete()  # Hapus dish
+            dish.delete()
+            print("Dish deleted")  # Tambah ini
+            return JsonResponse({'status': 'deleted', 'dish_id': dish_id})
 
-    return redirect('module4:check_dish')  # Kembali ke halaman cek setelah aksi
+    print("Invalid request method")  # Tambah ini
+    return JsonResponse({'status': 'error'}, status=400)
