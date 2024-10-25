@@ -8,10 +8,17 @@ class CustomUserCreationForm(UserCreationForm):
     last_name = forms.CharField(max_length=30, required=True, widget=forms.TextInput(attrs={'placeholder': 'Doe'})
 )
     email = forms.EmailField(required=True, widget=forms.EmailInput(attrs={'placeholder': 'example@example.com'}))
+    password1 = forms.CharField(
+        label='Password',
+        widget=forms.PasswordInput(attrs={'placeholder': 'Password Example'})
+    )
+    password2 = forms.CharField(
+        label='Confirm Password',
+        widget=forms.PasswordInput(attrs={'placeholder': 'Password Example'})
+    )
 
     class Meta:
-        User = get_user_model()
-        model = User
+        model = get_user_model()
         fields = ('username', 'first_name', 'last_name', 'email', 'password1', 'password2')
         
         widgets = {
