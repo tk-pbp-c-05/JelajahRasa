@@ -6,6 +6,11 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 
 # Create your views here.
+def show_main(request):
+    context = {
+        "user": request.user
+    }
+    return render(request, 'main.html', context)
 
 def register(request):  
     form = CustomUserCreationForm()
