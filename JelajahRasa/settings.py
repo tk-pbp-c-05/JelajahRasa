@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "main",
     "MyFavoriteDishes",
-    "review"
+    "review",
+    "module4",
 ]
 
 MIDDLEWARE = [
