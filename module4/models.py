@@ -14,5 +14,6 @@ class NewDish(models.Model):
     price = models.IntegerField() 
     map_link = models.CharField(max_length=255, default="")
     address = models.CharField(max_length=255, default="")
+    image = models.CharField(max_length=255, default="")
     is_approved = models.BooleanField(default=False)  # Status approval oleh admin
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
