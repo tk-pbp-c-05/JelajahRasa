@@ -15,7 +15,7 @@
         </a>
 
         {% if user.is_authenticated %}
-          <a href="{% url 'MyFavoriteDishes:add_favorite_dish' %}" class="font-bold py-2 px-4 rounded-lg transition duration-300" style="background-color: #983132; color:#E1A85F" onmouseover="this.style.backgroundColor='#AB4A2F';" onmouseout="this.style.backgroundColor='#983132';">
+          <a href="{% url 'MyFavoriteDishes:access_favorite' %}" class="font-bold py-2 px-4 rounded-lg transition duration-300" style="background-color: #983132; color:#E1A85F" onmouseover="this.style.backgroundColor='#AB4A2F';" onmouseout="this.style.backgroundColor='#983132';">
             My Favorites
           </a>
 

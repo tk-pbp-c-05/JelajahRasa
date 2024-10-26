@@ -79,6 +79,9 @@ class Food(models.Model):
             self.average_rating = avg_rating
             self.rating_count = count
             self.save()
+    
+    def __str__(self):
+        return self.name  # or any other descriptive field
             
 class ProductRating(models.Model):
     food = models.ForeignKey(Food, on_delete=models.CASCADE, related_name='ratings')
