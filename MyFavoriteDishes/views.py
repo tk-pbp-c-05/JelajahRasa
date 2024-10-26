@@ -14,14 +14,10 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import views as auth_views
 from django.contrib import messages
 
-
 @login_required
 def show_favorite(request):
     favorite_dishes = FavoriteDish.objects.filter(user=request.user)
-    # Check if there's a price filter in the request
-    price_filter = request.GET.get('price')
-    if price_filter:
-        favorite_dishes = favorite_dishes.filter(price__lte=price_filter) 
+
     context = {
         'name': request.user.username,
         'favorite_dishes':favorite_dishes,
@@ -113,5 +109,18 @@ def delete_favorite_dish(request, uuid):
     #return JsonResponse({'status': 'removed', 'is_favorite': False})
 
 def show_json(request):
-    data = FavoriteDish.objects.filter(user=request.user) 
-    return HttpResponse(serializers.serialize("json", data), content_type="application/json")
+    favorite_dishes = FavoriteDish.objects.filter(user=request.user)
+
+    flavor_filter = request.GET.get('flavor')
+    category_filter = request.GET.get('category')
+    name_filter = request.GET.get('name')
+
+    if flavor_filter:
+        favorite_dishes = favorite_dishes.filter(flavor__icontains=flavor_filter)
+    if category_filter:
+        favorite_dishes = favorite_dishes.filter(category__iexact=category_filter)
+    if name_filter:
+        favorite_dishes = favorite_dishes.filter(name__icontains=name_filter)
+
+    data = serializers.serialize("json", favorite_dishes)
+    return HttpResponse(data, content_type="application/json")
