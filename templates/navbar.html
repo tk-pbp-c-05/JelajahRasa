@@ -25,7 +25,7 @@
           </a> 
           <!-- Tampilkan Cek Dish jika admin -->
           {% if request.user.is_staff %}
-          <a class="font-bold py-2 px-4 rounded-lg transition duration-300" style="background-color: #983132; color:#E1A85F" onmouseover="this.style.backgroundColor='#AB4A2F';" onmouseout="this.style.backgroundColor='#983132';">
+          <a href="{% url 'module4:check_dish' %}" class="font-bold py-2 px-4 rounded-lg transition duration-300" style="background-color: #983132; color:#E1A85F" onmouseover="this.style.backgroundColor='#AB4A2F';" onmouseout="this.style.backgroundColor='#983132';">
             Check New Dish
           </a>
           {% endif %} 
@@ -47,10 +47,10 @@
         {% if user.is_authenticated %}
         <!-- Dropdown content -->
           <div id="desktopDropdownMenu" class="dropdown-content absolute mt-0 right-0 w-24 rounded-md shadow-lg py-1 hidden" style="z-index: 50; background-color:#fad68a">
-            <a href="{% url 'module4:show_home' %}" class="text-black py-2 px-4 rounded-lg transition duration-300 w-full block text-center" style="background-color: #fad68a;" >
+            <a href="{% url 'profilepage:profile' %}" class="text-black py-2 px-4 rounded-lg transition duration-300 w-full block text-center" style="background-color: #fad68a;" >
               Profile
             </a>
-            <a href="{% url 'module4:show_home' %}" class="text-black py-2 px-4 rounded-lg transition duration-300 w-full block text-center">
+            <a href="{% url 'main:logout' %}" class="text-black py-2 px-4 rounded-lg transition duration-300 w-full block text-center">
               Logout
             </a>
           </div>
@@ -95,7 +95,7 @@
       
           {% if user.is_authenticated %}
             <div id="mobileDropdownMenu" class="dropdown-content absolute left-0 mt-2 w-48 rounded-md shadow-lg py-1 hidden" style="z-index: 50; background-color:#fad68a">
-                <a href="{% url 'module4:show_home' %}" class="text-black py-2 px-4 rounded-lg transition duration-300 w-full block text-center" style="background-color: #fad68a;" >
+                <a href="{% url 'profilepage:profile' %}" class="text-black py-2 px-4 rounded-lg transition duration-300 w-full block text-center" style="background-color: #fad68a;" >
                   Profile
                 </a>
                 <a href="{% url 'main:logout' %}" class="text-black py-2 px-4 rounded-lg transition duration-300 w-full block text-center" style="background-color: #fad68a;" >
