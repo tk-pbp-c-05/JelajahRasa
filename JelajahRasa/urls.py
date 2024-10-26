@@ -23,4 +23,5 @@ urlpatterns = [
     path('MyFavoriteDishes/', include('MyFavoriteDishes.urls')),
     path('review/', include('review.urls')),
     path('module4/', include('module4.urls')),
+    path('catalog/', include('catalog.urls')),
 ]
