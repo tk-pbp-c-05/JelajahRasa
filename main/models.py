@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Avg
 from django.contrib.auth.models import AbstractUser
 
 # Create your models here.
@@ -18,6 +19,17 @@ class Food(models.Model):
     price = models.IntegerField() 
     map_link = models.CharField(max_length=255)
     address = models.CharField(max_length=255)
+    rating_count = models.PositiveIntegerField(default=0)
 
-    def __str__(self):
-        return self.name
+    def update_average_rating(self):
+        ratings = ProductRating.objects.filter(product=self)
+        if ratings.exists():
+            avg_rating = ratings.aggregate(Avg('rating'))['rating__avg']
+            count = ratings.count()
+            self.average_rating = avg_rating
+            self.rating_count = count
+            self.save()
+
+class ProductRating(models.Model):
+    food = models.ForeignKey(Food, on_delete=models.CASCADE, related_name='ratings')
+    rating = models.PositiveIntegerField()
