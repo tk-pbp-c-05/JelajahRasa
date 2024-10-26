@@ -11,7 +11,7 @@
           Home
         </a>
         
-        <a href="{% url 'module4:show_home' %}" class="font-bold py-2 px-4 rounded-lg transition duration-300" style="background-color: #983132; color:#E1A85F" onmouseover="this.style.backgroundColor='#AB4A2F';" onmouseout="this.style.backgroundColor='#983132';">
+        <a href="{% url 'catalog:view_catalog' %}" class="font-bold py-2 px-4 rounded-lg transition duration-300" style="background-color: #983132; color:#E1A85F" onmouseover="this.style.backgroundColor='#AB4A2F';" onmouseout="this.style.backgroundColor='#983132';">
           Food Catalogue
         </a>
 
@@ -20,7 +20,8 @@
             My Favorites
           </a>
 
-          <a class="font-bold py-2 px-4 rounded-lg transition duration-300" style="background-color: #983132; color:#E1A85F" onmouseover="this.style.backgroundColor='#AB4A2F';" onmouseout="this.style.backgroundColor='#983132';">
+         
+          <a href="{% url 'module4:add_dish' %}" class="font-bold py-2 px-4 rounded-lg transition duration-300" style="background-color: #983132; color:#E1A85F" onmouseover="this.style.backgroundColor='#AB4A2F';" onmouseout="this.style.backgroundColor='#983132';">
             Add New Dish
           </a> 
           <!-- Tampilkan Cek Dish jika admin -->

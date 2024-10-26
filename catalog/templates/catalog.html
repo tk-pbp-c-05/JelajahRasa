@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block meta %}
+<title> Food Catalogue </title>
+{% endblock meta %}
+
+{% block content %}
+{% include 'navbar.html' %}
+<body class="bg-gray-100">
+
+    <div class="container mx-auto p-6">
+        <h1 class="text-3xl font-bold text-center mb-8">Food Catalog</h1>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {% for food in catalogs %}
+            <!-- Card Structure -->
+            <div class="bg-white shadow-md rounded-lg overflow-hidden">
+                <div class="p-4 border-t border-gray-200 flex justify-between">
+                    <a href="" class=" text-white px-4 py-2 rounded" style="background-color:#983132">Review</a>
+                    <a href="" class=" text-white px-4 py-2 rounded " style="background-color:#983132">Report</a>
+                </div>
+                <div class="p-4">
+                    <h2 class="text-xl font-semibold">{{ food.name }}</h2>
+                    <p class="text-gray-500">Flavor: {{ food.flavor }}</p>
+                    <p class="text-gray-500">Category: {{ food.category }}</p>
+                    <p class="text-gray-500">Vendor: {{ food.vendor_name }}</p>
+                    <p class="text-gray-700 font-bold mt-2">{{ food.price }}</p>
+                    <p class="text-gray-500 mt-1">Address: {{ food.address }}</p>
+                    <a href="{{ food.map_link }}" target="_blank" class="text-blue-500 hover:underline mt-2 inline-block">View on Map</a>
+                </div>
+
+                <!-- Card Buttons for Review and Report -->
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+</body>
+{% endblock content %}

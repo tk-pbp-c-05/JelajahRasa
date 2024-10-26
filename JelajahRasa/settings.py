@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "main",
     "MyFavoriteDishes",
     "review",
+    "catalog",
     "module4",
 ]
 
