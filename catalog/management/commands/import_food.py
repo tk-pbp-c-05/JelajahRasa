@@ -24,8 +24,8 @@ class Command(BaseCommand):
                 price=item["Harga"],
                 map_link=item["Lokasi (Gmaps)"],
                 address=item["Alamat"],
-                image=item["Foto"]
-                
+                image=item["Foto"]   
+                      
             )
             if created:
                 self.stdout.write(self.style.SUCCESS(f"Successfully added food item: {food.name}"))
