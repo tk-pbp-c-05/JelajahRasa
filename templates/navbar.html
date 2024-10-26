@@ -29,6 +29,9 @@
           <a class="font-bold py-2 px-4 rounded-lg transition duration-300" style="background-color: #983132; color:#E1A85F" onmouseover="this.style.backgroundColor='#AB4A2F';" onmouseout="this.style.backgroundColor='#983132';">
             Check New Dish
           </a>
+          <a href="{% url 'report:report_list' %}" class="font-bold py-2 px-4 rounded-lg transition duration-300" style="background-color: #983132; color:#E1A85F" onmouseover="this.style.backgroundColor='#AB4A2F';" onmouseout="this.style.backgroundColor='#983132';">
+            Report List
+          </a> 
           {% endif %} 
         {% endif %}
     </div>
@@ -61,7 +64,6 @@
               Login
             </a>
 
-            <a href="{% url 'main:register' %}" class="text-black py-2 px-4 rounded-lg transition duration-300 w-full block text-center">
             <a href="{% url 'main:register' %}" class="text-black py-2 px-4 rounded-lg transition duration-300 w-full block text-center">
               Register
             </a>
@@ -100,7 +102,7 @@
                 <a href="{% url 'module4:show_home' %}" class="text-black py-2 px-4 rounded-lg transition duration-300 w-full block text-center" style="background-color: #fad68a;" >
                   Profile
                 </a>
-                <a href="{% url 'module4:show_home' %}" class="text-black py-2 px-4 rounded-lg transition duration-300 w-full block text-center" style="background-color: #fad68a;" >
+                <a href="{% url 'main:logout' %}" class="text-black py-2 px-4 rounded-lg transition duration-300 w-full block text-center" style="background-color: #fad68a;" >
                   Logout
                 </a>
             </div>
@@ -109,7 +111,6 @@
             <a href="{% url 'main:login' %}" class="text-black py-2 px-4 rounded-lg transition duration-300 w-full block text-center" style="background-color: #fad68a;">
               Login
             </a>
-            <a href="{% url 'main:register' %}" class="text-black py-2 px-4 rounded-lg transition duration-300 w-full block text-center" style="background-color: #fad68a;">
             <a href="{% url 'main:register' %}" class="text-black py-2 px-4 rounded-lg transition duration-300 w-full block text-center" style="background-color: #fad68a;">
               Register
             </a>

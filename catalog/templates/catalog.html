@@ -3,6 +3,12 @@
 
 {% block meta %}
 <title> Food Catalogue </title>
+<style>
+    #notification.show {
+        opacity: 1;
+        transition: opacity 0.3 ease-in-out;
+    }
+</style>
 {% endblock meta %}
 
 {% block content %}
@@ -17,8 +23,10 @@
             <!-- Card Structure -->
             <div class="bg-white shadow-md rounded-lg overflow-hidden">
                 <div class="p-4 border-t border-gray-200 flex justify-between">
-                    <a href="" class=" text-white px-4 py-2 rounded" style="background-color:#983132">Review</a>
-                    <a href="" class=" text-white px-4 py-2 rounded " style="background-color:#983132">Report</a>
+                    {% if user.is_authenticated %}
+                        <a href="" class=" text-white px-4 py-2 rounded" style="background-color:#983132">Review</a>
+                        <button class="text-white px-4 py-2 rounded-md transition create-report-btn" style="background-color:#983132" data-report-id="{{ food.uuid }}" onclick="openReportModal('{{ food.uuid }}')"> Report </button>
+                    {% endif %}
                 </div>
                 <div class="p-4">
                     <h2 class="text-xl font-semibold">{{ food.name }}</h2>
@@ -35,6 +43,116 @@
             {% endfor %}
         </div>
     </div>
-
+    <div id="create-report-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50">
+        <div class="bg-white rounded-lg p-8 shadow-lg w-1/3">
+            <h3 class="text-lg font-bold mb-4">Create Report</h3>
+            <form id="create-report-form">
+                <!-- Issue Type Dropdown -->
+                <label for="issue_type" class="block mb-2 text-sm font-medium">Issue Type</label>
+                <select id="issue_type" class="border rounded-md w-full px-4 py-2 mb-4" required>
+                    <option value="">Select an issue type</option>
+                    <option value="quality">Quality Issue</option>
+                    <option value="incorrect_info">Incorrect Information</option>
+                    <option value="out_of_stock">Out of Stock</option>
+                    <option value="other">Other</option>
+                </select>
+    
+                <!-- Description Textarea -->
+                <label for="description" class="block mb-2 text-sm font-medium">Description</label>
+                <textarea id="description" class="border rounded-md w-full px-4 py-2 mb-4" rows="4" placeholder="Describe the issue" required></textarea>
+                
+                <!-- Hidden field for Food ID -->
+                <input type="hidden" id="create-report-id">
+                
+                <div class="flex justify-end space-x-4">
+                    <button type="button" id="cancel-create-report" class="bg-gray-400 text-white px-4 py-2 rounded-md hover:bg-gray-500">Cancel</button>
+                    <button type="submit" class=" text-white px-4 py-2 rounded-md" style="background-color:#983132">Create</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div id="notification" class="hidden fixed bottom-4 left-4 bg-green-500 text-white px-4 py-2 rounded-md shadow-lg transition-opacity duration-300 opacity-0">
+        <span id="notification-message"></span>
+    </div>
 </body>
+<script>
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    const csrfToken = getCookie('csrftoken');
+   // Show the modal
+function openReportModal(foodId) {
+    document.getElementById("create-report-id").value = foodId;
+    document.getElementById("create-report-modal").classList.remove("hidden");
+}
+
+// Hide the modal
+function closeReportModal() {
+    document.getElementById("create-report-modal").classList.add("hidden");
+    document.getElementById("create-report-form").reset();
+}
+
+document.getElementById("cancel-create-report").addEventListener("click", closeReportModal);
+document.getElementById("create-report-form").addEventListener("submit", function (event) {
+    event.preventDefault();
+
+    const foodId = document.getElementById("create-report-id").value;
+    const issueType = document.getElementById("issue_type").value;
+    const description = document.getElementById("description").value;
+
+    fetch(`/report/food/${foodId}/`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": csrfToken,
+        },
+        body: JSON.stringify({ issue_type: issueType, description: description }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+           showNotification("Report submitted successfully.")
+            closeReportModal();
+        } else {
+            showNotification("Failed to submit report.","error")
+        }
+    })
+    .catch(error => {
+        console.error("Error:", error);
+        showNotification("An error occurred.","error");
+    });
+
+}); 
+
+function showNotification(message, type = "success") {
+    const notification = document.getElementById("notification");
+    const notificationMessage = document.getElementById("notification-message");
+
+    notificationMessage.textContent = message;
+    notification.classList.remove("bg-green-500", "bg-red-500");
+    notification.classList.add(type === "success" ? "bg-green-500" : "bg-red-500");
+
+    notification.classList.remove("hidden", "opacity-0");
+    notification.classList.add("show");
+    console.log(message)
+    setTimeout(() => {
+        notification.classList.remove("show");
+        setTimeout(() => {
+            notification.classList.add("hidden", "opacity-0");
+        }, 300); // Matches transition duration
+    }, 3000);
+}
+</script>
 {% endblock content %}
