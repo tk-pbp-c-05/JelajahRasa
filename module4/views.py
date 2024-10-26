@@ -40,13 +40,13 @@ def check_dish(request):
     return render(request, 'check_dish.html', context)
 
 # Fungsi untuk approve atau delete dish dengan AJAX
-def approve_dish(request, dish_id):
+def approve_dish(request, uuid):
     print("Approve/Delete view called")
     if not request.user.is_staff:
         print("User not authorized")
         return JsonResponse({'status': 'forbidden'}, status=403)
 
-    dish = get_object_or_404(NewDish, id=dish_id)
+    dish = get_object_or_404(NewDish, uuid=uuid)
     print(f"Dish found: {dish.name}")
 
     if request.method == 'POST':
