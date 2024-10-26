@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block meta %}
+<title> Report List Food </title>
+{% endblock meta %}
+
+{% block content %}
+{% include 'navbar.html' %}
+<body class="bg-gray-100">
+    <div class="container mx-auto p-6">
+        <h1 class="text-3xl font-bold text-center mb-8">Food Catalog</h1>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {% for report in reports %}
+            <!-- Card Structure -->
+            <div class="bg-white shadow-md rounded-lg overflow-hidden">
+                <div class="p-4">
+                    <h2 class="text-xl font-semibold">{{ report.food.name }}</h2>
+                    <h2 class="text-xl">{{ report.get_issue_type_display }}</h2>
+                    <p class="text-gray-500">Description: {{ report.description }}</p>
+                    <p class="text-gray-500">Reported by: {{ report.reported_by.username }} on {{ report.created_at }}</p>
+                    <p class="text-gray-500" id="status-{{report.id}}">Status: {{ report.get_status_display}} </p>
+                    <div>
+                        {% if report.status == 'pending' %}
+                          <button onclick="updateReportStatus('{{ report.id }}', 'approve')">Approve</button>
+                          <button onclick="updateReportStatus('{{ report.id }}', 'reject')">Reject</button>
+                        {% else %}
+                          <span>{{ report.get_status_display }}</span>
+                        {% endif %}
+                      </div>
+                </div>
+
+
+                <!-- Card Buttons for Review and Report -->
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+</body>
+
+<script>
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    const csrfToken = getCookie('csrftoken');
+
+    function updateReportStatus(reportId, action) {
+    const url = action === 'approve' 
+        ? `/report/${reportId}/approve/` 
+        : `/report/${reportId}/reject/`;
+
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': csrfToken,
+            'Content-Type': 'application/json'
+        },
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            document.getElementById(`status-${reportId}`).textContent = data.status.charAt(0).toUpperCase() + data.status.slice(1);
+        } else {
+            alert("There was an error updating the report status.");
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert("An error occurred.");
+    });
+}
+</script>
+{% endblock content %}
