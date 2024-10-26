@@ -1,10 +1,12 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+import uuid
 
 User = get_user_model()
 
 # Create your models here.
 class NewDish(models.Model):
+    uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=100)
     flavor = models.CharField(max_length=100)
     category = models.CharField(max_length=50)
