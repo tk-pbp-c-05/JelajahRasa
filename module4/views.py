@@ -30,7 +30,7 @@ def add_dish(request):
         else:
             messages.success(request, 'Dish added successfully! Please wait for our admin to approve it.')
             
-        return redirect('catalog:view_catalog')
+        return redirect('module4:add_dish')
 
     context = {"form": form}
     return render(request, 'add_dish.html', context)
