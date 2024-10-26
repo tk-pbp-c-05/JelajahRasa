@@ -38,4 +38,12 @@ def create_review(request, food_id):
     )
     new_review.save()
     
-    return JsonResponse({'message': 'Review submitted successfully.'}, status=201)
+    formatted_timestamp = new_review.timestamp.strftime("%B %d, %Y, %I:%M %p")
+    
+    return JsonResponse({
+        'message': 'Review submitted successfully.',
+        'user': user.username,  # Assuming `username` is what you want to show
+        'comment': comment,
+        'rating': rating,
+        'timestamp': formatted_timestamp  # Convert timestamp to string
+    }, status=201)
