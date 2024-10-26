@@ -11,6 +11,25 @@
     <div class="container mx-auto px-4 py-8 max-w-xl">
       <h1 class="text-3xl font-bold text-center mb-4 text-black">Add New Dish</h1>
     
+      <!-- Django Messages (Pop-up style) -->
+      {% if messages %}
+        <div id="messagePopup" class="fixed top-10 right-10 bg-green-500 text-white font-bold px-6 py-4 rounded-lg shadow-lg transition duration-300 ease-in-out" style="z-index: 1000; display: none;">
+          {% for message in messages %}
+            {{ message }}
+          {% endfor %}
+        </div>
+        <script>
+          // Show the message popup and auto-hide after 3 seconds
+          const messagePopup = document.getElementById('messagePopup');
+          if (messagePopup) {
+            messagePopup.style.display = 'block';
+            setTimeout(() => {
+              messagePopup.style.display = 'none';
+            }, 3000); // Hide after 3 seconds
+          }
+        </script>
+      {% endif %}
+    
       <div class="shadow-md rounded-lg p-6 form-style" style="background-color:#f4e7b2">
         <form method="POST" enctype="multipart/form-data" class="space-y-6">
           {% csrf_token %}
@@ -41,7 +60,7 @@
             </button>
         
             <!-- Tombol Cancel -->
-            <a href="{% url 'module4:show_home' %}" 
+            <a href="{% url 'catalog:view_catalog' %}" 
                class="text-white font-bold px-6 py-3 rounded-lg transition duration-300 ease-in-out" 
                style="background-color: #983132;" 
                onmouseover="this.style.backgroundColor='#FF4D4D';" 
@@ -76,4 +95,4 @@
     min-height: 150px;
   }
 </style>
-{% endblock %}
+{% endblock content %}

@@ -11,13 +11,10 @@
           Home
         </a>
         
-        <a href="{% url 'module4:show_home' %}" class="font-bold py-2 px-4 rounded-lg transition duration-300" style="background-color: #983132; color:#E1A85F" onmouseover="this.style.backgroundColor='#AB4A2F';" onmouseout="this.style.backgroundColor='#983132';">
+        <a href="{% url 'catalog:view_catalog' %}" class="font-bold py-2 px-4 rounded-lg transition duration-300" style="background-color: #983132; color:#E1A85F" onmouseover="this.style.backgroundColor='#AB4A2F';" onmouseout="this.style.backgroundColor='#983132';">
           Food Catalogue
         </a>
-        
-        <a href="{% url 'module4:show_home' %}" class="font-bold py-2 px-4 rounded-lg transition duration-300" style="background-color: #983132; color:#E1A85F" onmouseover="this.style.backgroundColor='#AB4A2F';" onmouseout="this.style.backgroundColor='#983132';">
-          Reviews and Ratings
-        </a>
+
         {% if user.is_authenticated %}
           <a href="{% url 'MyFavoriteDishes:show_favorite' %}" class="font-bold py-2 px-4 rounded-lg transition duration-300" style="background-color: #983132; color:#E1A85F" onmouseover="this.style.backgroundColor='#AB4A2F';" onmouseout="this.style.backgroundColor='#983132';">
             My Favorites
@@ -27,8 +24,8 @@
             Add New Dish
           </a> 
           <!-- Tampilkan Cek Dish jika admin -->
-          {% if request.user.is_superuser %}
-          <a href="{% url 'module4:check_dish' %}" class="font-bold py-2 px-4 rounded-lg transition duration-300" style="background-color: #983132; color:#E1A85F" onmouseover="this.style.backgroundColor='#AB4A2F';" onmouseout="this.style.backgroundColor='#983132';">
+          {% if request.user.is_staff %}
+          <a class="font-bold py-2 px-4 rounded-lg transition duration-300" style="background-color: #983132; color:#E1A85F" onmouseover="this.style.backgroundColor='#AB4A2F';" onmouseout="this.style.backgroundColor='#983132';">
             Check New Dish
           </a>
           {% endif %} 
@@ -101,7 +98,7 @@
                 <a href="{% url 'module4:show_home' %}" class="text-black py-2 px-4 rounded-lg transition duration-300 w-full block text-center" style="background-color: #fad68a;" >
                   Profile
                 </a>
-                <a href="{% url 'module4:show_home' %}" class="text-black py-2 px-4 rounded-lg transition duration-300 w-full block text-center" style="background-color: #fad68a;" >
+                <a href="{% url 'main:logout' %}" class="text-black py-2 px-4 rounded-lg transition duration-300 w-full block text-center" style="background-color: #fad68a;" >
                   Logout
                 </a>
             </div>
@@ -125,10 +122,6 @@
             Food Catalogue
           </a>
   
-          
-          <a href="{% url 'module4:show_home' %}" class="font-bold py-2 px-4 rounded-lg transition duration-300" style="background-color: #E1A85F; color:#e0a85e" onmouseover="this.style.backgroundColor='#AB4A2F';" onmouseout="this.style.backgroundColor='#983132';">
-            Reviews and Ratings
-          </a>
           {% if user.is_authenticated %}
             <a href="{% url 'module4:show_home' %}" class="font-bold py-2 px-4 rounded-lg transition duration-300" style="background-color: #E1A85F; color:#e0a85e" onmouseover="this.style.backgroundColor='#AB4A2F';" onmouseout="this.style.backgroundColor='#983132';">
               My Favorites

@@ -80,8 +80,8 @@ def add_fav_dish_ajax(request):
 
     return HttpResponse(b"CREATED", status=201)
 
-def edit_favorite_dish(request, id):
-    favorite_dish = FavoriteDish.objects.get(pk = id)
+def edit_favorite_dish(request, uuid):
+    favorite_dish = FavoriteDish.objects.get(pk = uuid)
     form = FavoriteDishForm(request.POST or None, instance=favorite_dish)
 
     if form.is_valid() and request.method == "POST":
@@ -91,9 +91,9 @@ def edit_favorite_dish(request, id):
     context = {'form': form}
     return render(request, "edit_favorite_dish.html", context)
 
-def delete_favorite_dish(request, id):
-    favorite_dish = FavoriteDish.objects.get(pk = id)
-    #favorite_dish = get_object_or_404(FavoriteDish, user=request.user, id=id)
+def delete_favorite_dish(request, uuid):
+    #favorite_dish = FavoriteDish.objects.get(pk = id)
+    favorite_dish = get_object_or_404(FavoriteDish, user=request.user, uuid=uuid)
     favorite_dish.delete()  # Remove from favorites
     return HttpResponseRedirect(reverse('MyFavoriteDishes:show_favorite'))
     #return JsonResponse({'status': 'removed', 'is_favorite': False})

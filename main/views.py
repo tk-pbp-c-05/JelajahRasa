@@ -15,17 +15,21 @@ def show_main(request):
     }
     return render(request, 'main.html', context)
 
-def register(request):  
-    form = CustomUserCreationForm()
-
-    if request.method == "POST":
+def register(request):
+    if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
-            form.save()
-            messages.success(request, 'Your account has been successfully created!')
-            return redirect('main:login')
-    context = {'form':form}
-    return render(request, 'register.html', context)
+            user = form.save(commit=False)
+            admin_code = form.cleaned_data.get('admin_code')
+            if admin_code == "PBPC05ASELOLE":  
+                user.is_admin = True
+                user.is_staff = True
+            user.save()
+            login(request, user)
+            return redirect('main:show_main')  
+    else:
+        form = CustomUserCreationForm()
+    return render(request, 'register.html', {'form': form})
 
 def login_user(request):
    if request.method == 'POST':
