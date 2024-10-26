@@ -4,7 +4,7 @@ from main.models import Food
 import uuid
 
 class FavoriteDish(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     food = models.ForeignKey(Food, on_delete=models.CASCADE, null=True)
     name = models.CharField(max_length=100)
     flavor = models.CharField(max_length=100)

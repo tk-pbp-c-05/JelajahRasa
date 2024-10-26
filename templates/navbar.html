@@ -11,7 +11,7 @@
           Home
         </a>
         
-        <a href="{% url 'module4:show_home' %}" class="font-bold py-2 px-4 rounded-lg transition duration-300" style="background-color: #983132; color:#E1A85F" onmouseover="this.style.backgroundColor='#AB4A2F';" onmouseout="this.style.backgroundColor='#983132';">
+        <a href="{% url 'catalog:view_catalog' %}" class="font-bold py-2 px-4 rounded-lg transition duration-300" style="background-color: #983132; color:#E1A85F" onmouseover="this.style.backgroundColor='#AB4A2F';" onmouseout="this.style.backgroundColor='#983132';">
           Food Catalogue
         </a>
 
@@ -20,7 +20,7 @@
             My Favorites
           </a>
 
-          <a class="font-bold py-2 px-4 rounded-lg transition duration-300" style="background-color: #983132; color:#E1A85F" onmouseover="this.style.backgroundColor='#AB4A2F';" onmouseout="this.style.backgroundColor='#983132';">
+          <a href="{% url 'module4:add_dish' %}" class="font-bold py-2 px-4 rounded-lg transition duration-300" style="background-color: #983132; color:#E1A85F" onmouseover="this.style.backgroundColor='#AB4A2F';" onmouseout="this.style.backgroundColor='#983132';">
             Add New Dish
           </a> 
           <!-- Tampilkan Cek Dish jika admin -->
@@ -61,7 +61,6 @@
             </a>
 
             <a href="{% url 'main:register' %}" class="text-black py-2 px-4 rounded-lg transition duration-300 w-full block text-center">
-            <a href="{% url 'main:register' %}" class="text-black py-2 px-4 rounded-lg transition duration-300 w-full block text-center">
               Register
             </a>
           </div>
@@ -99,7 +98,7 @@
                 <a href="{% url 'module4:show_home' %}" class="text-black py-2 px-4 rounded-lg transition duration-300 w-full block text-center" style="background-color: #fad68a;" >
                   Profile
                 </a>
-                <a href="{% url 'module4:show_home' %}" class="text-black py-2 px-4 rounded-lg transition duration-300 w-full block text-center" style="background-color: #fad68a;" >
+                <a href="{% url 'main:logout' %}" class="text-black py-2 px-4 rounded-lg transition duration-300 w-full block text-center" style="background-color: #fad68a;" >
                   Logout
                 </a>
             </div>
@@ -108,7 +107,6 @@
             <a href="{% url 'main:login' %}" class="text-black py-2 px-4 rounded-lg transition duration-300 w-full block text-center" style="background-color: #fad68a;">
               Login
             </a>
-            <a href="{% url 'main:register' %}" class="text-black py-2 px-4 rounded-lg transition duration-300 w-full block text-center" style="background-color: #fad68a;">
             <a href="{% url 'main:register' %}" class="text-black py-2 px-4 rounded-lg transition duration-300 w-full block text-center" style="background-color: #fad68a;">
               Register
             </a>

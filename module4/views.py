@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from module4.models import NewDish
+from main.models import Food
 from module4.forms import NewDishForm
 from django.http import JsonResponse
 from django.contrib import messages
@@ -18,35 +19,39 @@ def add_dish(request):
         
         if request.user.is_superuser:
             new_dish.is_approved = True
-            new_dish.save()
-            messages.success(request, 'Dish added successfully!')
-            return redirect('module4:show_home')  # Redirect ke home setelah approve
         else:
             new_dish.is_approved = False
-            new_dish.save()
+        
+        new_dish.save()
+
+        if new_dish.is_approved:
+            create_food_entry(new_dish)
+            messages.success(request, 'Dish added and approved successfully!')
+        else:
             messages.success(request, 'Dish added successfully! Please wait for our admin to approve it.')
-            return redirect('module4:show_home')
-    
+            
+        return redirect('module4:add_dish')
+
     context = {"form": form}
     return render(request, 'add_dish.html', context)
 
 # Menampilkan dish yang belum di-approve
 def check_dish(request):
-    if not request.user.is_staff:
-        return redirect('module4:show_home')  # Hanya admin yang bisa mengakses halaman ini
+    if not request.user.is_superuser:
+        return redirect('module4:show_home')
 
     pending_dishes = NewDish.objects.filter(is_approved=False)
     context = {'pending_dishes': pending_dishes}
     return render(request, 'check_dish.html', context)
 
 # Fungsi untuk approve atau delete dish dengan AJAX
-def approve_dish(request, dish_id):
+def approve_dish(request, dish_uuid):
     print("Approve/Delete view called")
-    if not request.user.is_staff:
+    if not request.user.is_superuser:
         print("User not authorized")
         return JsonResponse({'status': 'forbidden'}, status=403)
 
-    dish = get_object_or_404(NewDish, id=dish_id)
+    dish = get_object_or_404(NewDish, uuid=dish_uuid)
     print(f"Dish found: {dish.name}")
 
     if request.method == 'POST':
@@ -56,11 +61,29 @@ def approve_dish(request, dish_id):
             dish.is_approved = True
             dish.save()
             print("Dish approved")
-            return JsonResponse({'status': 'approved', 'dish_id': dish_id})
+            create_food_entry(dish)
+            return JsonResponse({'status': 'approved', 'dish_id': dish_uuid})
+        
         elif action == 'delete':
             dish.delete()
             print("Dish deleted")
-            return JsonResponse({'status': 'deleted', 'dish_id': dish_id})
+            return JsonResponse({'status': 'deleted', 'dish_id': dish_uuid})
 
     print("Invalid request method")
     return JsonResponse({'status': 'error'}, status=400)
+
+# Fungsi untuk membuat entry di Food model ketika dish disetujui
+def create_food_entry(dish):
+    if not Food.objects.filter(uuid=dish.uuid).exists():
+        Food.objects.create(
+            uuid=dish.uuid,
+            name=dish.name,
+            flavor=dish.flavor,
+            category=dish.category,
+            vendor_name=dish.vendor_name,
+            price=dish.price,
+            map_link=dish.map_link,
+            address=dish.address,
+            image = dish.image
+        )
+        print(f"Food entry created for dish: {dish.name}")
