@@ -14,17 +14,12 @@
   </div>
 
   <div class="flex space-x-4 mb-6">
-    <a href="{% url 'MyFavoriteDishes:add_favorite_dish' %}">
-      <button class="bg-[#3C3837] hover:bg-[#3C3837] text-white font-bold py-2 px-4 rounded-lg transition duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105">
-        Add Favorite Dish
-      </button>
-    </a>
     <a href="{% url 'MyFavoriteDishes:add_favorite' %}">
       <button class="bg-[#F18F73] hover:bg-[#F18F73] text-white font-bold py-2 px-4 rounded-lg transition duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105">
         Add Favorite Dish From Catalogue
       </button>
     </a>
-    <button data-modal-target="crudModal" data-modal-toggle="crudModal" class="btn bg-indigo-700 hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded-lg transition duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105" onclick="showModal();">
+    <button data-modal-target="crudModal" data-modal-toggle="crudModal" class="btn bg-[#3C3837] hover:bg-[#3C3837] text-white font-bold py-2 px-4 rounded-lg transition duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105" onclick="showModal();">
       Add Favorite Dish by AJAX
     </button>
   </div>
@@ -50,49 +45,49 @@
         <form id="favoriteDishForm">
           <div class="mb-4">
             <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
-            <input type="text" id="name" name="name" class="mt-1 block w-full border border-gray-300 rounded-md p-2 hover:border-indigo-700" placeholder="Enter your favorite dish" required>
+            <input type="text" id="name" name="name" class="mt-1 block w-full border border-gray-300 rounded-md p-2 hover:border-[#F18F73]" placeholder="Enter your favorite dish" required>
           </div>
 
           <div class="mb-4">
             <label for="flavor" class="block text-sm font-medium text-gray-700">Flavor</label>
-            <input type="text" id="flavor" name="flavor" class="mt-1 block w-full border border-gray-300 rounded-md p-2 hover:border-indigo-700" placeholder="Enter the flavor" maxlength="100" required>
+            <input type="text" id="flavor" name="flavor" class="mt-1 block w-full border border-gray-300 rounded-md p-2 hover:border-[#F18F73]" placeholder="Enter the flavor" maxlength="100" required>
           </div>
 
           <!-- Category -->
           <div class="mb-4">
             <label for="category" class="block text-sm font-medium text-gray-700">Category</label>
-            <input type="text" id="category" name="category" class="mt-1 block w-full border border-gray-300 rounded-md p-2 hover:border-indigo-700" placeholder="Enter the category" maxlength="50" required>
+            <input type="text" id="category" name="category" class="mt-1 block w-full border border-gray-300 rounded-md p-2 hover:border-[#F18F73]" placeholder="Enter the category" maxlength="50" required>
           </div>
 
           <!-- Vendor Name -->
           <div class="mb-4">
             <label for="vendor_name" class="block text-sm font-medium text-gray-700">Vendor Name</label>
-            <input type="text" id="vendor_name" name="vendor_name" class="mt-1 block w-full border border-gray-300 rounded-md p-2 hover:border-indigo-700" placeholder="Enter vendor name" maxlength="100" required>
+            <input type="text" id="vendor_name" name="vendor_name" class="mt-1 block w-full border border-gray-300 rounded-md p-2 hover:border-[#F18F73]" placeholder="Enter vendor name" maxlength="100" required>
           </div>
 
           <!-- Price -->
           <div class="mb-4">
             <label for="price" class="block text-sm font-medium text-gray-700">Price</label>
-            <input type="number" id="price" name="price" class="mt-1 block w-full border border-gray-300 rounded-md p-2 hover:border-indigo-700" placeholder="Enter the price" min="0" required>
+            <input type="number" id="price" name="price" class="mt-1 block w-full border border-gray-300 rounded-md p-2 hover:border-[#F18F73]" placeholder="Enter the price" min="0" required>
           </div>
 
           <!-- Map Link -->
           <div class="mb-4">
             <label for="map_link" class="block text-sm font-medium text-gray-700">Map Link</label>
-            <input type="text" id="map_link" name="map_link" class="mt-1 block w-full border border-gray-300 rounded-md p-2 hover:border-indigo-700" placeholder="Enter the map link" maxlength="255">
+            <input type="text" id="map_link" name="map_link" class="mt-1 block w-full border border-gray-300 rounded-md p-2 hover:border-[#F18F73]" placeholder="Enter the map link" maxlength="255">
           </div>
 
           <!-- Address -->
           <div class="mb-4">
             <label for="address" class="block text-sm font-medium text-gray-700">Address</label>
-            <input type="text" id="address" name="address" class="mt-1 block w-full border border-gray-300 rounded-md p-2 hover:border-indigo-700" placeholder="Enter the address" maxlength="255" required>
+            <input type="text" id="address" name="address" class="mt-1 block w-full border border-gray-300 rounded-md p-2 hover:border-[#F18F73]" placeholder="Enter the address" maxlength="255" required>
           </div>
         </form>
       </div>
       <!-- Modal footer -->
       <div class="flex flex-col space-y-2 md:flex-row md:space-y-0 md:space-x-2 p-6 border-t border-gray-200 rounded-b justify-center md:justify-end">
-        <button type="button" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg" id="cancelButton">Cancel</button>
-        <button type="submit" id="submitFavoriteDish" form="favoriteDishForm" class="bg-indigo-700 hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded-lg">Save</button>
+        <button type="button" class="bg-[#3C3837] hover:bg-[#3C3837] text-white font-bold py-2 px-4 rounded-lg" id="cancelButton">Cancel</button>
+        <button type="submit" id="submitFavoriteDish" form="favoriteDishForm" class="bg-[#F18F73] hover:bg-[#F18F73] text-white font-bold py-2 px-4 rounded-lg">Save</button>
       </div>
     </div>
   </div>
@@ -144,7 +139,7 @@
                     <a href="/MyFavoriteDishes/edit-fav-dish/${item.pk}" class="bg-[#F18F73] hover:bg-[#F18F73]/80 text-white font-bold py-2 px-4 rounded-full transition duration-300 shadow-md">
                         Edit
                     </a>
-                    <a href="/MyFavoriteDishes/delete/${item.pk}" class="bg-[#F18F73] hover:bg-[#F18F73]/80 text-white font-bold py-2 px-4 rounded-full transition duration-300 shadow-md">
+                    <a href="/MyFavoriteDishes/delete/${item.pk}" class="bg-[#3C3837] hover:bg-[#3C3837]/80 text-white font-bold py-2 px-4 rounded-full transition duration-300 shadow-md">
                         Delete
                     </a>
                   </div>
@@ -209,8 +204,5 @@
     e.preventDefault();
     addFavoriteDish();
   })
-
-  
-  
 </script>
 {% endblock content %}

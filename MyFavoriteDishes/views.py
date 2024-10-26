@@ -1,5 +1,6 @@
 # MyFavoriteDishes/views.py
 
+import json
 from django.shortcuts import render, redirect, get_object_or_404, reverse
 from django.urls import reverse
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
@@ -9,7 +10,9 @@ from .forms import FavoriteDishForm
 from .forms import FavoriteDishFromCatalogueForm
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
+from django.contrib.auth.decorators import login_required
 
+@login_required
 def show_favorite(request):
     favorite_dishes = FavoriteDish.objects.filter(user=request.user) 
     context = {
@@ -28,7 +31,7 @@ def add_favorite(request):
                 food=food,
                 name=food.name, 
                 flavor=food.flavor,
-                category="Makanan",  
+                category=food.category,  
                 vendor_name=food.vendor_name,  
                 price=food.price,  
                 map_link=food.map_link,  
