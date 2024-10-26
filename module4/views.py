@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from module4.models import NewDish
+from main.models import Food
 from module4.forms import NewDishForm
 from django.http import JsonResponse
 from django.contrib import messages
@@ -32,8 +33,8 @@ def add_dish(request):
 
 # Menampilkan dish yang belum di-approve
 def check_dish(request):
-    if not request.user.is_staff:
-        return redirect('module4:show_home')  # Hanya admin yang bisa mengakses halaman ini
+    if not request.user.is_superuser:
+        return redirect('module4:show_home')
 
     pending_dishes = NewDish.objects.filter(is_approved=False)
     context = {'pending_dishes': pending_dishes}
@@ -56,6 +57,19 @@ def approve_dish(request, dish_id):
             dish.is_approved = True
             dish.save()
             print("Dish approved")
+            
+            # After approval, store the dish into the foods model
+            Food.objects.create(
+                uuid=dish.uuid,
+                name=dish.name,
+                flavor=dish.flavor,
+                category=dish.category,
+                vendor_name=dish.vendor_name,
+                price=dish.price,
+                map_link=dish.map_link,
+                address=dish.address
+            )
+            
             return JsonResponse({'status': 'approved', 'dish_id': dish_id})
         elif action == 'delete':
             dish.delete()
