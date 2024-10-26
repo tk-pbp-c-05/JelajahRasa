@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Community</h1>
+<a href="{% url 'add_comment' %}">Add Comment</a>
+
+{% for comment in comments %}
+    <div class="comment">
+        <p>{{ comment.content }}</p>
+        <p>By: <a href="{% url 'user_profile' comment.user.username %}">{{ comment.user.username }}</a></p>
+        <p>Date: {{ comment.created_at }}</p>
+        {% if comment.food %}
+            <p>Food: {{ comment.food.name }}</p>
+        {% endif %}
+        {% if comment.user == request.user and comment.is_editable %}
+            <a href="{% url 'edit_comment' comment.uuid %}">Edit</a>
+        {% endif %}
+        <a href="{% url 'add_reply' comment.uuid %}">Reply</a>
+        
+        {% for reply in comment.replies.all %}
+            <div class="reply">
+                <p>{{ reply.content }}</p>
+                <p>By: {{ reply.user.username }}</p>
+                <p>Date: {{ reply.created_at }}</p>
+            </div>
+        {% endfor %}
+    </div>
+{% endfor %}
+{% endblock %}
