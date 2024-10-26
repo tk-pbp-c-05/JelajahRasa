@@ -1,6 +1,5 @@
-<nav class="shadow-lg fixed top-0 left-0 z-40 w-full dark:bg-gray-800" style="background-color:#983132">
+<nav class="shadow-lg fixed top-0 left-0 z-40 w-full" style="background-color:#983132">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16 w-full">
-    <!-- Logo mentok ke kiri -->
     <div class="flex items-center space-x-2 absolute left-7 pr-4">
         <h1 class="text-2xl font-bold dark:text-purple-300" style="color:#E1A85F">JelajahRasa</h1>
     </div>
@@ -20,7 +19,6 @@
             My Favorites
           </a>
 
-         
           <a href="{% url 'module4:add_dish' %}" class="font-bold py-2 px-4 rounded-lg transition duration-300" style="background-color: #983132; color:#E1A85F" onmouseover="this.style.backgroundColor='#AB4A2F';" onmouseout="this.style.backgroundColor='#983132';">
             Add New Dish
           </a> 
@@ -37,170 +35,207 @@
     </div>
   
       <!-- Dropdown in Desktop Menu -->
-      <div class="hidden absolute right-2 pr-4 dropdown-desktop">
+      <div class="hidden absolute right-2 pr-4 dropdown-desktop md:flex items-center">
+        {% if user.is_authenticated %}
+          <span class="mr-4" style="color:#E1A85F">Welcome, {{ user.username }}</span>
+        {% endif %}
         <button id="desktopDropdownButton" class="inline-flex items-center">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M18 18.7023C18 15.6706 14.5 15 12 15C9.5 15 6 15.6706 6 18.7023M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12ZM15 9C15 10.6569 13.6569 12 12 12C10.3431 12 9 10.6569 9 9C9 7.34315 10.3431 6 12 6C13.6569 6 15 7.34315 15 9Z" stroke="#e0a85e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-    
-            <!-- Arrow down SVG -->
-            <svg class="w-5 h-5 ml-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="#e0a85e">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-            </svg>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M18 18.7023C18 15.6706 14.5 15 12 15C9.5 15 6 15.6706 6 18.7023M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12ZM15 9C15 10.6569 13.6569 12 12 12C10.3431 12 9 10.6569 9 9C9 7.34315 10.3431 6 12 6C13.6569 6 15 7.34315 15 9Z" stroke="#e0a85e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+
+          <!-- Arrow down SVG -->
+          <svg class="w-5 h-5 ml-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="#e0a85e">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+          </svg>
         </button>
         {% if user.is_authenticated %}
         <!-- Dropdown content -->
-          <div id="desktopDropdownMenu" class="dropdown-content absolute mt-0 right-0 w-24 rounded-md shadow-lg py-1 hidden" style="z-index: 50; background-color:#fad68a">
-            <a href="{% url 'module4:show_home' %}" class="text-black py-2 px-4 rounded-lg transition duration-300 w-full block text-center" style="background-color: #fad68a;" >
-              Profile
-            </a>
-            <a href="{% url 'module4:show_home' %}" class="text-black py-2 px-4 rounded-lg transition duration-300 w-full block text-center">
-              Logout
-            </a>
-          </div>
-        {% else %}
-          <div id="desktopDropdownMenu" class="dropdown-content absolute mt-0 right-0 w-24 rounded-md shadow-lg py-1 hidden" style="z-index: 50; background-color:#fad68a">
-            <a href="{% url 'main:login' %}" class="text-black py-2 px-4 rounded-lg transition duration-300 w-full block text-center">
-              Login
-            </a>
-
-            <a href="{% url 'main:register' %}" class="text-black py-2 px-4 rounded-lg transition duration-300 w-full block text-center">
-              Register
-            </a>
-          </div>
-        {% endif %}
+        <div id="desktopDropdownMenu" class="dropdown-content opacity-0 transform scale-y-0 origin-top transition-all duration-300 absolute mt-2 right-0 w-auto rounded-md shadow-lg py-0 z-50 overflow-visible" style="background-color:#fad68a;">
+          {% if user.is_authenticated %}
+          <a href="{% url 'module4:show_home' %}" class="text-black py-1 px-2 rounded-lg transition duration-300 w-full block text-center text-lg" style="background-color: #fad68a;">
+            Profile
+          </a>
+          <a href="{% url 'main:logout' %}" class="text-black py-1 px-2 rounded-lg transition duration-300 w-full block text-center text-lg" style="background-color: #fad68a;">
+            Logout
+          </a>
+          {% else %}
+          <a href="{% url 'main:login' %}" class="text-black py-1 px-2 rounded-lg transition duration-300 w-full block text-center text-lg" style="background-color: #fad68a;">
+            Login
+          </a>
+          <a href="{% url 'main:register' %}" class="text-black py-1 px-2 rounded-lg transition duration-300 w-full block text-center text-lg" style="background-color: #fad68a;">
+            Register
+          </a>
+          {% endif %}
+        </div>        
+      {% endif %}
       </div>
 
     <!-- Mobile menu button -->
-    <div class="mobile-menu-button-container flex items-center ml-auto">
+    <div class="mobile-menu-button-container flex items-center ml-auto md:hidden">
         <button class="mobile-menu-button">
-          <svg class="w-6 h-6 " fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
+          <svg class="w-6 h-6 " fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="#E1A85F">
             <path d="M4 6h16M4 12h16M4 18h16"/>
           </svg>
         </button>
     </div>
   </div>
 
-    <!-- Mobile menu -->
-    <div class="mobile-menu hidden px-4 w-full">
-      <div class="pt-2 pb-3 space-y-1 mx-auto">  
-        <!-- Dropdown in Mobile Menu -->
-        <div class="relative inline-block text-left">
-          <button id="mobileDropdownButton" class="inline-flex items-center">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M18 18.7023C18 15.6706 14.5 15 12 15C9.5 15 6 15.6706 6 18.7023M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12ZM15 9C15 10.6569 13.6569 12 12 12C10.3431 12 9 10.6569 9 9C9 7.34315 10.3431 6 12 6C13.6569 6 15 7.34315 15 9Z" stroke="#e0a85e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
+<!-- Mobile menu -->
+<div class="mobile-menu hidden px-2 w-full transition-all duration-500 ease-in-out max-h-0 overflow-hidden">
+  <div class="pt-2 pb-4 space-y-1 mx-auto">  
+    <div class="relative inline-block text-left w-full overflow-visible">
+      <!-- Dropdown button -->
+      <div class="flex justify-between items-center ml-3">
+        {% if user.is_authenticated %}
+          <span class="mr-4" style="color:#E1A85F">Welcome, {{ user.username }}</span>
+        {% endif %}
+        <button id="mobileDropdownButton" class="inline-flex items-center">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M18 18.7023C18 15.6706 14.5 15 12 15C9.5 15 6 15.6706 6 18.7023M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12ZM15 9C15 10.6569 13.6569 12 12 12C10.3431 12 9 10.6569 9 9C9 7.34315 10.3431 6 12 6C13.6569 6 15 7.34315 15 9Z" stroke="#e0a85e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+    
+          <!-- Arrow down SVG -->
+          <svg class="w-5 h-5 ml-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="#e0a85e">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+          </svg>
+        </button>
+      </div>
+    
+      <!-- Dropdown menu (overflow visible) -->
+      <div id="mobileDropdownMenu" class="dropdown-content opacity-0 transform scale-y-0 origin-top transition-all duration-300 absolute right-0 mt-1 w-auto rounded-md shadow-lg py-0 z-50 overflow-visible" style="background-color:#fad68a;">
+        {% if user.is_authenticated %}
+        <a href="{% url 'module4:show_home' %}" class="text-black py-1 px-2 rounded-lg transition duration-300 w-full block text-center text-sm" style="background-color: #fad68a;">
+          Profile
+        </a>
+        <a href="{% url 'main:logout' %}" class="text-black py-1 px-2 rounded-lg transition duration-300 w-full block text-center text-sm" style="background-color: #fad68a;">
+          Logout
+        </a>
+      {% else %}
+        <a href="{% url 'main:login' %}" class="text-black py-1 px-2 rounded-lg transition duration-300 w-full block text-center text-sm" style="background-color: #fad68a;">
+          Login
+        </a>
+        <a href="{% url 'main:register' %}" class="text-black py-1 px-2 rounded-lg transition duration-300 w-full block text-center text-sm" style="background-color: #fad68a;">
+          Register
+        </a>
+      {% endif %}
       
-              <!-- Arrow down SVG -->
-              <svg class="w-5 h-5 ml-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="#e0a85e">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-              </svg>
-          </button>
-      
-          {% if user.is_authenticated %}
-            <div id="mobileDropdownMenu" class="dropdown-content absolute left-0 mt-2 w-48 rounded-md shadow-lg py-1 hidden" style="z-index: 50; background-color:#fad68a">
-                <a href="{% url 'module4:show_home' %}" class="text-black py-2 px-4 rounded-lg transition duration-300 w-full block text-center" style="background-color: #fad68a;" >
-                  Profile
-                </a>
-                <a href="{% url 'main:logout' %}" class="text-black py-2 px-4 rounded-lg transition duration-300 w-full block text-center" style="background-color: #fad68a;" >
-                  Logout
-                </a>
-            </div>
-          {% else %}
-          <div id="mobileDropdownMenu" class="dropdown-content absolute left-0 mt-2 w-48 rounded-md shadow-lg py-1 hidden" style="z-index: 50; background-color:#fad68a">
-            <a href="{% url 'main:login' %}" class="text-black py-2 px-4 rounded-lg transition duration-300 w-full block text-center" style="background-color: #fad68a;">
-              Login
-            </a>
-            <a href="{% url 'main:register' %}" class="text-black py-2 px-4 rounded-lg transition duration-300 w-full block text-center" style="background-color: #fad68a;">
-              Register
-            </a>
-          </div>
-          {% endif %}
-        </div>
-          <!-- Mobile Links -->
-          <a href="{% url 'module4:show_home' %}" class="font-bold py-2 px-4 rounded-lg w-full transition duration-300" style="background-color: #E1A85F; color:#e0a85e" onmouseover="this.style.backgroundColor='#AB4A2F';" onmouseout="this.style.backgroundColor='#983132';">
-              Home
-          </a>
-
-          <a href="{% url 'module4:show_home' %}" class="font-bold py-2 px-4 rounded-lg transition duration-300" style="background-color: #E1A85F; color:#e0a85e" onmouseover="this.style.backgroundColor='#AB4A2F';" onmouseout="this.style.backgroundColor='#983132';">
-            Food Catalogue
-          </a>
-  
-          {% if user.is_authenticated %}
-            <a href="{% url 'module4:show_home' %}" class="font-bold py-2 px-4 rounded-lg transition duration-300" style="background-color: #E1A85F; color:#e0a85e" onmouseover="this.style.backgroundColor='#AB4A2F';" onmouseout="this.style.backgroundColor='#983132';">
-              My Favorites
-            </a>
-
-            <a href="{% url 'module4:add_dish' %}" class="font-bold py-2 px-4 rounded-lg w-full transition duration-300" style="background-color: #E1A85F; color:#e0a85e" onmouseover="this.style.backgroundColor='#AB4A2F';" onmouseout="this.style.backgroundColor='#983132';">
-                Add New Dish
-            </a>
-
-            <!-- Tampilkan Cek Dish jika admin di mobile view -->
-            {% if request.user.is_superuser %}
-              <a href="{% url 'module4:check_dish' %}" class="font-bold py-2 px-4 rounded-lg w-full transition duration-300" style="background-color: #E1A85F; color:#e0a85e" onmouseover="this.style.backgroundColor='#AB4A2F';" onmouseout="this.style.backgroundColor='#983132';">
-                  Check New Dish
-              </a>
-            {% endif %}
-          {% endif %}
       </div>
     </div>
 
-    <!-- Script for Mobile and Desktop Dropdowns -->
-    <script>
-      const mobileMenuButton = document.querySelector('.mobile-menu-button');
-      const mobileMenu = document.querySelector('.mobile-menu');
+    <!-- Mobile Links -->
+    <div class="flex flex-row mt-6 space-y-0">
+      <a href="{% url 'main:show_main' %}" class="font-bold flex justify-center items-center py-2 px-4 rounded-lg transition duration-300 text-lg" style="background-color: #983132; color:#e0a85e" onmouseover="this.style.backgroundColor='#AB4A2F';" onmouseout="this.style.backgroundColor='#983132';">
+        Home
+      </a>
 
-      function checkWindowSize() {
-        if (window.innerWidth >= 1200) {
-          document.querySelector('.menu-links').classList.remove('hidden');
-          document.querySelector('.dropdown-desktop').classList.remove('hidden');
-          document.querySelector('.mobile-menu-button-container').classList.add('hidden');
-          document.querySelector('.mobile-menu').classList.add('hidden');
-        } else {
-          document.querySelector('.menu-links').classList.add('hidden');
-          document.querySelector('.dropdown-desktop').classList.add('hidden');
-          document.querySelector('.mobile-menu-button-container').classList.remove('hidden');
-        }
-      }
-  
-      mobileMenuButton.addEventListener('click', () => {
-        mobileMenu.classList.toggle('hidden');
-      });
-  
-      window.addEventListener('resize', checkWindowSize);
+      <a href="{% url 'catalog:view_catalog' %}" class="font-bold flex justify-center items-center py-2 px-4 rounded-lg transition duration-300 text-lg" style="background-color: #983132; color:#e0a85e" onmouseover="this.style.backgroundColor='#AB4A2F';" onmouseout="this.style.backgroundColor='#983132';">
+        Food Catalogue
+      </a>
 
-      window.addEventListener('DOMContentLoaded', checkWindowSize);
+      {% if user.is_authenticated %}
+        <a href="{% url 'MyFavoriteDishes:add_favorite_dish' %}" class="font-bold flex justify-center items-center py-2 px-4 rounded-lg transition duration-300 text-lg" style="background-color: #983132; color:#e0a85e" onmouseover="this.style.backgroundColor='#AB4A2F';" onmouseout="this.style.backgroundColor='#983132';">
+          My Favorites
+        </a>
 
-      const desktopDropdownButton = document.getElementById('desktopDropdownButton');
-      const desktopDropdownMenu = document.getElementById('desktopDropdownMenu');
+        <a href="{% url 'module4:add_dish' %}" class="font-bold flex justify-center items-center py-2 px-4 rounded-lg transition duration-300 text-lg" style="background-color: #983132; color:#e0a85e" onmouseover="this.style.backgroundColor='#AB4A2F';" onmouseout="this.style.backgroundColor='#983132';">
+          Add New Dish
+        </a>
 
-      desktopDropdownButton.addEventListener('click', () => {
-          desktopDropdownMenu.classList.toggle('show');
-      });
+        <!-- Tampilkan Cek Dish jika admin di mobile view -->
+        {% if request.user.is_superuser %}
+          <a href="{% url 'module4:check_dish' %}" class="font-bold flex justify-center items-center py-2 px-4 rounded-lg transition duration-300 text-sm" style="background-color: #983132; color:#e0a85e" onmouseover="this.style.backgroundColor='#AB4A2F';" onmouseout="this.style.backgroundColor='#983132';">
+            Check New Dish
+          </a>
+          <a href="{% url 'report:report_list' %}" class="font-bold py-2 px-4 rounded-lg transition duration-300" style="background-color: #983132; color:#E1A85F" onmouseover="this.style.backgroundColor='#AB4A2F';" onmouseout="this.style.backgroundColor='#983132';">
+            Report List
+          </a> 
+        {% endif %}
+      {% endif %}
+    </div>        
+  </div>
+</div>
 
-      const mobileDropdownButton = document.getElementById('mobileDropdownButton');
-      const mobileDropdownMenu = document.getElementById('mobileDropdownMenu');
+<script>
+  const desktopDropdownButton = document.getElementById('desktopDropdownButton');
+  const desktopDropdownMenu = document.getElementById('desktopDropdownMenu');
+  const mobileMenuButton = document.querySelector('.mobile-menu-button');
+  const mobileMenu = document.querySelector('.mobile-menu');
+  const mobileDropdownButton = document.getElementById('mobileDropdownButton');
+  const mobileDropdownMenu = document.getElementById('mobileDropdownMenu');
 
-      mobileDropdownButton.addEventListener('click', () => {
-          mobileDropdownMenu.classList.toggle('show');
-      });
+  desktopDropdownButton.addEventListener('click', () => {
+    desktopDropdownMenu.classList.toggle('show');
+    if (desktopDropdownMenu.classList.contains('show')) {
+      desktopDropdownMenu.style.opacity = '1';
+      desktopDropdownMenu.style.transform = 'scaleY(1)';
+    } else {
+      desktopDropdownMenu.style.opacity = '0';
+      desktopDropdownMenu.style.transform = 'scaleY(0)';
+    }
+  });
 
-      window.addEventListener('click', function(e) {   
-          if (!desktopDropdownButton.contains(e.target)) {
-              desktopDropdownMenu.classList.remove('show');
-          }
-          if (!mobileDropdownButton.contains(e.target)) {
-              mobileDropdownMenu.classList.remove('show');
-          }
-      });
-    </script>
+  function toggleMobileMenu() {
+    if (mobileMenu.classList.contains('hidden')) {
+      mobileMenu.classList.remove('hidden');
+      mobileMenu.style.maxHeight = mobileMenu.scrollHeight + 'px';
+    } else {
+      mobileMenu.style.maxHeight = '0px';
+      setTimeout(() => mobileMenu.classList.add('hidden'), 500);
+    }
+  }
 
-    <style>
-      .dropdown-content {
-          display: none;
-      }
-      .dropdown-content.show {
-          display: block;
-      }
-    </style>
+  mobileMenuButton.addEventListener('click', toggleMobileMenu);
+
+  mobileDropdownButton.addEventListener('click', () => {
+    mobileDropdownMenu.classList.toggle('show');
+    if (mobileDropdownMenu.classList.contains('show')) {
+      mobileDropdownMenu.style.opacity = '1';
+      mobileDropdownMenu.style.transform = 'scaleY(1)';
+    } else {
+      mobileDropdownMenu.style.opacity = '0';
+      mobileDropdownMenu.style.transform = 'scaleY(0)';
+    }
+  });
+
+  function handleWindowSize() {
+    const windowWidth = window.innerWidth;
+
+    if (windowWidth < 1200) {
+      document.querySelector('.menu-links').classList.add('hidden');
+      document.querySelector('.dropdown-desktop').classList.add('hidden');
+      document.querySelector('.mobile-menu-button-container').classList.remove('hidden');
+      mobileMenu.classList.add('hidden');
+    } else {
+      document.querySelector('.menu-links').classList.remove('hidden');
+      document.querySelector('.dropdown-desktop').classList.remove('hidden');
+      document.querySelector('.mobile-menu-button-container').classList.add('hidden');
+      mobileMenu.classList.add('hidden');
+    }
+  }
+
+  window.addEventListener('resize', handleWindowSize);
+  window.addEventListener('DOMContentLoaded', handleWindowSize);
+</script>
+
+<style>
+  .dropdown-content {
+    display: block;
+    opacity: 0;
+    transform: scaleY(0);
+    transform-origin: top;
+    overflow: visible;
+    position: absolute;
+    top: 100%;
+  }
+
+  .dropdown-content.show {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+
+  .mobile-menu {
+    overflow: hidden;
+  }
+</style>
 </nav>
