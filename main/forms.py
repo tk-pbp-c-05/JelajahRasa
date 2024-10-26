@@ -4,6 +4,14 @@ from django.contrib.auth import get_user_model
 from .models import CustomUser
 
 class CustomUserCreationForm(UserCreationForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['first_name'].widget.attrs.update({'type': 'text'})
+        self.fields['last_name'].widget.attrs.update({'type': 'text'})
+        self.fields['email'].widget.attrs.update({'type': 'email'})
+        self.fields['password1'].widget.attrs.update({'type': 'password'})
+        self.fields['password2'].widget.attrs.update({'type': 'password'})
+        
     first_name = forms.CharField(max_length=30, required=True, widget=forms.TextInput(attrs={'placeholder': 'John'})
 )
     last_name = forms.CharField(max_length=30, required=True, widget=forms.TextInput(attrs={'placeholder': 'Doe'})
@@ -25,8 +33,8 @@ class CustomUserCreationForm(UserCreationForm):
         
         widgets = {
             'username': forms.TextInput(attrs={'placeholder': 'username_example'}),
-            'password1': forms.PasswordInput(attrs={'placeholder': 'password example'}),
-            'password2': forms.PasswordInput(attrs={'placeholder': 'password example'}),
+            # 'password1': forms.PasswordInput(attrs={'placeholder': 'password example'}),
+            # 'password2': forms.PasswordInput(attrs={'placeholder': 'password example'}),
         }
         
     def save(self, commit=True):

@@ -11,15 +11,28 @@ from .forms import FavoriteDishFromCatalogueForm
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import views as auth_views
+from django.contrib import messages
+
 
 @login_required
 def show_favorite(request):
-    favorite_dishes = FavoriteDish.objects.filter(user=request.user) 
+    favorite_dishes = FavoriteDish.objects.filter(user=request.user)
+    # Check if there's a price filter in the request
+    price_filter = request.GET.get('price')
+    if price_filter:
+        favorite_dishes = favorite_dishes.filter(price__lte=price_filter) 
     context = {
         'name': request.user.username,
         'favorite_dishes':favorite_dishes,
     }
     return render(request, 'show_favorite.html', context)
+
+def access_favorite(request):
+    if not request.user.is_authenticated:
+        messages.error(request, "You must be logged in to view favorite dishes.")
+        return redirect('main:login')  # Adjust to your login URL name
+    return show_favorite(request)
 
 def add_favorite(request):
     if request.method == 'POST':
@@ -35,7 +48,8 @@ def add_favorite(request):
                 vendor_name=food.vendor_name,  
                 price=food.price,  
                 map_link=food.map_link,  
-                address=food.address  
+                address=food.address,
+                image=food.image,
             )
             favorite_dish.save()  
             return redirect('MyFavoriteDishes:show_favorite')  
@@ -92,8 +106,8 @@ def edit_favorite_dish(request, uuid):
     return render(request, "edit_favorite_dish.html", context)
 
 def delete_favorite_dish(request, uuid):
-    #favorite_dish = FavoriteDish.objects.get(pk = id)
-    favorite_dish = get_object_or_404(FavoriteDish, user=request.user, uuid=uuid)
+    favorite_dish = FavoriteDish.objects.get(pk = uuid)
+    #favorite_dish = get_object_or_404(FavoriteDish, user=request.user, uuid=uuid)
     favorite_dish.delete()  # Remove from favorites
     return HttpResponseRedirect(reverse('MyFavoriteDishes:show_favorite'))
     #return JsonResponse({'status': 'removed', 'is_favorite': False})

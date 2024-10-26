@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "module4",
     "MyFavoriteDishes",
     "review",
+    "report",
 ]
 
 MIDDLEWARE = [

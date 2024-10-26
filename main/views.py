@@ -32,7 +32,9 @@ def register(request):
     return render(request, 'register.html', {'form': form})
 
 def login_user(request):
-   if request.method == 'POST':
+    if request.user.is_authenticated:
+        return redirect('main:show_main')
+    if request.method == 'POST':
       form = AuthenticationForm(data=request.POST)
 
       if form.is_valid():
@@ -44,10 +46,10 @@ def login_user(request):
       else:
         messages.error(request, "Invalid username or password. Please try again.")
 
-   else:
-      form = AuthenticationForm(request)
-   context = {'form': form}
-   return render(request, 'login.html', context)
+    else:
+        form = AuthenticationForm(request)
+    context = {'form': form}
+    return render(request, 'login.html', context)
 
 def logout_user(request):
     logout(request)

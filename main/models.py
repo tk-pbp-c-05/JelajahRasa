@@ -1,6 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 import uuid
+from django.db.models import Avg
+from django.core.validators import MinValueValidator, MaxValueValidator
+
 # Create your models here.
 
 class CustomUserManager(BaseUserManager):
@@ -62,10 +65,24 @@ class Food(models.Model):
     flavor = models.CharField(max_length=100)
     category = models.CharField(max_length=50)
     vendor_name = models.CharField(max_length=100)  
-    price = models.CharField(max_length=255) 
+    price = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(1000000)])
     map_link = models.CharField(max_length=255)
     address = models.CharField(max_length=255)
     image = models.CharField(max_length=255, default="")
+    rating_count = models.PositiveIntegerField(default=0)
+
+    def update_average_rating(self):
+        ratings = ProductRating.objects.filter(product=self)
+        if ratings.exists():
+            avg_rating = ratings.aggregate(Avg('rating'))['rating__avg']
+            count = ratings.count()
+            self.average_rating = avg_rating
+            self.rating_count = count
+            self.save()
     
     def __str__(self):
-        return self.name
+        return self.name  # or any other descriptive field
+            
+class ProductRating(models.Model):
+    food = models.ForeignKey(Food, on_delete=models.CASCADE, related_name='ratings')
+    rating = models.PositiveIntegerField()
