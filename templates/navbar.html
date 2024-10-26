@@ -47,7 +47,7 @@
         {% if user.is_authenticated %}
         <!-- Dropdown content -->
           <div id="desktopDropdownMenu" class="dropdown-content absolute mt-0 right-0 w-24 rounded-md shadow-lg py-1 hidden" style="z-index: 50; background-color:#fad68a">
-            <a href="{% url 'profilepage:profile' %}" class="text-black py-2 px-4 rounded-lg transition duration-300 w-full block text-center" style="background-color: #fad68a;" >
+            <a href="{% url 'profilepage:profile' username=user.username %}" class="text-black py-2 px-4 rounded-lg transition duration-300 w-full block text-center" style="background-color: #fad68a;" >
               Profile
             </a>
             <a href="{% url 'main:logout' %}" class="text-black py-2 px-4 rounded-lg transition duration-300 w-full block text-center">
@@ -95,7 +95,7 @@
       
           {% if user.is_authenticated %}
             <div id="mobileDropdownMenu" class="dropdown-content absolute left-0 mt-2 w-48 rounded-md shadow-lg py-1 hidden" style="z-index: 50; background-color:#fad68a">
-                <a href="{% url 'profilepage:profile' %}" class="text-black py-2 px-4 rounded-lg transition duration-300 w-full block text-center" style="background-color: #fad68a;" >
+                <a href="{% url 'profilepage:profile' username=user.username %}" class="text-black py-2 px-4 rounded-lg transition duration-300 w-full block text-center" style="background-color: #fad68a;" >
                   Profile
                 </a>
                 <a href="{% url 'main:logout' %}" class="text-black py-2 px-4 rounded-lg transition duration-300 w-full block text-center" style="background-color: #fad68a;" >
