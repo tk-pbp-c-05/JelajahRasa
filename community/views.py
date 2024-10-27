@@ -91,6 +91,7 @@ def comment_detail(request, uuid):
     comment = get_object_or_404(Comment, uuid=uuid)
     context = {
         'comment': comment,
-        'replies': comment.replies.all().order_by('created_at')
+        'replies': comment.replies.all().order_by('created_at'),
+        'foods': Food.objects.all()
     }
     return render(request, 'comment_detail.html', context)

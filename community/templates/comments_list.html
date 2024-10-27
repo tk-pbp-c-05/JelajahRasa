@@ -2,9 +2,11 @@
     {% for comment in comments %}
     <div class="comment bg-[#FDEDDA] rounded-lg shadow-lg p-4 sm:p-6 relative">
         <div class="flex items-start">
-            <img src="{{ comment.user.image_url }}" alt="{{ comment.user.username }}" class="w-12 h-12 rounded-full mr-4">
+            <a href="{% url 'profilepage:profile' comment.user.username %}">
+                <img src="{{ comment.user.image_url }}" alt="{{ comment.user.username }}" class="w-12 h-12 rounded-full mr-4">
+            </a>
             <div class="flex-grow">
-                <p class="font-bold text-[#3C3837] text-xl mb-2">{{ comment.user.username }}</p>
+                <a href="{% url 'profilepage:profile' comment.user.username %}" class="font-bold text-[#3C3837] text-xl mb-2">{{ comment.user.username }}</a>
                 <a href="{% url 'community:comment_detail' comment.uuid %}" class="block">
                     <p class="comment-content text-lg text-[#3C3837] mb-2">{{ comment.content }}</p>
                 </a>
