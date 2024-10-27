@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+{% include 'navbar.html' %}
+<div class="max-w-6xl mx-auto px-4 py-8 pt-20">
+    <h1 class="text-3xl font-bold text-[#3C3837] mb-6">Add Comment</h1>
+    <form method="post" class="bg-[#FDEDDA] rounded-lg shadow-lg p-6">
+        {% csrf_token %}
+        <div class="mb-4">
+            <label for="{{ form.content.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">Comment</label>
+            {{ form.content }}
+        </div>
+        <div class="mb-4">
+            <label for="{{ form.food.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">Food (optional)</label>
+            {{ form.food }}
+        </div>
+        <button type="submit" class="mt-4 px-4 py-2 bg-[#AB4A2F] text-white rounded hover:bg-[#F18F73] transition">Submit</button>
+    </form>
+    <a href="{% url 'community:home' %}" class="inline-block mt-4 text-[#F18F73] hover:underline">Back to Community</a>
+</div>
+{% endblock %}

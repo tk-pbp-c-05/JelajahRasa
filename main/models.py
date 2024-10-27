@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 import uuid
 from django.db.models import Avg
+from django.core.validators import MinValueValidator, MaxValueValidator
+
 # Create your models here.
 
 class CustomUserManager(BaseUserManager):
@@ -30,7 +32,7 @@ class CustomUser(AbstractUser):
     email = models.EmailField(unique=True)
     image_url = models.CharField(max_length=255, blank=True, null=True)
     is_admin = models.BooleanField(default=False)
-
+    location = models.CharField(max_length=50, blank=True, null=True, default="Indonesia")
     groups = models.ManyToManyField(
         'auth.Group',
         verbose_name='groups',
@@ -63,7 +65,7 @@ class Food(models.Model):
     flavor = models.CharField(max_length=100)
     category = models.CharField(max_length=50)
     vendor_name = models.CharField(max_length=100)  
-    price = models.CharField(max_length=255) 
+    price = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(1000000)])
     map_link = models.CharField(max_length=255)
     address = models.CharField(max_length=255)
     image = models.CharField(max_length=255, default="")

@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     "MyFavoriteDishes",
     "review",
     "report",
+    "community",
+    "profilepage",
 ]
 
 MIDDLEWARE = [
