@@ -103,10 +103,8 @@ def edit_favorite_dish(request, uuid):
 
 def delete_favorite_dish(request, uuid):
     favorite_dish = FavoriteDish.objects.get(pk = uuid)
-    #favorite_dish = get_object_or_404(FavoriteDish, user=request.user, uuid=uuid)
     favorite_dish.delete()  # Remove from favorites
     return HttpResponseRedirect(reverse('MyFavoriteDishes:show_favorite'))
-    #return JsonResponse({'status': 'removed', 'is_favorite': False})
 
 def show_json(request):
     favorite_dishes = FavoriteDish.objects.filter(user=request.user)

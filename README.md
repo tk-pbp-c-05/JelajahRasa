@@ -35,12 +35,10 @@ Jelajah Rasa, sebuah platform web yang hadir untuk mempermudah pengguna menjelaj
 ## 📂 Daftar Modul 📂
 
 ### 🍽️ Food Catalog 🍽️
-
 Pada halaman Food Catalogue, pengguna dapat melihat daftar makanan yang terdaftar pada web aplikasi. Pengguna dapat mencari makanan berdasarkan nama makanan, serta menggunakan filter untuk menyortir berdasarkan kategori (makanan/minuman), rasa (asin/manis), hingga harga. Ketika suatu makanan dipilih, akan ditampilkan foto, nama makanan, nama restoran, lokasi restoran, harga, rating, dan ulasan dari pengguna lain terhadap makanan tersebut. 
 
 ### ❤️ My Favorite Dishes ❤️
-Pada halaman My Favorite Dishes, pengguna bisa menyimpan daftar 
-makanan/minuman favorit atau yang ingin dicoba. Pengguna dapat menambahkan makanan/minuman ke daftar makanan/minuman favorit dari katalog yang tersedia di aplikasi.
+Pada halaman My Favorite Dishes, pengguna dapat menyimpan daftar makanan atau minuman favorit yang paling disukai. Pengguna memiliki dua pilihan untuk menambahkan makanan atau minuman ke dalam daftar favorit mereka. Pengguna dapat menjelajahi katalog yang tersedia di aplikasi dan menambahkan makanan atau minuman favorit mereka langsung dari daftar yang disediakan. Pengguna juga dapat membuat entri makanan favorit secara mandiri dengan mengisi formulir yang telah disediakan. Formulir ini mencakup detail seperti nama makanan, rasa, kategori, dan informasi lainnya. Hal ini memungkinkan pengguna untuk menambahkan makanan yang tidak terdapat dalam katalog.
 
 ### 💬 Food Reviews & Ratings 💬
 Fitur ini memungkinkan pengguna memberikan ulasan dan penilaian bintang untuk makanan yang telah mereka coba di berbagai restoran di Malang. Pengguna dapat membagikan pengalaman mereka secara rinci, termasuk kualitas rasa, harga, dan pelayanan restoran. Ulasan ini akan membantu pengguna lain dalam membuat keputusan berdasarkan pengalaman nyata dari komunitas. Fitur ini juga menjadi tempat diskusi dan rekomendasi seputar kuliner di Malang.
@@ -62,6 +60,13 @@ Modul ini memungkinkan pengguna untuk membuat dan mengelola profil mereka sendir
 - Meninjau ulasan yang diberi pengguna (family-friendly) serta memiliki akses untuk menghapus ulasan tersebut.
 ### 👤 Guest 👤
 - Melihat food catalogue, food reviews dan rating
+
+## Pembagian Tugas
+1.Food Catalog : Muhammad Satria Aleka Ramadha (2306245094)
+2.My Favorite Dishes : Kayla Agrata Budiawan (2306245693)
+3.Food Reviews & Ratings : Dionysius Davis (2306213836)
+4.Add a new dish : Rafif Sulaiman Dirvesa (2306222771)
+5.User Profile Management : Daffa Desra Hastiar (2306165490)
 
 ## 📊 Sumber Dataset 📊
 - https://docs.google.com/spreadsheets/d/1rTiH_IgXek9lh-2nlPvYFJalEkmPvEoOADmcFRpYrQ0/edit?usp=sharing 
