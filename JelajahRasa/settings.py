@@ -44,7 +44,6 @@ INSTALLED_APPS = [
     "MyFavoriteDishes",
     "review",
     "report",
-    "profilepage",
     "community",
     "profilepage",
 ]
