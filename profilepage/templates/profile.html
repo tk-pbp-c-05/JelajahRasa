@@ -59,9 +59,9 @@
             </div>
             <div class="mt-4 text-center">
                 {% if user.username == profile_user.username %}
-                    <button href="{% url 'MyFavoriteDishes:access_favorite' %}" id="show-all-favorites" class="inline-block px-4 py-2 bg-[#AB4A2F] text-white rounded hover:bg-[#F18F73] transition">
+                    <a href="{% url 'MyFavoriteDishes:show_favorite' %}" id="show-all-favorites" class="inline-block px-4 py-2 bg-[#AB4A2F] text-white rounded hover:bg-[#F18F73] transition">
                         Add More Favorite Dishes
-                    </button>
+                    </a>
                 {% endif %}
             </div>
         </div>
