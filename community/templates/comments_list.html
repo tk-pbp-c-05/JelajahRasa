@@ -1,55 +1,40 @@
-{% for comment in comments %}
-    <div class="comment bg-[#FDEDDA] rounded-lg shadow-lg p-6 relative">
-        <div class="absolute top-2 right-2">
-            <div class="relative inline-block text-left">
-                {% if comment.user == user %}
-                <button class="three-dot-menu p-1 rounded-full hover:bg-gray-200 focus:outline-none" data-uuid="{{ comment.uuid }}" data-type="comment">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
-                    </svg>
-                </button>
-                <div class="three-dot-menu-content origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 hidden">
-                    <div class="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
-                        <button class="edit-comment block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem" data-comment-uuid="{{ comment.uuid }}" data-food-id="{{ comment.food.id|default_if_none:'' }}">Edit</button>
-                        <button class="delete-btn block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" data-url="{% url 'community:delete_comment' comment.uuid %}" role="menuitem">Delete</button>
-                    </div>
-                </div>
+<div id="comments-container" class="space-y-6">
+    {% for comment in comments %}
+    <div class="comment bg-[#FDEDDA] rounded-lg shadow-lg p-4 sm:p-6 relative">
+        <div class="flex items-start">
+            <img src="{{ comment.user.image_url }}" alt="{{ comment.user.username }}" class="w-12 h-12 rounded-full mr-4">
+            <div class="flex-grow">
+                <p class="font-bold text-[#3C3837] text-xl mb-2">{{ comment.user.username }}</p>
+                <a href="{% url 'community:comment_detail' comment.uuid %}" class="block">
+                    <p class="comment-content text-lg text-[#3C3837] mb-2">{{ comment.content }}</p>
+                </a>
+                <p class="text-sm text-[#AB4A2F] mb-2">{{ comment.created_at|date:"l, d F Y" }} at {{ comment.created_at|date:"H:i" }}</p>
+                {% if comment.food %}
+                    <p class="text-sm text-[#AB4A2F] mb-2">Food Mentioned: {{ comment.food.name }}</p>
                 {% endif %}
-            </div>
-        </div>
-        <p class="comment-content text-lg text-[#3C3837] mb-2 p-2">{{ comment.content }}</p>
-        <p class="text-sm text-[#AB4A2F]">By: <a href="{% url 'profilepage:profile' comment.user.username %}" class="font-bold hover:underline">{{ comment.user.username }}</a></p>
-        <p class="text-sm text-[#AB4A2F]">Date: {{ comment.created_at|date:"F d, Y H:i" }}</p>
-        {% if comment.food %}
-            <p class="text-sm text-[#AB4A2F]">Food: {{ comment.food.name }}</p>
-        {% endif %}
-        <div class="mt-2 space-x-2">
-            <button class="open-reply-modal text-sm text-[#F18F73] hover:underline" data-comment-uuid="{{ comment.uuid }}">Reply</button>
-        </div>
-        
-        {% for reply in comment.replies.all %}
-            <div class="bg-white rounded p-4 mt-2 relative">
-                <div class="absolute top-2 right-2">
-                    <div class="relative inline-block text-left">
-                        {% if reply.user == user %}
-                        <button class="three-dot-menu p-1 rounded-full hover:bg-gray-200 focus:outline-none" data-uuid="{{ reply.uuid }}" data-type="reply">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
-                            </svg>
-                        </button>
-                        <div class="three-dot-menu-content origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 hidden">
-                            <div class="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
-                                <button class="edit-reply block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem" data-reply-uuid="{{ reply.uuid }}">Edit</button>
-                                <button class="delete-btn block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" data-url="{% url 'community:delete_reply' reply.uuid %}" role="menuitem">Delete</button>
-                            </div>
-                        </div>
-                        {% endif %}
-                    </div>
+                <div class="flex items-center">
+                    <button class="open-reply-modal text-sm text-[#F18F73] hover:underline mr-2" data-comment-uuid="{{ comment.uuid }}">Reply</button>
+                    <span class="text-sm text-[#AB4A2F]">{{ comment.replies.count }} replies</span>
                 </div>
-                <p class="text-[#3C3837] p-2">{{ reply.content }}</p>
-                <p class="text-sm text-[#AB4A2F]">By: {{ reply.user.username }}</p>
-                <p class="text-sm text-[#AB4A2F]">Date: {{ reply.created_at|date:"F d, Y H:i" }}</p>
             </div>
-        {% endfor %}
+            <div class="absolute top-2 right-2">
+                <div class="relative inline-block text-left">
+                    {% if user.is_admin or comment.user == user %}
+                    <button class="three-dot-menu p-1 rounded-full hover:bg-gray-200 focus:outline-none" data-uuid="{{ comment.uuid }}" data-type="comment">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
+                        </svg>
+                    </button>
+                    <div class="three-dot-menu-content origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 hidden">
+                        <div class="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
+                            <button class="edit-comment block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem" data-comment-uuid="{{ comment.uuid }}" data-food-id="{{ comment.food.id|default_if_none:'' }}">Edit</button>
+                            <button class="delete-btn block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" data-url="{% url 'community:delete_comment' comment.uuid %}" role="menuitem">Delete</button>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
     </div>
-{% endfor %}
+    {% endfor %}
+</div>
