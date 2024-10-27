@@ -25,11 +25,7 @@
             <div class="bg-white shadow-md rounded-lg overflow-hidden">
                 
                 <!-- Image Section -->
-                {% if food.image_url %}
-                    <img src="{{ food.image }}" alt="{{ food.name }}" class="w-full h-48 object-cover">
-                {% else %}
-                    <img src="{% static 'default-image.jpg' %}" alt="Default Image" class="w-full h-48 object-cover">
-                {% endif %}
+                <img src="{{ food.image }}" alt="{{ food.name }}" class="w-full h-48 object-cover">
 
                 <div class="p-4 border-t border-gray-200 flex justify-between">
                     {% if user.is_authenticated %}
