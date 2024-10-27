@@ -1,6 +1,7 @@
 <div id="comments-container" class="space-y-6">
     {% for comment in comments %}
     <div class="comment bg-[#FFF5EA] rounded-lg shadow-lg p-4 sm:p-6 relative">
+    <div class="comment bg-[#FFF5EA] rounded-lg shadow-lg p-4 sm:p-6 relative">
         <div class="flex items-start">
             <a href="{% url 'profilepage:profile' comment.user.username %}" class="flex-shrink-0">
                 <img src="{{ comment.user.image_url|default:'https://static.vecteezy.com/system/resources/thumbnails/009/292/244/small/default-avatar-icon-of-social-media-user-vector.jpg' }}" alt="{{ comment.user.username }}" class="w-12 h-12 rounded-full mr-4">

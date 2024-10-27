@@ -73,6 +73,9 @@ class Food(models.Model):
     rating_count = models.PositiveIntegerField(default=0)
     average_rating = models.FloatField(default=0.0)
 
+    def __str__(self):
+        return f"{self.name} - {self.vendor_name}"
+
     def update_average_rating(self):
         from review.models import Review
         reviews = self.reviews.all()  # Get all reviews related to this food item

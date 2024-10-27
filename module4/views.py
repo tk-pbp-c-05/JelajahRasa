@@ -4,6 +4,7 @@ from main.models import Food
 from module4.forms import NewDishForm
 from django.http import JsonResponse
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
 # Tampilkan home dengan hanya dish yang sudah di-approve
 def show_home(request):
@@ -11,28 +12,30 @@ def show_home(request):
     return render(request, 'home.html', {'dishes': approved_dishes})
 
 # Form untuk menambahkan dish
+@login_required
 def add_dish(request):
-    form = NewDishForm(request.POST, request.FILES or None)
-    if form.is_valid() and request.method == 'POST':
-        new_dish = form.save(commit=False)
-        new_dish.user = request.user
-        
-        if request.user.is_admin:
-            new_dish.is_approved = True
-        else:
-            new_dish.is_approved = False
-        
-        new_dish.save()
-
-        # Cek apakah dish di-approve langsung atau perlu menunggu admin
-        if new_dish.is_approved:
-            create_food_entry(new_dish)  # Panggil fungsi untuk membuat entri di Food
-            messages.success(request, 'Dish added and approved successfully!')
-        else:
-            messages.success(request, 'Dish added successfully! Please wait for our admin to approve it.')
+    form = NewDishForm(request.POST or None, request.FILES or None)
+    if request.method == 'POST':
+        if form.is_valid():
+            new_dish = form.save(commit=False)
+            new_dish.user = request.user
             
-        return redirect('module4:add_dish')
+            if request.user.is_admin:
+                new_dish.is_approved = True
+            else:
+                new_dish.is_approved = False
+            
+            new_dish.save()
 
+            # Cek apakah dish di-approve langsung atau perlu menunggu admin
+            if new_dish.is_approved:
+                create_food_entry(new_dish)  # Panggil fungsi untuk membuat entri di Food
+                messages.success(request, 'Dish added and approved successfully!')
+            else:
+                messages.success(request, 'Dish added successfully! Please wait for our admin to approve it.')
+            
+            return redirect('module4:add_dish')  # Redirect ke halaman 'add_dish' setelah berhasil
+            
     context = {"form": form}
     return render(request, 'add_dish.html', context)
 

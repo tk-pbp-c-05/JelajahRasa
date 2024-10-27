@@ -40,7 +40,7 @@
                     <div class="three-dot-menu-content origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 hidden">
                         <div class="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
                             <button class="edit-comment block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem" data-comment-uuid="{{ comment.uuid }}" data-food-id="{{ comment.food.id|default_if_none:'' }}">Edit</button>
-                            <button class="delete-btn block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" data-url="{% url 'community:delete_comment' comment.uuid %}" role="menuitem">Delete</button>
+                            <button data-type="comment" class="delete-btn block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" data-url="{% url 'community:delete_comment' comment.uuid %}" role="menuitem">Delete</button>
                         </div>
                     </div>
                     {% endif %}
@@ -148,6 +148,7 @@
         </div>
     </div>
 </div>
+
 <script>
     function getCookie(name) {
         let cookieValue = null;
@@ -302,4 +303,5 @@
         }
     });
 </script>
+
 {% endblock %}

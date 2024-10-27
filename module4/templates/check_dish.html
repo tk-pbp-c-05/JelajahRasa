@@ -16,7 +16,7 @@
 
 <!-- Table -->
 {% if pending_dishes %}
-  <div class="mx-2">
+<div class="mx-2">
     <table class="table-auto w-full text-left bg-white shadow-md rounded-lg overflow-hidden">
       <thead class="rounded-t-lg">
         <tr class="bg-gray-200 text-gray-600 text-sm leading-normal">
@@ -72,37 +72,36 @@
         
       </tbody>
     </table>
-  </div>
+</div>
 {% else %}
   <p>No pending dishes.</p>
 {% endif %}
-
 <script>
-  function getCookie(name) {
-      let cookieValue = null;
-      if (document.cookie && document.cookie !== '') {
-          const cookies = document.cookie.split(';');
-          for (let i = 0; i < cookies.length; i++) {
-              const cookie = cookies[i].trim();
-              if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                  cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                  break;
-              }
-          }
-      }
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
       return cookieValue;
   }
   
   function approveDish(dishUuid) {
-    const csrftoken = getCookie('csrftoken');
-    fetch(`/module4/approve-dish/${dishUuid}/`, {
-        method: 'POST',
-        headers: {
-            'X-CSRFToken': csrftoken,
-            'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: new URLSearchParams({
-            'action': 'approve'
+      const csrftoken = getCookie('csrftoken');
+      fetch(`/module4/approve-dish/${dishUuid}/`, {
+          method: 'POST',
+          headers: {
+              'X-CSRFToken': csrftoken,
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams({
+                'action': 'approve'
         })
     })
     .then(response => response.json())
@@ -123,37 +122,37 @@
     });
 }
 
-  
-  function deleteDish(dishUuid) {
-      const csrftoken = getCookie('csrftoken');
-      fetch(`/module4/approve-dish/${dishUuid}/`, {
-          method: 'POST',
-          headers: {
-              'X-CSRFToken': csrftoken,
-              'Content-Type': 'application/x-www-form-urlencoded',
-          },
-          body: new URLSearchParams({
-              'action': 'delete'
-          })
-      })
-      .then(response => response.json())
-      .then(data => {
-          if (data.status === 'deleted') {
-              const row = document.getElementById(`dish-row-${dishUuid}`);
-              if (row) {
-                  row.remove();
-                  console.log('Dish deleted successfully');
-              }
-          } else {
-              alert('Failed to delete dish.');
-          }
-      })
-      .catch(error => {
+
+function deleteDish(dishUuid) {
+    const csrftoken = getCookie('csrftoken');
+    fetch(`/module4/approve-dish/${dishUuid}/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': csrftoken,
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({
+            'action': 'delete'
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'deleted') {
+            const row = document.getElementById(`dish-row-${dishUuid}`);
+            if (row) {
+                row.remove();
+                console.log('Dish deleted successfully');
+            }
+        } else {
+            alert('Failed to delete dish.');
+        }
+    })
+    .catch(error => {
           console.error('Error:', error);
           alert('An error occurred while deleting the dish.');
       });
-  }
-  
+    }
+    
   // Search Functionality
   document.addEventListener('DOMContentLoaded', function() {
       const searchInput = document.getElementById('searchInput');
@@ -168,13 +167,14 @@
                       const name = nameCell.textContent.toLowerCase().trim();
                       if (name.includes(searchValue)) {
                           row.style.display = '';
-                      } else {
-                          row.style.display = 'none';
-                      }
-                  }
-              });
-          });
-      }
-  });
-  </script>
+                        } else {
+                            row.style.display = 'none';
+                        }
+                    }
+                });
+            });
+        }
+    });
+    </script>
+
 {% endblock content %}
