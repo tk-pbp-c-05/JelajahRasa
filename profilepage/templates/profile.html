@@ -107,10 +107,17 @@
         <div class="bg-[#FDC66B] rounded-lg shadow-lg p-6">
             <h2 class="text-2xl font-bold mb-4 text-[#3C3837]">Forum Comments</h2>
             <div class="space-y-4">
-                {% for i in '123'|make_list %}
+                {% for comment in comments %}
                 <div class="bg-[#FFFFFF] rounded p-4">
-                    <p class="text-[#3C3837]">"This is a placeholder comment about a delicious dish. It's really tasty and I recommend it to everyone!"</p>
-                    <p class="text-sm text-[#AB4A2F] mt-2">on Tasty Discussion Thread {{ forloop.counter }} - Jan {{ forloop.counter }}, 2024</p>
+                    {% if comment.food %}
+                        <a href="{% url 'review:food_reviews' comment.food.uuid %}" class="block text-sm font-semibold text-[#AB4A2F] mb-2 hover:text-[#F18F73] transition duration-300 ease-in-out hover:underline">Food Mentioned: {{ comment.food.name }}</a>       
+                    {% else %}
+                        <p class="text-sm text-[#AB4A2F] mt-2">Food Mentioned:  None </p>
+                    {% endif %}
+                    <p class="text-[#3C3837]"> {{ comment.content }} </p>
+                    <p class="text-sm text-[#AB4A2F] mt-2">Created at {{ comment.created_at|date:"F d, Y" }}</p>
+                    <p class="text-sm text-[#AB4A2F] mt-2">Replies: {{ comment.replies.count }}</p>
+                    <a href="{% url 'community:comment_detail' comment.uuid %}" class="text-sm font-bold text-[#AB4A2F] hover:underline">Link to thread</a>
                 </div>
                 {% endfor %}
             </div>
