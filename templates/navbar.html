@@ -1,17 +1,18 @@
 <nav class="shadow-lg fixed top-0 left-0 z-40 w-full" style="background-color:#983132">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16 w-full">
     <div class="flex items-center space-x-2 absolute left-7 pr-4">
-        <h1 class="text-2xl font-bold dark:text-purple-300" style="color:#E1A85F">JelajahRasa</h1>
+        <a href="{% url 'main:show_main' %}" class="text-2xl font-bold dark:text-purple-300" style="color:#E1A85F; text-decoration: none;">
+          JelajahRasa
+        </a>
     </div>
   
-    <div class="menu-links hidden md:flex items-center justify-center h-6 space-x-4 mx-auto">
-        <!-- Links -->
-        <a href="{% url 'main:show_main' %}" class="font-bold py-2 px-4 rounded-lg transition duration-300" style="background-color: #983132; color:#E1A85F" onmouseover="this.style.backgroundColor='#AB4A2F';" onmouseout="this.style.backgroundColor='#983132';">
-          Home
-        </a>
-        
+    <div class="menu-links hidden md:flex items-center justify-center h-6 space-x-4 mx-auto">        
         <a href="{% url 'catalog:view_catalog' %}" class="font-bold py-2 px-4 rounded-lg transition duration-300" style="background-color: #983132; color:#E1A85F" onmouseover="this.style.backgroundColor='#AB4A2F';" onmouseout="this.style.backgroundColor='#983132';">
           Food Catalogue
+        </a>
+
+        <a href="{% url 'community:home' %}" class="font-bold py-2 px-4 rounded-lg transition duration-300" style="background-color: #983132; color:#E1A85F" onmouseover="this.style.backgroundColor='#AB4A2F';" onmouseout="this.style.backgroundColor='#983132';">
+          Community
         </a>
 
         {% if user.is_authenticated %}
@@ -22,18 +23,7 @@
           <a href="{% url 'module4:add_dish' %}" class="font-bold py-2 px-4 rounded-lg transition duration-300" style="background-color: #983132; color:#E1A85F" onmouseover="this.style.backgroundColor='#AB4A2F';" onmouseout="this.style.backgroundColor='#983132';">
             Add New Dish
           </a> 
-          <a href="{% url 'community:home' %}" class="font-bold py-2 px-4 rounded-lg transition duration-300" style="background-color: #983132; color:#E1A85F" onmouseover="this.style.backgroundColor='#AB4A2F';" onmouseout="this.style.backgroundColor='#983132';">
-            Community
-          </a>
-          <!-- Tampilkan Cek Dish jika admin -->
-          {% if request.user.is_staff %}
-            <a href="{% url 'module4:check_dish' %}" class="font-bold py-2 px-4 rounded-lg transition duration-300" style="background-color: #983132; color:#E1A85F" onmouseover="this.style.backgroundColor='#AB4A2F';" onmouseout="this.style.backgroundColor='#983132';">
-              Check New Dish
-            </a>
-            <a href="{% url 'report:report_list' %}" class="font-bold py-2 px-4 rounded-lg transition duration-300" style="background-color: #983132; color:#E1A85F" onmouseover="this.style.backgroundColor='#AB4A2F';" onmouseout="this.style.backgroundColor='#983132';">
-              Report List
-            </a> 
-          {% endif %} 
+          <!-- Tampilkan Cek Dish jika admin --> 
         {% endif %}
     </div>
   
@@ -57,6 +47,14 @@
       <!-- Dropdown content -->
       <div id="desktopDropdownMenu" class="dropdown-content opacity-0 transform scale-y-0 origin-top transition-all duration-300 absolute mt-2 right-0 w-auto rounded-md shadow-lg py-0 z-50 overflow-visible" style="background-color:#fad68a;">
           {% if user.is_authenticated %}
+            {% if request.user.is_staff %}
+            <a href="{% url 'module4:check_dish' %}" class="text-black py-1 px-2 rounded-lg transition duration-300 w-full block text-center text-lg" style="background-color: #fad68a;">
+              Check New Dish
+            </a>
+            <a href="{% url 'report:report_list' %}" class="text-black py-1 px-2 rounded-lg transition duration-300 w-full block text-center text-lg" style="background-color: #fad68a;">
+              Report List
+            </a> 
+          {% endif %}
           <a href="{% url 'profilepage:profile' username=user.username %}" class="text-black py-1 px-2 rounded-lg transition duration-300 w-full block text-center text-lg" style="background-color: #fad68a;">
             Profile
           </a>
@@ -110,6 +108,14 @@
       <!-- Dropdown menu (overflow visible) -->
       <div id="mobileDropdownMenu" class="dropdown-content opacity-0 transform scale-y-0 origin-top transition-all duration-300 absolute right-0 mt-1 w-auto rounded-md shadow-lg py-0 z-50 overflow-visible" style="background-color:#fad68a;">
         {% if user.is_authenticated %}
+          {% if request.user.is_staff %}
+            <a href="{% url 'module4:check_dish' %}" class="text-black py-1 px-2 rounded-lg transition duration-300 w-full block text-center text-sm" style="background-color: #fad68a;">
+              Check New Dish
+            </a>
+            <a href="{% url 'report:report_list' %}" class="text-black py-1 px-2 rounded-lg transition duration-300 w-full block text-center text-sm" style="background-color: #fad68a;">
+              Report List
+            </a> 
+          {% endif %}
         <a href="{% url 'profilepage:profile' username=user.username %}" class="text-black py-1 px-2 rounded-lg transition duration-300 w-full block text-center text-sm" style="background-color: #fad68a;">
           Profile
         </a>
@@ -129,105 +135,31 @@
     </div>
 
     <!-- Mobile Links -->
-    <div class="flex flex-row mt-6 space-y-0">
-      <a href="{% url 'main:show_main' %}" class="font-bold flex justify-center items-center py-2 px-4 rounded-lg transition duration-300 text-lg" style="background-color: #983132; color:#e0a85e" onmouseover="this.style.backgroundColor='#AB4A2F';" onmouseout="this.style.backgroundColor='#983132';">
+    <div class="flex flex-col mt-6 space-y-0">
+      <a href="{% url 'main:show_main' %}" class="font-bold flex items-center py-2 px-4 rounded-lg transition duration-300 text-lg" style="background-color: #983132; color:#e0a85e" onmouseover="this.style.backgroundColor='#AB4A2F';" onmouseout="this.style.backgroundColor='#983132';">
         Home
       </a>
 
-      <a href="{% url 'catalog:view_catalog' %}" class="font-bold flex justify-center items-center py-2 px-4 rounded-lg transition duration-300 text-lg" style="background-color: #983132; color:#e0a85e" onmouseover="this.style.backgroundColor='#AB4A2F';" onmouseout="this.style.backgroundColor='#983132';">
+      <a href="{% url 'catalog:view_catalog' %}" class="font-bold flex items-center py-2 px-4 rounded-lg transition duration-300 text-lg" style="background-color: #983132; color:#e0a85e" onmouseover="this.style.backgroundColor='#AB4A2F';" onmouseout="this.style.backgroundColor='#983132';">
         Food Catalogue
       </a>
 
+      <a href="{% url 'community:home' %}" class="font-bold flex items-center py-2 px-4 rounded-lg transition duration-300 text-lg" style="background-color: #983132; color:#e0a85e" onmouseover="this.style.backgroundColor='#AB4A2F';" onmouseout="this.style.backgroundColor='#983132';">
+        Community
+      </a>
+
       {% if user.is_authenticated %}
-        <a href="{% url 'MyFavoriteDishes:add_favorite_dish' %}" class="font-bold flex justify-center items-center py-2 px-4 rounded-lg transition duration-300 text-lg" style="background-color: #983132; color:#e0a85e" onmouseover="this.style.backgroundColor='#AB4A2F';" onmouseout="this.style.backgroundColor='#983132';">
+        <a href="{% url 'MyFavoriteDishes:add_favorite_dish' %}" class="font-bold flex  items-center py-2 px-4 rounded-lg transition duration-300 text-lg" style="background-color: #983132; color:#e0a85e" onmouseover="this.style.backgroundColor='#AB4A2F';" onmouseout="this.style.backgroundColor='#983132';">
           My Favorites
         </a>
 
-        <a href="{% url 'module4:add_dish' %}" class="font-bold flex justify-center items-center py-2 px-4 rounded-lg transition duration-300 text-lg" style="background-color: #983132; color:#e0a85e" onmouseover="this.style.backgroundColor='#AB4A2F';" onmouseout="this.style.backgroundColor='#983132';">
+        <a href="{% url 'module4:add_dish' %}" class="font-bold flex  items-center py-2 px-4 rounded-lg transition duration-300 text-lg" style="background-color: #983132; color:#e0a85e" onmouseover="this.style.backgroundColor='#AB4A2F';" onmouseout="this.style.backgroundColor='#983132';">
           Add New Dish
         </a>
-        <a href="{% url 'community:home' %}" class="font-bold flex justify-center items-center py-2 px-4 rounded-lg transition duration-300 text-lg" style="background-color: #983132; color:#e0a85e" onmouseover="this.style.backgroundColor='#AB4A2F';" onmouseout="this.style.backgroundColor='#983132';">
-          Community
-        </a>
-        {% if request.user.is_staff %}
-          <a href="{% url 'module4:check_dish' %}" class="font-bold flex justify-center items-center py-2 px-4 rounded-lg transition duration-300 text-lg" style="background-color: #983132; color:#e0a85e" onmouseover="this.style.backgroundColor='#AB4A2F';" onmouseout="this.style.backgroundColor='#983132';">
-            Check New Dish
-          </a>
-          <a href="{% url 'report:report_list' %}" class="font-bold flex justify-center items-center py-2 px-4 rounded-lg transition duration-300 text-lg" style="background-color: #983132; color:#e0a85e" onmouseover="this.style.backgroundColor='#AB4A2F';" onmouseout="this.style.backgroundColor='#983132';">
-            Report List
-          </a>
-        {% endif %}
       {% endif %}
     </div>        
   </div>
 </div>
-
-<script>
-  const desktopDropdownButton = document.getElementById('desktopDropdownButton');
-  const desktopDropdownMenu = document.getElementById('desktopDropdownMenu');
-  const mobileMenuButton = document.querySelector('.mobile-menu-button');
-  const mobileMenu = document.querySelector('.mobile-menu');
-  const mobileDropdownButton = document.getElementById('mobileDropdownButton');
-  const mobileDropdownMenu = document.getElementById('mobileDropdownMenu');
-
-  desktopDropdownButton.addEventListener('click', () => {
-    desktopDropdownMenu.classList.toggle('show');
-    if (desktopDropdownMenu.classList.contains('show')) {
-      desktopDropdownMenu.style.opacity = '1';
-      desktopDropdownMenu.style.transform = 'scaleY(1)';
-    } else {
-      desktopDropdownMenu.style.opacity = '0';
-      desktopDropdownMenu.style.transform = 'scaleY(0)';
-    }
-  });
-
-  function toggleMobileMenu() {
-    if (mobileMenu.classList.contains('hidden')) {
-      mobileMenu.classList.remove('hidden');
-      mobileMenu.style.maxHeight = mobileMenu.scrollHeight + 'px';
-    } else {
-      mobileMenu.style.maxHeight = '0px';
-      setTimeout(() => mobileMenu.classList.add('hidden'), 500);
-    }
-  }
-
-  mobileMenuButton.addEventListener('click', toggleMobileMenu);
-
-  mobileDropdownButton.addEventListener('click', () => {
-    mobileDropdownMenu.classList.toggle('show');
-    if (mobileDropdownMenu.classList.contains('show')) {
-      mobileDropdownMenu.style.opacity = '1';
-      mobileDropdownMenu.style.transform = 'scaleY(1)';
-    } else {
-      mobileDropdownMenu.style.opacity = '0';
-      mobileDropdownMenu.style.transform = 'scaleY(0)';
-    }
-  });
-
-  window.addEventListener('DOMContentLoaded', () => {
-    // Ensure the right menu elements are hidden based on screen size
-    handleWindowSize();
-  });
-  
-  window.addEventListener('resize', () => {
-    handleWindowSize();
-  });
-
-  function handleWindowSize() {
-    const windowWidth = window.innerWidth;
-    console.log("Window width:", windowWidth);
-
-    if (windowWidth < 768) {
-      // Do nothing for the mobile menu button as Tailwind handles it
-      document.querySelector('.menu-links').classList.add('hidden');
-      document.querySelector('.dropdown-desktop').classList.add('hidden');
-    } else {
-      document.querySelector('.menu-links').classList.remove('hidden');
-      document.querySelector('.dropdown-desktop').classList.remove('hidden');
-      mobileMenu.classList.add('hidden'); // Hide mobile menu on desktop
-    }
-  }
-</script>
 
 <style>
   .dropdown-content {
@@ -238,6 +170,7 @@
     overflow: visible;
     position: absolute;
     top: 100%;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .dropdown-content.show {
@@ -247,6 +180,131 @@
 
   .mobile-menu {
     overflow: hidden;
+    transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .menu-links, .dropdown-desktop {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .menu-links a {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+  }
+
+  .menu-links a.hidden {
+    opacity: 0;
+    transform: translateY(-10px);
+    pointer-events: none;
+  }
+
+  .mobile-menu a {
+    opacity: 1;
+    transform: translateX(0);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+
+  .mobile-menu.hiding {
+    max-height: 0 !important;
   }
 </style>
+
+<script>
+  const desktopDropdownButton = document.getElementById('desktopDropdownButton');
+  const desktopDropdownMenu = document.getElementById('desktopDropdownMenu');
+  const mobileMenuButton = document.querySelector('.mobile-menu-button');
+  const mobileMenu = document.querySelector('.mobile-menu');
+  const mobileDropdownButton = document.getElementById('mobileDropdownButton');
+  const mobileDropdownMenu = document.getElementById('mobileDropdownMenu');
+  const menuLinks = document.querySelector('.menu-links');
+  const dropdownDesktop = document.querySelector('.dropdown-desktop');
+  const menuItems = document.querySelectorAll('.menu-links a');
+  
+  desktopDropdownButton.addEventListener('click', () => {
+    requestAnimationFrame(() => {
+      desktopDropdownMenu.classList.toggle('show');
+    });
+  });
+
+  function toggleMobileMenu() {
+    if (mobileMenu.classList.contains('hidden')) {
+      mobileMenu.classList.remove('hidden');
+      requestAnimationFrame(() => {
+        mobileMenu.style.maxHeight = `${mobileMenu.scrollHeight}px`;
+      });
+    } else {
+      closeMobileMenu();
+    }
+  }
+
+  function closeMobileMenu() {
+    mobileMenu.classList.add('hiding');
+    mobileMenu.addEventListener('transitionend', () => {
+      if (mobileMenu.classList.contains('hiding')) {
+        mobileMenu.classList.add('hidden');
+        mobileMenu.classList.remove('hiding');
+      }
+    }, { once: true });
+    
+    if (mobileDropdownMenu.classList.contains('show')) {
+      mobileDropdownMenu.classList.remove('show');
+    }
+  }
+  
+  mobileMenuButton.addEventListener('click', toggleMobileMenu);
+  
+  mobileDropdownButton.addEventListener('click', () => {
+    requestAnimationFrame(() => {
+      mobileDropdownMenu.classList.toggle('show');
+    });
+  });
+  
+  function handleWindowSize() {
+    const windowWidth = window.innerWidth;
+    const menuItemsArray = Array.from(menuItems);
+    
+    if (windowWidth >= 768 && !mobileMenu.classList.contains('hidden')) {
+      closeMobileMenu();
+    }
+
+    setTimeout(() => {
+      if (windowWidth >= 1024) {
+        menuLinks.classList.remove('hidden');
+        dropdownDesktop.classList.remove('hidden');
+        menuItemsArray.forEach((item, index) => {
+          setTimeout(() => {
+            item.classList.remove('hidden');
+          }, index * 50);
+        });
+      } else if (windowWidth >= 768) {
+        menuLinks.classList.remove('hidden');
+        dropdownDesktop.classList.remove('hidden');
+        
+        menuItemsArray.forEach((item, index) => {
+          if (index < menuItemsArray.length - 2) {
+            setTimeout(() => {
+              item.classList.remove('hidden');
+            }, index * 50);
+          } else {
+            item.classList.add('hidden');
+          }
+        });
+      } else {
+        menuLinks.classList.add('hidden');
+        dropdownDesktop.classList.add('hidden');
+        menuItemsArray.forEach(item => item.classList.add('hidden'));
+      }
+    }, 0);
+  }
+  
+  window.addEventListener('DOMContentLoaded', handleWindowSize);
+
+  let resizeTimeout;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(handleWindowSize, 150);
+  });
+</script>
+</nav>
 </nav>
