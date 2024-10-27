@@ -14,20 +14,19 @@
             </a>
             <div class="flex-grow">
                 <div class="flex items-center justify-between mb-2">
-                    <a href="{% url 'profilepage:profile' comment.user.username %}" class="font-bold text-[#3C3837] text-xl">{{ comment.user.username }}</a>
+                    <a href="{% url 'profilepage:profile' comment.user.username %}" class="text-l">
+                        <span class="font-bold text-[#3C3837]">{{comment.user.first_name}}</span>
+                        <span class="font-bold text-[#CEB88F] hover:text-[#AB4A2F] transition duration-300">@{{ comment.user.username }}</span>
+                    </a>                
                 </div>
-                {% if comment.food %}
-                    <p class="text-sm font-semibold text-[#AB4A2F] mb-2">Food Mentioned: {{ comment.food.name }}</p>
-                {% endif %}
                 <a href="{% url 'community:comment_detail' comment.uuid %}" class="block">
                     <p class="comment-content text-lg text-[#3C3837] mb-4">{{ comment.content }}</p>
                 </a>
-                <div class="flex items-center justify-between text-sm">
-                    <span class="text-sm text-[#AB4A2F]">{{ comment.created_at|date:"l, d F Y" }} at {{ comment.created_at|date:"H:i" }}</span>
-                    <div class="flex items-center">
-                        <button class="open-reply-modal text-[#F18F73] hover:underline mr-4" data-comment-uuid="{{ comment.uuid }}">Reply</button>
-                        <span class="text-[#AB4A2F]">{{ comment.replies.count }} replies</span>
-                    </div>
+                {% if comment.food %}
+                    <a href="{% url 'review:food_reviews' comment.food.uuid %}" class="text-sm font-semibold text-[#AB4A2F] mb-2 hover:text-[#F18F73] transition duration-300 ease-in-out hover:underline">Food Mentioned: {{ comment.food.name }}</a>                   
+                {% endif %}
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between text-sm">
+                    <span class="text-sm text-[#AB4A2F] mb-2 sm:mb-0">{{ comment.created_at|date:"l, d F Y" }} at {{ comment.created_at|date:"H:i" }}</span>
                 </div>
             </div>
             <div class="absolute top-4 right-4">
@@ -51,7 +50,7 @@
     </div>
 
     <!-- Replies -->
-    <h2 class="text-2xl font-bold text-[#3C3837] mb-4">Replies</h2>
+    <h2 class="text-2xl pt-8 font-bold text-[#3C3837] mb-4">Replies</h2>
     <button id="open-add-reply-modal" class="px-4 py-2 mb-8 bg-[#F18F73] text-white rounded hover:bg-[#AB4A2F] transition text-sm" data-comment-uuid="{{ comment.uuid }}">Add Reply</button>
     <div class="space-y-4">
         {% for reply in replies %}
@@ -61,7 +60,12 @@
                     <img src="{{ reply.user.image_url|default:"https://static.vecteezy.com/system/resources/thumbnails/009/292/244/small/default-avatar-icon-of-social-media-user-vector.jpg" }}" alt="{{ reply.user.username }}" class="w-12 h-12 rounded-full mr-4">
                 </a>
                 <div class="flex-grow">
-                    <a href="{% url 'profilepage:profile' reply.user.username %}" class="font-semibold text-[#3C3837] text-lg mb-1">{{ reply.user.username }}</a>
+                    <div class="flex items-center justify-between mb-2">
+                        <a href="{% url 'profilepage:profile' comment.user.username %}" class="text-l">
+                            <span class="font-bold text-[#3C3837]">{{comment.user.first_name}}</span>
+                            <span class="font-bold text-[#CEB88F] hover:text-[#AB4A2F] transition duration-300">@{{ comment.user.username }}</span>
+                        </a>                
+                    </div>                   
                     <p class="text-sm text-[#3C3837] mb-2">{{ reply.content }}</p>
                     <p class="text-xs text-[#AB4A2F]">{{ reply.created_at|date:"l, d F Y" }} at {{ reply.created_at|date:"H:i" }}</p>
                 </div>
@@ -144,6 +148,7 @@
         </div>
     </div>
 </div>
+
 <script>
     function getCookie(name) {
         let cookieValue = null;
@@ -298,4 +303,5 @@
         }
     });
 </script>
+
 {% endblock %}

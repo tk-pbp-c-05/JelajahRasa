@@ -6,7 +6,7 @@
 <div class="max-w-6xl mx-auto px-4 py-8 pt-20">
     <h1 class="text-3xl font-bold text-[#3C3837] mb-6">Community</h1>
     <button id="open-add-comment-modal" class="inline-block px-4 py-2 bg-[#AB4A2F] text-white rounded hover:bg-[#F18F73] transition mb-6">Add Comment</button>
-
+    
     <div id="comments-container" class="space-y-6">
         {% for comment in comments %}
         <div class="comment bg-[#FFF5EA] rounded-lg shadow-lg p-4 sm:p-6 relative">
@@ -21,16 +21,19 @@
                             <span class="font-bold text-[#CEB88F] hover:text-[#AB4A2F] transition duration-300">@{{ comment.user.username }}</span>
                         </a>                
                     </div>
-                    {% if comment.food %}
-                    <a href="{% url 'review:food_reviews' comment.food.uuid %}" class="text-sm font-semibold text-[#AB4A2F] mb-2 hover:text-[#F18F73] transition duration-300 ease-in-out hover:underline">Food Mentioned: {{ comment.food.name }}</a>                    {% endif %}
                     <a href="{% url 'community:comment_detail' comment.uuid %}" class="block">
                         <p class="comment-content text-lg text-[#3C3837] mb-4">{{ comment.content }}</p>
                     </a>
-                    <div class="flex items-center justify-between text-sm">
-                        <span class="text-sm text-[#AB4A2F]">{{ comment.created_at|date:"l, d F Y" }} at {{ comment.created_at|date:"H:i" }}</span>
-                        <div class="flex items-center">
-                            <button class="open-reply-modal text-[#F18F73] hover:underline mr-4" data-comment-uuid="{{ comment.uuid }}">Reply</button>
+                    {% if comment.food %}
+                        <a href="{% url 'review:food_reviews' comment.food.uuid %}" class="block text-sm font-semibold text-[#AB4A2F] mb-2 hover:text-[#F18F73] transition duration-300 ease-in-out hover:underline">Food Mentioned: {{ comment.food.name }}</a>                   
+                    {% endif %}
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between text-sm">
+                        <span class="text-sm text-[#AB4A2F] mb-2 sm:mb-0">{{ comment.created_at|date:"l, d F Y" }} at {{ comment.created_at|date:"H:i" }}</span>
+                        <div class="flex items-center space-x-2">
                             <span class="text-[#AB4A2F]">{{ comment.replies.count }} replies</span>
+                            <a href="{% url 'community:comment_detail' comment.uuid %}" class="text-sm text-[#F18F73] hover:text-[#AB4A2F] transition duration-300 ease-in-out hover:underline">
+                                Reply or see more replies
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -55,6 +58,8 @@
         </div>
         {% endfor %}
     </div>
+</div>
+
 
 <!-- Add Comment Modal -->
 <div id="add-comment-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden">
@@ -154,15 +159,15 @@
     
     document.addEventListener('DOMContentLoaded', function() {
         console.log('Script loaded');
-    
+        
         function openModal(modalId) {
             document.getElementById(modalId).classList.remove('hidden');
         }
-    
+        
         function closeModal(modalId) {
             document.getElementById(modalId).classList.add('hidden');
         }
-    
+        
         function attachThreeDotMenuListeners() {
             document.querySelectorAll('.three-dot-menu').forEach(button => {
                 button.addEventListener('click', function(e) {
@@ -172,9 +177,9 @@
                 });
             });
         }
-    
+        
         attachThreeDotMenuListeners();
-    
+        
         // Mutation Observer to watch for changes in the comments container
         const observer = new MutationObserver(function(mutations) {
             mutations.forEach(function(mutation) {
@@ -186,14 +191,14 @@
     
         const config = { childList: true, subtree: true };
         observer.observe(document.getElementById('comments-container'), config);
-    
+        
         // Event delegation for all interactions
         document.addEventListener('click', function(e) {
             // Open Add Comment Modal
             if (e.target.id === 'open-add-comment-modal') {
                 openModal('add-comment-modal');
             }
-    
+            
             // Open Reply Modal
             if (e.target.classList.contains('open-reply-modal')) {
                 const commentUuid = e.target.dataset.commentUuid;
@@ -202,7 +207,7 @@
                 document.getElementById('reply-comment-uuid').value = commentUuid;
                 openModal('add-reply-modal');
             }
-    
+            
             // Edit Comment
             if (e.target.classList.contains('edit-comment')) {
                 const commentUuid = e.target.dataset.commentUuid;
@@ -263,7 +268,7 @@
             function setConfirmationMessage(message) {
                 document.getElementById('confirmation-message').textContent = message;
             }
-    
+            
             // Close all menus when clicking outside
             if (!e.target.closest('.three-dot-menu-content') && !e.target.closest('.three-dot-menu')) {
                 document.querySelectorAll('.three-dot-menu-content').forEach(menu => {
@@ -271,25 +276,25 @@
                 });
             }
         });
-    
+        
         // Form submissions
         document.getElementById('add-comment-form').addEventListener('submit', function(e) {
             e.preventDefault();
             submitForm(this, '{% url "community:add_comment" %}', 'add-comment-modal');
         });
-    
+        
         document.getElementById('add-reply-form').addEventListener('submit', function(e) {
             e.preventDefault();
             const commentUuid = this.querySelector('#reply-comment-uuid').value;
             submitForm(this, `/community/add_reply/${commentUuid}/`, 'add-reply-modal');
         });
-    
+        
         document.getElementById('edit-comment-form').addEventListener('submit', function(e) {
             e.preventDefault();
             const commentUuid = this.querySelector('#edit-comment-uuid').value;
             submitForm(this, `/community/edit_comment/${commentUuid}/`, 'edit-comment-modal');
         });
-    
+        
         function submitForm(form, url, modalId) {
             const formData = new FormData(form);
             fetch(url, {
@@ -313,4 +318,5 @@
         }
     });
 </script>
+
 {% endblock %}
