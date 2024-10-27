@@ -11,6 +11,17 @@ class FavoriteDishForm(forms.ModelForm):
         choices=FLAVOR_CHOICES,
         widget=forms.Select(attrs={'class': 'form-control'})
     )
+
+    CATEGORY_CHOICES = [
+        ('food', 'Food'),
+        ('beverage', 'Beverage'),
+    ]
+
+    category = forms.ChoiceField(
+        choices=CATEGORY_CHOICES,
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+    
     class Meta:
         model = FavoriteDish
         fields = ['name', 'flavor', 'category', 'vendor_name', 'price', 'map_link', 'address']
