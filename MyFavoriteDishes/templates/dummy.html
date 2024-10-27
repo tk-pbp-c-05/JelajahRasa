@@ -144,10 +144,9 @@
     </div>
   </div>
 </div>
-
 <script>
   async function getFavoriteDishes(){
-      return fetch("{% url 'MyFavoriteDishes:show_json' %}").then((res) => res.json())
+    return fetch("{% url 'MyFavoriteDishes:show_json' %}").then((res) => res.json())
   }
   async function refreshFavoriteDishes() {
     document.getElementById("fav_dish_cards").innerHTML = "";
@@ -155,53 +154,53 @@
     const favoriteDishes = await getFavoriteDishes();
     let htmlString = "";
     let classNameString = "";
-
+    
     if (favoriteDishes.length === 0) {
-        classNameString = "flex flex-col items-center justify-center min-h-[24rem] p-6";
-        htmlString = `
-            <div class="flex flex-col items-center justify-center min-h-[24rem] p-6">
-                <p class="text-center text-gray-600 mt-4">Belum ada data pada MyFavoriteDishes.</p>
-            </div>
+      classNameString = "flex flex-col items-center justify-center min-h-[24rem] p-6";
+      htmlString = `
+      <div class="flex flex-col items-center justify-center min-h-[24rem] p-6">
+        <p class="text-center text-gray-600 mt-4">Belum ada data pada MyFavoriteDishes.</p>
+        </div>
         `;
-    }
-    else {
-      classNameString = "columns-1 sm:columns-2 lg:columns-3 gap-6 space-y-6 w-full"
+      }
+      else {
+        classNameString = "columns-1 sm:columns-2 lg:columns-3 gap-6 space-y-6 w-full"
         favoriteDishes.forEach((item) => {
-            htmlString += `
-            <div class="relative break-inside-avoid">
-  
-                <div class="bg-white shadow-md rounded-lg mb-6 flex flex-col border-2 border-[#F18F73] transition-transform duration-300">
+          htmlString += `
+          <div class="relative break-inside-avoid">
+            
+            <div class="bg-white shadow-md rounded-lg mb-6 flex flex-col border-2 border-[#F18F73] transition-transform duration-300">
+              
+              
+              <div class="flex justify-between p-4">
                   
-                
-                  <div class="flex justify-between p-4">
-                  
-                    <div class="flex-grow">
-                      <h3 class="font-bold text-xl mb-2">${item.fields.name}</h3>
-                      <p class="text-gray-700 mb-2">Rp${item.fields.price}}</p>
-                      <p class="text-gray-700 mb-2">Flavor: ${item.fields.flavor}</p>
-                      <p class="text-gray-700 mb-2">Category: ${item.fields.category}</p>
-                      <p class="text-gray-700 mb-2">Vendor:${item.fields.vendor_name}}</p>
+                <div class="flex-grow">
+                  <h3 class="font-bold text-xl mb-2">${item.fields.name}</h3>
+                  <p class="text-gray-700 mb-2">Rp${item.fields.price}}</p>
+                  <p class="text-gray-700 mb-2">Flavor: ${item.fields.flavor}</p>
+                  <p class="text-gray-700 mb-2">Category: ${item.fields.category}</p>
+                  <p class="text-gray-700 mb-2">Vendor:${item.fields.vendor_name}}</p>
                       <p class="text-gray-700 mb-2">Map Link: <a href="${item.fields.map_link}" class="text-blue-500 hover:underline">${item.fields.map_link}</a></p>
                       <p class="text-gray-700 mb-2">Address: ${item.fields.address}</p>
-                    </div>
-                    
-                    
-                    <div class="flex-shrink-0">
-                      <button id="favorite-button-${item.pk}" class="favorite-button" data-dish-id="${item.pk}">
+                      </div>
+                      
+                      
+                      <div class="flex-shrink-0">
+                        <button id="favorite-button-${item.pk}" class="favorite-button" data-dish-id="${item.pk}">
                           {% if item.is_favorite %}
                             <svg id="heart-icon-${item.pk}" xmlns="http://www.w3.org/2000/svg" fill="#3C3837" viewBox="0 0 24 24" width="35" height="35" class="filled-heart">
                               <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-                            </svg>
-                          {% else %}
-                            <svg id="heart-icon-${item.pk}" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="#3C3837" width="35" height="35" class="unfilled-heart">
+                              </svg>
+                              {% else %}
+                              <svg id="heart-icon-${item.pk}" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="#3C3837" width="35" height="35" class="unfilled-heart">
                               <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-                            </svg>
-                          {% endif %}
+                              </svg>
+                              {% endif %}
                       </button>
-                    </div>
+                      </div>
                   </div>
 
-                
+                  
                   <div class="flex justify-end p-4">
                     <a href="/MyFavoriteDishes/edit-fav-dish/${item.pk}" class="bg-[#F18F73] hover:bg-[#F18F73]/80 text-white font-bold py-2 px-4 rounded-full transition duration-300 shadow-md">
                         Edit
@@ -209,57 +208,57 @@
                   </div>
                 </div>
               </div>
-             `;
-        });
-    }
+              `;
+            });
+          }
     document.getElementById("fav_dish_cards").className = classNameString;
     document.getElementById("fav_dish_cards").innerHTML = htmlString;
   }
   refreshFavoriteDishes();
   const modal = document.getElementById('crudModal');
   const modalContent = document.getElementById('crudModalContent');
-
+  
   function showModal() {
       const modal = document.getElementById('crudModal');
       const modalContent = document.getElementById('crudModalContent');
-
+      
       modal.classList.remove('hidden'); 
       setTimeout(() => {
         modalContent.classList.remove('opacity-0', 'scale-95');
         modalContent.classList.add('opacity-100', 'scale-100');
       }, 50); 
-  }
-
-  function hideModal() {
+    }
+    
+    function hideModal() {
       const modal = document.getElementById('crudModal');
       const modalContent = document.getElementById('crudModalContent');
-
+      
       modalContent.classList.remove('opacity-100', 'scale-100');
       modalContent.classList.add('opacity-0', 'scale-95');
-
+      
       setTimeout(() => {
         modal.classList.add('hidden');
       }, 150); 
-  }
-
-  document.getElementById("cancelButton").addEventListener("click", hideModal);
-  document.getElementById("closeModalBtn").addEventListener("click", hideModal);
-
-  function addFavoriteDish() {
+    }
+    
+    document.getElementById("cancelButton").addEventListener("click", hideModal);
+    document.getElementById("closeModalBtn").addEventListener("click", hideModal);
+    
+    function addFavoriteDish() {
     fetch("{% url 'MyFavoriteDishes:add_fav_dish_ajax' %}", {
       method: "POST",
       body: new FormData(document.querySelector('#favoriteDishForm')),
     })
     .then(response => {
-          if (response.ok) {
-              refreshFavoriteDishes();
-              hideModal();
-            } 
-          })
-
+      if (response.ok) {
+        refreshFavoriteDishes();
+        hideModal();
+      } 
+    })
+    
     document.getElementById("favoriteDishForm").reset(); 
     document.querySelector("[data-modal-toggle='crudModal']").click();
-
+    
     return false;
   }
 
@@ -267,9 +266,8 @@
     e.preventDefault();
     addFavoriteDish();
   })
-
+  
   
   
 </script>
 {% endblock content %}
-
