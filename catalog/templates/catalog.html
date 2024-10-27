@@ -13,34 +13,51 @@
 
 {% block content %}
 {% include 'navbar.html' %}
-<body class="bg-gray-100">
+<body class="bg-gray-100 pt-16">
 
     <div class="container mx-auto p-6">
         <h1 class="text-3xl font-bold text-center mb-8">Food Catalog</h1>
         
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {% if catalogs %}
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {% for food in catalogs %}
             <!-- Card Structure -->
             <div class="bg-white shadow-md rounded-lg overflow-hidden">
+                
+                <!-- Image Section -->
+                {% if food.image %}
+                    <img src="{{ food.image }}" alt="{{ food.name }}" class="w-full h-48 object-cover">
+                {% else %}
+                    <img src="{% static 'default-image.jpg' %}" alt="Default Image" class="w-full h-48 object-cover">
+                {% endif %}
+
                 <div class="p-4 border-t border-gray-200 flex justify-between">
-                    {% if user.is_authenticated %}
-                        <a href="" class=" text-white px-4 py-2 rounded" style="background-color:#983132">Review</a>
+                        <a href="{% url 'review:food_reviews' food_id=food.uuid %}" class=" text-white px-4 py-2 rounded" style="background-color:#983132">Review</a>
+                        {% if user.is_authenticated %}
                         <button class="text-white px-4 py-2 rounded-md transition create-report-btn" style="background-color:#983132" data-report-id="{{ food.uuid }}" onclick="openReportModal('{{ food.uuid }}')"> Report </button>
-                    {% endif %}
+                        {% endif %}
                 </div>
                 <div class="p-4">
                     <h2 class="text-xl font-semibold">{{ food.name }}</h2>
                     <p class="text-gray-500">Flavor: {{ food.flavor }}</p>
                     <p class="text-gray-500">Category: {{ food.category }}</p>
                     <p class="text-gray-500">Vendor: {{ food.vendor_name }}</p>
-                    <p class="text-gray-700 font-bold mt-2">{{ food.price }}</p>
+                    <p class="text-gray-700 font-bold mt-2">Rp. {{ food.price }}</p>
                     <p class="text-gray-500 mt-1">Address: {{ food.address }}</p>
                     <a href="{{ food.map_link }}" target="_blank" class="text-blue-500 hover:underline mt-2 inline-block">View on Map</a>
                 </div>
 
-                <!-- Card Buttons for Review and Report -->
             </div>
             {% endfor %}
+            {% else %}
+            <div class="text-center py-8">
+                <p class="text-xl text-gray-600">The catalog is currently empty. Check back later for delicious food items!</p>
+                <a href="{% url 'module4:add_dish' %}" class="text-[#F18F73] hover:text-red-700 font-bold py-2 px-4 rounded transition duration-300">
+                    Want to add new food?
+                </a>
+            </div>
+        {% endif %}
+            
         </div>
     </div>
     <div id="create-report-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50">

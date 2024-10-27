@@ -6,10 +6,7 @@
 
 {% block content %}
 {% include 'navbar.html' %}
-
-{# Add CSRF Token #}
 {% csrf_token %}
-
 <h1 class="text-3xl font-bold mb-8">Pending Dishes</h1>
 
 <!-- Search bar -->
@@ -28,43 +25,51 @@
           <th class="px-4 py-2">Price</th>
           <th class="px-4 py-2" style="width: 100px;">Category</th>
           <th class="px-4 py-2">Address</th>
+          <th class="px-4 py-2">Image</th>
           <th class="px-4 py-2" style="width: 80px; text-align:center">Approve</th>
           <th class="px-2 py-2" style="width: 80px; text-align:center">Delete</th>
         </tr>
       </thead>
       <tbody id="dishesTable" class="rounded-b-lg">
         {% for dish in pending_dishes %}
-          <tr id="dish-row-{{ dish.id }}" class="hover:bg-gray-100 border-b border-gray-200">
+        <tr id="dish-row-{{ dish.uuid }}" class="hover:bg-gray-100 border-b border-gray-200">
             <td class="border px-4 py-2">{{ dish.name }}</td>
             <td class="border px-4 py-2">{{ dish.vendor_name }}</td>
             <td class="border px-4 py-2">{{ dish.price }}</td>
             <td class="border px-4 py-2" style="width: 100px;">{{ dish.category }}</td>
             <td class="border px-4 py-2">{{ dish.address }}</td>
+            <td class="border px-4 py-4">
+              <img src="{{ dish.image }}" alt="Dish Image" class="h-16 w-16 object-cover">
+            </td>
+            
             <!-- Approve Button -->
             <td class="border px-4 py-2 text-center" style="width: 80px;">
               <button 
-                type="button" 
-                class="bg-green-500 hover:bg-green-700 text-white rounded-full p-2 transition duration-300 shadow-md approve-dish-btn"
-                data-dish-id="{{ dish.id }}">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 00-1.414 0L9 11.586 6.707 9.293a1 1 0 10-1.414 1.414l3 3a1 1 0 001.414 0l7-7a1 1 0 000-1.414z" clip-rule="evenodd" />
-                </svg>
-              </button>            
-            </td>
-
-            <!-- Delete Button -->
-            <td class="border px-4 py-2 text-center">
-              <button 
-                type="button" 
-                class="bg-red-500 hover:bg-red-700 text-white rounded-full p-2 transition duration-300 shadow-md delete-dish-btn"
-                data-dish-id="{{ dish.id }}">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 011.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
-                </svg>
+                  type="button" 
+                  class="bg-green-500 hover:bg-green-700 text-white rounded-full p-2 transition duration-300 shadow-md approve-dish-btn"
+                  data-dish-uuid="{{ dish.uuid }}"
+                  onclick="approveDish('{{ dish.uuid }}')">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                      <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 00-1.414 0L9 11.586 6.707 9.293a1 1 0 10-1.414 1.414l3 3a1 1 0 001.414 0l7-7a1 1 0 000-1.414z" clip-rule="evenodd" />
+                  </svg>
               </button>
-            </td>
-          </tr>
+          </td>
+      
+          <!-- Delete Button -->
+          <td class="border px-4 py-2 text-center">
+              <button 
+                  type="button" 
+                  class="bg-red-500 hover:bg-red-700 text-white rounded-full p-2 transition duration-300 shadow-md delete-dish-btn"
+                  data-dish-uuid="{{ dish.uuid }}"
+                  onclick="deleteDish('{{ dish.uuid }}')">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                      <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 011.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                  </svg>
+              </button>
+          </td>
+        </tr>
         {% endfor %}
+        
       </tbody>
     </table>
   </div>
@@ -73,115 +78,103 @@
 {% endif %}
 
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    // Get CSRF token
-    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-    console.log('CSRF Token loaded:', csrftoken ? 'Yes' : 'No');
-
-    // Approve Dish via AJAX
-    document.querySelectorAll('.approve-dish-btn').forEach(button => {
-        button.addEventListener('click', function() {
-            const dishId = this.dataset.dishId;
-            const approveUrl = "{% url 'module4:approve_dish' 0 %}".replace('0', dishId);
-            
-            // Debug information
-            console.log('Approving dish:', dishId);
-            console.log('Approve URL:', approveUrl);
-
-            fetch(approveUrl, {
-                method: 'POST',
-                headers: {
-                    'X-CSRFToken': csrftoken,
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: new URLSearchParams({
-                    'action': 'approve'
-                })
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                return response.json();
-            })
-            .then(data => {
-                console.log('Server response:', data);
-                if (data.status === 'approved') {
-                    document.getElementById(`dish-row-${dishId}`).remove();
-                    console.log('Dish approved successfully');
-                } else {
-                    console.error('Failed to approve dish:', data);
-                    alert('Failed to approve dish. Please try again.');
-                }
-            })
-            .catch(error => {
-                console.error('Error during approve:', error);
-                alert('An error occurred while approving the dish. Please check the console for details.');
-            });
-        });
-    });
-
-    // Delete Dish via AJAX
-    document.querySelectorAll('.delete-dish-btn').forEach(button => {
-        button.addEventListener('click', function() {
-            const dishId = this.dataset.dishId;
-            const deleteUrl = "{% url 'module4:approve_dish' 0 %}".replace('0', dishId);
-            
-            // Debug information
-            console.log('Deleting dish:', dishId);
-            console.log('Delete URL:', deleteUrl);
-
-            fetch(deleteUrl, {
-                method: 'POST',
-                headers: {
-                    'X-CSRFToken': csrftoken,
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: new URLSearchParams({
-                    'action': 'delete'
-                })
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                return response.json();
-            })
-            .then(data => {
-                console.log('Server response:', data);
-                if (data.status === 'deleted') {
-                    document.getElementById(`dish-row-${dishId}`).remove();
-                    console.log('Dish deleted successfully');
-                } else {
-                    console.error('Failed to delete dish:', data);
-                    alert('Failed to delete dish. Please try again.');
-                }
-            })
-            .catch(error => {
-                console.error('Error during delete:', error);
-                alert('An error occurred while deleting the dish. Please check the console for details.');
-            });
-        });
-    });
-
-    // Search Functionality
-    document.getElementById('searchInput').addEventListener('input', function() {
-        const searchValue = this.value.toLowerCase().trim();
-        const rows = document.querySelectorAll('#dishesTable tr');
-        
-        rows.forEach(row => {
-            const nameCell = row.querySelector('td:first-child');
-            if (nameCell) {
-                const name = nameCell.textContent.toLowerCase().trim();
-                if (name.startsWith(searchValue)) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
-                }
+  function getCookie(name) {
+      let cookieValue = null;
+      if (document.cookie && document.cookie !== '') {
+          const cookies = document.cookie.split(';');
+          for (let i = 0; i < cookies.length; i++) {
+              const cookie = cookies[i].trim();
+              if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                  cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                  break;
+              }
+          }
+      }
+      return cookieValue;
+  }
+  
+  function approveDish(dishUuid) {
+    const csrftoken = getCookie('csrftoken');
+    fetch(`/module4/approve-dish/${dishUuid}/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': csrftoken,
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({
+            'action': 'approve'
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'approved') {
+            const row = document.getElementById(`dish-row-${dishUuid}`);
+            if (row) {
+                row.remove();
+                console.log('Dish approved successfully');
             }
-        });
+        } else {
+            alert('Failed to approve dish.');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred while approving the dish.');
     });
-});
-</script>
+}
 
+  
+  function deleteDish(dishUuid) {
+      const csrftoken = getCookie('csrftoken');
+      fetch(`/module4/approve-dish/${dishUuid}/`, {
+          method: 'POST',
+          headers: {
+              'X-CSRFToken': csrftoken,
+              'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: new URLSearchParams({
+              'action': 'delete'
+          })
+      })
+      .then(response => response.json())
+      .then(data => {
+          if (data.status === 'deleted') {
+              const row = document.getElementById(`dish-row-${dishUuid}`);
+              if (row) {
+                  row.remove();
+                  console.log('Dish deleted successfully');
+              }
+          } else {
+              alert('Failed to delete dish.');
+          }
+      })
+      .catch(error => {
+          console.error('Error:', error);
+          alert('An error occurred while deleting the dish.');
+      });
+  }
+  
+  // Search Functionality
+  document.addEventListener('DOMContentLoaded', function() {
+      const searchInput = document.getElementById('searchInput');
+      if (searchInput) {
+          searchInput.addEventListener('input', function() {
+              const searchValue = this.value.toLowerCase().trim();
+              const rows = document.querySelectorAll('#dishesTable tr');
+              
+              rows.forEach(row => {
+                  const nameCell = row.querySelector('td:first-child');
+                  if (nameCell) {
+                      const name = nameCell.textContent.toLowerCase().trim();
+                      if (name.includes(searchValue)) {
+                          row.style.display = '';
+                      } else {
+                          row.style.display = 'none';
+                      }
+                  }
+              });
+          });
+      }
+  });
+  </script>
 {% endblock content %}

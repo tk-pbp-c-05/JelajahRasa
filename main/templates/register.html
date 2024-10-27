@@ -5,9 +5,9 @@
 {% endblock meta %}
 
 {% block content %}
-<div class="min-h-screen flex items-center justify-center bg-white py-4 px-4 sm:px-6 lg:px-8">
-  <img src="{% static 'image/register_pict.jpg' %}" alt="Food Pict" class="h-screen object-cover rounded-lg shadow-md">
-  <div class="max-w-md w-full h-screen space-y-8 form-style bg-white p-8 rounded-lg shadow-lg">
+<div class="min-h-screen flex flex-grow items-center justify-center bg-white py-4 px-4 sm:px-6 lg:px-8">
+  <img src="{% static 'image/register_pict.jpg' %}" alt="Food Pict" class="h-screen object-cover rounded-lg">
+  <div class="max-w-md w-full space-y-8 form-style bg-white p-8 rounded-lg">
     <div>
       <h2 class="mt-6 text-center text-3xl font-extrabold text-[#F18F73]">
         Jelajah Rasa
@@ -62,9 +62,9 @@
     {% endif %}
 
     <div class="text-center mt-4">
-      <p class="text-sm text-gray-400">
+      <a href="{% url 'main:login' %}" class="text-sm text-gray-400">
         Already have an account?
-      </p>
+      </a>
     </div>
   </div>
 </div>
