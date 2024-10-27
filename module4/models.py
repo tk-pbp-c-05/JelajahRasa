@@ -10,7 +10,7 @@ class NewDish(models.Model):
     name = models.CharField(max_length=100)
     flavor = models.CharField(max_length=100)
     category = models.CharField(max_length=50)
-    vendor_name = models.CharField(max_length=100, default="Unknown Vendor")
+    vendor_name = models.CharField(max_length=100, default="")
     price = models.IntegerField() 
     map_link = models.CharField(max_length=255, default="")
     address = models.CharField(max_length=255, default="")

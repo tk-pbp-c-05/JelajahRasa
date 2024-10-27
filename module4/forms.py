@@ -3,13 +3,13 @@ from module4.models import NewDish
 
 # Pilihan untuk flavor dan taste
 FLAVOR_CHOICES = [
-    ('sweet', 'Sweet'),
-    ('salty', 'Salty'),
+    ('Sweet', 'Sweet'),
+    ('Salty', 'Salty'),
 ]
 
 CATEGORY_CHOICES = [
-    ('food', 'Food'),
-    ('beverage', 'Beverage'),
+    ('Food', 'Food'),
+    ('Beverage', 'Beverage'),
 ]
 
 class NewDishForm(forms.ModelForm):
