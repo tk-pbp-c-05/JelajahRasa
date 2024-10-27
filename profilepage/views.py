@@ -8,6 +8,8 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from MyFavoriteDishes.models import FavoriteDish
 from review.models import Review
+from community.models import Comment
+from profilepage.models import UserProfile
 # Create your views here.
 
 @login_required
@@ -15,6 +17,7 @@ def profile_view(request, username):
     profile_user = get_object_or_404(CustomUser, username=username)
     favorite_dishes = FavoriteDish.objects.filter(user=profile_user)
     reviews = Review.objects.filter(user=profile_user)
+    comments = Comment.objects.filter(user=profile_user)
     context = {
         'profile_user': profile_user,
         'user': request.user,
@@ -22,6 +25,8 @@ def profile_view(request, username):
         'favorite_dishes_count': favorite_dishes.count(),
         'reviews': reviews,
         'reviews_count': reviews.count(),
+        'comments': comments,
+        'comments_count': comments.count(),
     }
     return render(request, 'profile.html', context)
 
@@ -51,7 +56,6 @@ def edit_profile(request, username):
         return JsonResponse({'success': False, 'error': 'Unauthorized'}, status=403)
     
     user = request.user
-    user.username = request.POST.get('username', user.username)
     user.first_name = request.POST.get('first_name', user.first_name)
     user.last_name = request.POST.get('last_name', user.last_name)
     user.location = request.POST.get('location', user.location)
@@ -60,9 +64,8 @@ def edit_profile(request, username):
 
     return JsonResponse({
         'success': True,
-        'username': user.username,
         'first_name': user.first_name,
         'last_name': user.last_name,
         'location': user.location,
-        'image_url': user.image_url
+        'image_url': user.image_url,
     })
