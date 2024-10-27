@@ -68,6 +68,6 @@ def delete_review(request, review_id):
     if request.method == 'POST':
         review.delete()
         food.update_average_rating()
-        return redirect('food_reviews', food_id=review.food.uuid)  # Adjust the redirect as needed
+        return redirect('review:food_reviews', food_id=review.food.uuid)  # Adjust the redirect as needed
 
-    return redirect('food_reviews', food_id=review.food.uuid)
+    return redirect('review:food_reviews', food_id=review.food.uuid)

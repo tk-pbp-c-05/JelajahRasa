@@ -32,7 +32,7 @@
     <div class="w-full bg-gray-100 p-6 mt-8">
         <h2 class="text-2xl font-bold mb-4">Leave a Review</h2>
         {% if user.is_authenticated%}
-            <form id="reviewForm" method="POST" action="{% url 'create_review' food.uuid %}" class="w-full">
+            <form id="reviewForm" method="POST" action="{% url 'review:create_review' food.uuid %}" class="w-full">
                 {% csrf_token %}
                 <div>
                     <textarea name="comment" placeholder="Leave a review..." class="w-full p-2 border rounded" required></textarea>
@@ -68,7 +68,7 @@
 
     <!-- Reviews Section (Bottom) -->
     <div class="flex justify-end mt-8">
-        <form method="get" action="{% url 'food_reviews' food.uuid %}" class="flex items-center">
+        <form method="get" action="{% url 'review:food_reviews' food.uuid %}" class="flex items-center">
             <label for="order" class="mr-2">Order reviews:</label>
             <select name="order" id="order" onchange="this.form.submit()" class="bg-white border-4 border-[#EFD19A] rounded p-2">
                 <option value="newest" {% if current_order == 'newest' %}selected{% endif %}>Latest</option>
@@ -95,7 +95,7 @@
                     <p class="mt-2">{{ review.comment }}</p>
                     <span class="text-gray-500 text-sm">{{ review.timestamp|date:"F j, Y, g:i a" }}</span>
                     {% if user.is_admin %}
-                        <form method="POST" action="{% url 'delete_review' review.uuid %}">
+                        <form method="POST" action="{% url 'review:delete_review' review.uuid %}">
                             {% csrf_token %}
                             <button type="submit" 
                                     class="py-1 px-3 bg-red-500 text-white rounded hover:bg-red-600"
@@ -146,7 +146,7 @@
         const formData = new FormData(this); // Gather form data
 
         try {
-            const response = await fetch("{% url 'create_review' food.uuid %}", {
+            const response = await fetch("{% url 'review:create_review' food.uuid %}", {
                 method: 'POST',
                 body: formData,
             });

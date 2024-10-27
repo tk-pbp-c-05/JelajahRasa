@@ -16,7 +16,7 @@
                 <span class="text-sm text-gray-500">Favorite Dishes</span>
             </div>
             <div class="text-center">
-                <span class="block text-2xl font-bold">{{ reviewed_dishes_count|default:'12' }}</span>
+                <span class="block text-2xl font-bold">{{ reviews_count|default:'0' }}</span>
                 <span class="text-sm text-gray-500">Reviewed Dishes</span>
             </div>
             <div class="text-center">
@@ -41,7 +41,7 @@
         <div class="bg-[#FDEDDA] rounded-lg shadow-lg p-6">
             <h2 class="text-2xl font-bold mb-4 text-[#3C3837]">Favorite Dishes </h2>
             <div id="favorite-dishes-container" class="grid grid-cols-2 md:grid-cols-3 gap-4">
-                {% for dish in favorite_dishes|slice:":6" %}
+                {% for dish in favorite_dishes %}
                 <div class="bg-white rounded shadow overflow-hidden">
                     <img src="{{ dish.image|default:'https://via.placeholder.com/300x200?text=No+Image' }}" alt="{{ dish.name }}" class="w-full h-40 object-cover">
                     <div class="p-2">
@@ -59,7 +59,7 @@
             </div>
             <div class="mt-4 text-center">
                 {% if user.username == profile_user.username %}
-                    <a href="{% url 'MyFavoriteDishes:access_favorite' %}" id="show-all-favorites" class="inline-block px-4 py-2 bg-[#AB4A2F] text-white rounded hover:bg-[#F18F73] transition">
+                    <a href="{% url 'MyFavoriteDishes:show_favorite' %}" id="show-all-favorites" class="inline-block px-4 py-2 bg-[#AB4A2F] text-white rounded hover:bg-[#F18F73] transition">
                         Add More Favorite Dishes
                     </a>
                 {% endif %}
@@ -69,15 +69,35 @@
         <div class="bg-[#EFD19A] rounded-lg shadow-lg p-6">
             <h2 class="text-2xl font-bold mb-4 text-[#3C3837]">Reviewed Dishes</h2>
             <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-                {% for i in '123'|make_list %}
+                {% for review in reviews %}
                 <div class="bg-white rounded shadow overflow-hidden">
-                    <img src="https://via.placeholder.com/300x200?text=Reviewed+Dish" alt="Placeholder" class="w-full h-40 object-cover">
+                    <img src="{{review.food.image}}" alt={{review.food.name}} class="w-full h-40 object-cover">
                     <div class="p-2">
-                        <p class="font-medium text-[#3C3837]">Tasty Meal {{ forloop.counter }}</p>
-                        <p class="text-sm text-[#AB4A2F]">Rating: {{ forloop.counter|add:"2" }}/5</p>
+                        <p class="font-medium text-[#3C3837]"> {{review.food.name}}</p>
+                        <p class="text-sm text-[#AB4A2F]">Rating: {{ review.rating }}/5</p>
+                        <p class="text-sm text-[#AB4A2F]">Rating: 
+                            {% for i in "12345"|make_list %}
+                                {% if forloop.counter <= review.rating %}
+                                    <span class="text-yellow-400">★</span>
+                                {% else %}
+                                    <span class="text-gray-300">☆</span>
+                                {% endif %}
+                            {% endfor %}
+                            ({{ review.rating }}/5)
+                        </p>
+                        <a href="{% url 'review:food_reviews' review.food.uuid %}" class="font-bold text-sm text-[#AB4A2F]">Link to review</a>
                     </div>
                 </div>
+                {% empty %}
+                <p class="col-span-3 text-center text-[#3C3837]">No reviewed dishes added yet.</p>
                 {% endfor %}
+            </div>
+            <div class="mt-4 text-center">
+                {% if user.username == profile_user.username %}
+                    <a href="{% url 'catalog:view_catalog' %}" id="add-food-review-btn" class="inline-block px-4 py-2 bg-[#AB4A2F] text-white rounded hover:bg-[#F18F73] transition">
+                        Add Food Review
+                    </a>
+                {% endif %}
             </div>
         </div>
         
@@ -141,6 +161,29 @@ document.addEventListener('DOMContentLoaded', function() {
     const cancelBtn = document.getElementById('cancel-edit');
     const profileForm = document.getElementById('profile-form');
     const saveBtn = document.getElementById('save-profile');
+    const addFoodReviewBtn = document.getElementById('add-food-review-btn');
+    if (addFoodReviewBtn) {
+        // Hover effect
+        addFoodReviewBtn.addEventListener('mouseenter', function() {
+            this.style.transform = 'scale(1.05)';
+            this.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
+        });
+
+        addFoodReviewBtn.addEventListener('mouseleave', function() {
+            this.style.transform = 'scale(1)';
+            this.style.boxShadow = 'none';
+        });
+
+        // Click animation
+        addFoodReviewBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            this.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                this.style.transform = 'scale(1)';
+                window.location.href = this.href;
+            }, 150);
+        });
+    }
 
     function showEditModal() {
         editModal.classList.remove('hidden');
