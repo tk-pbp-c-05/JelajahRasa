@@ -19,15 +19,19 @@ def add_dish(request):
         
         if request.user.is_superuser:
             new_dish.is_approved = True
-            new_dish.save()
-            messages.success(request, 'Dish added successfully!')
-            return redirect('module4:show_home')  # Redirect ke home setelah approve
         else:
             new_dish.is_approved = False
-            new_dish.save()
+        
+        new_dish.save()
+
+        if new_dish.is_approved:
+            create_food_entry(new_dish)
+            messages.success(request, 'Dish added and approved successfully!')
+        else:
             messages.success(request, 'Dish added successfully! Please wait for our admin to approve it.')
-            return redirect('module4:show_home')
-    
+            
+        return redirect('module4:add_dish')
+
     context = {"form": form}
     return render(request, 'add_dish.html', context)
 
@@ -57,19 +61,9 @@ def approve_dish(request, dish_uuid):
             dish.is_approved = True
             dish.save()
             print("Dish approved")
-            
-            Food.objects.create(
-                uuid=dish.uuid,
-                name=dish.name,
-                flavor=dish.flavor,
-                category=dish.category,
-                vendor_name=dish.vendor_name,
-                price=dish.price,
-                map_link=dish.map_link,
-                address=dish.address
-            )
-            
+            create_food_entry(dish)
             return JsonResponse({'status': 'approved', 'dish_id': dish_uuid})
+        
         elif action == 'delete':
             dish.delete()
             print("Dish deleted")
@@ -77,3 +71,19 @@ def approve_dish(request, dish_uuid):
 
     print("Invalid request method")
     return JsonResponse({'status': 'error'}, status=400)
+
+# Fungsi untuk membuat entry di Food model ketika dish disetujui
+def create_food_entry(dish):
+    if not Food.objects.filter(uuid=dish.uuid).exists():
+        Food.objects.create(
+            uuid=dish.uuid,
+            name=dish.name,
+            flavor=dish.flavor,
+            category=dish.category,
+            vendor_name=dish.vendor_name,
+            price=dish.price,
+            map_link=dish.map_link,
+            address=dish.address,
+            image = dish.image
+        )
+        print(f"Food entry created for dish: {dish.name}")
