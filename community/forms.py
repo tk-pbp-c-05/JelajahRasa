@@ -15,7 +15,7 @@ class CommentForm(forms.ModelForm):
         fields = ['content', 'food']
         widgets = {
             'content': forms.Textarea(attrs={
-                'class': 'form-textarea mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 p-2',
+                'class': 'form-textarea mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50',
                 'rows': 3,
                 'placeholder': "What's on your mind?"
             }),
@@ -25,10 +25,3 @@ class ReplyForm(forms.ModelForm):
     class Meta:
         model = Reply
         fields = ['content']
-        widgets = {
-            'content': forms.Textarea(attrs={
-                'class': 'form-textarea mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 p-2',
-                'rows': 3,
-                'placeholder': "Your reply..."
-            }),
-        }

@@ -32,8 +32,6 @@ def add_comment(request):
             comment.save()
             comments = Comment.objects.all().order_by('-created_at')
             html = render_to_string('comments_list.html', {'comments': comments, 'user': request.user})
-            comments = Comment.objects.all().order_by('-created_at')
-            html = render_to_string('comments_list.html', {'comments': comments, 'user': request.user})
             return JsonResponse({'success': True, 'html': html})
     return JsonResponse({'success': False, 'error': 'Invalid request method'})
 
@@ -87,3 +85,12 @@ def delete_reply(request, uuid):
         html = render_to_string('comments_list.html', {'comments': comments, 'user': request.user})
         return JsonResponse({'success': True, 'html': html})
     return JsonResponse({'success': False, 'error': 'You are not authorized to delete this reply.'})
+
+@login_required
+def comment_detail(request, uuid):
+    comment = get_object_or_404(Comment, uuid=uuid)
+    context = {
+        'comment': comment,
+        'replies': comment.replies.all().order_by('created_at')
+    }
+    return render(request, 'comment_detail.html', context)
