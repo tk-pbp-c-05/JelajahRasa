@@ -17,6 +17,7 @@ class Comment(models.Model):
     @property
     def is_editable(self):
         return (timezone.now() - self.created_at).total_seconds() < 3600  # 1 hour
+    
 
 class Reply(models.Model):
     uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

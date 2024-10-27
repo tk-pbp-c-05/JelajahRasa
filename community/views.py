@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from .models import Comment, Reply
-from main.models import Food
+from main.models import Food, CustomUser
 from .forms import CommentForm, ReplyForm
 
 def community_home(request):
@@ -56,6 +56,6 @@ def add_reply(request, comment_uuid):
     return render(request, 'community/add_reply.html', {'form': form, 'comment': comment})
 
 def user_profile(request, username):
-    user = get_object_or_404(User, username=username)
+    user = get_object_or_404(CustomUser, username=username)
     comments = user.comments.all().order_by('-created_at')
     return render(request, 'community/user_profile.html', {'profile_user': user, 'comments': comments})
