@@ -42,54 +42,56 @@
     </div>
     
     <div class="space-y-8">
-        <div>
-            <h2 class="text-2xl font-bold mb-4">Favorite Dishes</h2>
-            <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-                {% for dish in favorite_dishes %}
+        <div class="bg-[#FDEDDA] rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-4 text-[#3C3837]">Favorite Dishes </h2>
+            <div id="favorite-dishes-container" class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                {% for dish in favorite_dishes|slice:":6" %}
                 <div class="bg-white rounded shadow overflow-hidden">
                     <img src="{{ dish.image|default:'https://via.placeholder.com/300x200?text=No+Image' }}" alt="{{ dish.name }}" class="w-full h-40 object-cover">
                     <div class="p-2">
-                        <p class="font-medium">{{ dish.name }}</p>
-                        <p class="text-sm text-gray-600">Type: {{ dish.category }}</p>
-                        <p class="text-sm text-gray-600">Flavor: {{ dish.flavor }}</p>
-                        <p class="text-sm text-gray-600">Price: Rp.{{ dish.price }},00</p>
-                        <p class="text-sm text-gray-600">Vendor: {{ dish.vendor_name }}</p>
-                        <a href="{{ dish.map_link }}" target="_blank" class="text-sm text-blue-600 hover:underline">Location</a>
+                        <p class="font-medium text-[#3C3837]">{{ dish.name }}</p>
+                        <p class="text-sm text-[#AB4A2F]">Type: {{ dish.category }}</p>
+                        <p class="text-sm text-[#AB4A2F]">Flavor: {{ dish.flavor }}</p>
+                        <p class="text-sm text-[#AB4A2F]">Price: Rp {{ dish.price }}</p>
+                        <p class="text-sm text-[#AB4A2F]">Vendor: {{ dish.vendor_name }}</p>
+                        <a href="{{ dish.map_link }}" target="_blank" class="text-sm font-bold text-[#F18F73] hover:underline">Location</a>
                     </div>
                 </div>
                 {% empty %}
-                <p class="col-span-3 text-center text-gray-600">No favorite dishes added yet.</p>
+                <p class="col-span-3 text-center text-[#3C3837]">No favorite dishes added yet.</p>
                 {% endfor %}
             </div>
             <div class="mt-4 text-center">
-                <a href="{% url 'MyFavoriteDishes:show_favorite' %}" class="inline-block px-4 py-2 bg-[#AB4A2F] text-white rounded hover:bg-[#F18F73] transition">
-                    View All Favorites ({{ favorite_dishes_count }})
-                </a>
+                {% if user.username == profile_user.username %}
+                    <button href="{% url 'MyFavoriteDishes:access_favorite' %}" id="show-all-favorites" class="inline-block px-4 py-2 bg-[#AB4A2F] text-white rounded hover:bg-[#F18F73] transition">
+                        Add More Favorite Dishes
+                    </button>
+                {% endif %}
             </div>
         </div>
         
-        <div>
-            <h2 class="text-2xl font-bold mb-4">Reviewed Dishes</h2>
+        <div class="bg-[#EFD19A] rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-4 text-[#3C3837]">Reviewed Dishes</h2>
             <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
                 {% for i in '123'|make_list %}
                 <div class="bg-white rounded shadow overflow-hidden">
                     <img src="https://via.placeholder.com/300x200?text=Reviewed+Dish" alt="Placeholder" class="w-full h-40 object-cover">
                     <div class="p-2">
-                        <p class="font-medium">Tasty Meal {{ forloop.counter }}</p>
-                        <p class="text-sm text-gray-600">Rating: {{ forloop.counter|add:"2" }}/5</p>
+                        <p class="font-medium text-[#3C3837]">Tasty Meal {{ forloop.counter }}</p>
+                        <p class="text-sm text-[#AB4A2F]">Rating: {{ forloop.counter|add:"2" }}/5</p>
                     </div>
                 </div>
                 {% endfor %}
             </div>
         </div>
         
-        <div>
-            <h2 class="text-2xl font-bold mb-4">Forum Comments</h2>
+        <div class="bg-[#FDC66B] rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-4 text-[#3C3837]">Forum Comments</h2>
             <div class="space-y-4">
                 {% for i in '123'|make_list %}
-                <div class="bg-gray-100 rounded p-4">
-                    <p class="text-gray-800">"This is a placeholder comment about a delicious dish. It's really tasty and I recommend it to everyone!"</p>
-                    <p class="text-sm text-gray-600 mt-2">on Tasty Discussion Thread {{ forloop.counter }} - Jan {{ forloop.counter }}, 2024</p>
+                <div class="bg-[#FFFFFF] rounded p-4">
+                    <p class="text-[#3C3837]">"This is a placeholder comment about a delicious dish. It's really tasty and I recommend it to everyone!"</p>
+                    <p class="text-sm text-[#AB4A2F] mt-2">on Tasty Discussion Thread {{ forloop.counter }} - Jan {{ forloop.counter }}, 2024</p>
                 </div>
                 {% endfor %}
             </div>
