@@ -10,11 +10,17 @@ from main.models import Food
 # Create your views here.
 def food_reviews(request, food_id):
     food = get_object_or_404(Food, uuid=food_id)
-    reviews = food.reviews.all().order_by('-timestamp')
+    
+    order = request.GET.get('order', 'newest')  
+    if order == 'oldest':
+        reviews = food.reviews.all().order_by('timestamp')
+    else:
+        reviews = food.reviews.all().order_by('-timestamp')
 
     context = {
         'food': food,
         'reviews': reviews,
+        'current_order': order,
     }
     return render(request, 'review.html', context)
 
@@ -54,7 +60,7 @@ def create_review(request, food_id):
         'average_rating': new_average_rating
     }, status=201)
     
-# @user_passes_test(lambda u: u.is_superuser)
+@user_passes_test(lambda u: u.is_admin)
 def delete_review(request, review_id):
     review = get_object_or_404(Review, uuid=review_id)
     food = review.food

@@ -7,14 +7,14 @@
 {% block content %}
 {% include 'navbar.html' %}
 <div class="flex flex-col w-full h-screen max-w-4xl mx-auto my-8 mt-20">
-    <div class="flex flex-row">
-        <div class="mr-8">
-            <img src="https://via.placeholder.com/600x300" alt="Placeholder Image" width="300" height="200">
+    <div class="flex flex-row px-20">
+        <div class="w-64 h-48 overflow-hidden mr-8">
+            <img src="{{ food.image }}" alt="Placeholder Image" class="object-cover h-full w-full">
         </div>
         <div class="flex flex-col border-l border-[#EFD19A] p-4">
         <h1 class="text-3xl">{{ food.name }}</h1>
         <p class="text-gray-500">{{ food.vendor_name }}</p>
-        <p class="mt-auto mb-4">{{ food.price }}</p>
+        <p class="mt-auto text-2xl">Rp. {{ food.price }}</p>
             <span class="average-rating-stars flex flex-row text-yellow-500">
                 {% for i in "12345"%}
                     {% if forloop.counter <= food.average_rating %}
@@ -67,6 +67,15 @@
     
 
     <!-- Reviews Section (Bottom) -->
+    <div class="flex justify-end mt-8">
+        <form method="get" action="{% url 'food_reviews' food.uuid %}" class="flex items-center">
+            <label for="order" class="mr-2">Order reviews:</label>
+            <select name="order" id="order" onchange="this.form.submit()" class="bg-white border-4 border-[#EFD19A] rounded p-2">
+                <option value="newest" {% if current_order == 'newest' %}selected{% endif %}>Latest</option>
+                <option value="oldest" {% if current_order == 'oldest' %}selected{% endif %}>Oldest</option>
+            </select>
+        </form>
+    </div>
     <div id="reviewsTitle" class="w-full p-6 mt-8">
         <h2 class="text-2xl font-semibold mb-4">Past Reviews</h2>
         <div id="reviewsContainer" class="w-full">
