@@ -25,16 +25,8 @@
                 {% if comment.food %}
                     <a href="{% url 'review:food_reviews' comment.food.uuid %}" class="text-sm font-semibold text-[#AB4A2F] mb-2 hover:text-[#F18F73] transition duration-300 ease-in-out hover:underline">Food Mentioned: {{ comment.food.name }}</a>                   
                 {% endif %}
-                <div class="flex items-center justify-between text-sm">
-                    <span class="text-sm text-[#AB4A2F]">{{ comment.created_at|date:"l, d F Y" }} at {{ comment.created_at|date:"H:i" }}</span>
-                    <div class="flex items-center">
-                        <div class="flex items-center space-x-2">
-                            <span class="text-[#AB4A2F]">{{ comment.replies.count }} replies</span>
-                            <a href="{% url 'community:comment_detail' comment.uuid %}" class="text-sm text-[#F18F73] hover:text-[#AB4A2F] transition duration-300 ease-in-out hover:underline">
-                                Reply or see more replies
-                            </a>
-                        </div>                            
-                    </div>
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between text-sm">
+                    <span class="text-sm text-[#AB4A2F] mb-2 sm:mb-0">{{ comment.created_at|date:"l, d F Y" }} at {{ comment.created_at|date:"H:i" }}</span>
                 </div>
             </div>
             <div class="absolute top-4 right-4">
