@@ -24,5 +24,7 @@ urlpatterns = [
     path('review/', include('review.urls')),
     path('module4/', include('module4.urls')),
     path('catalog/', include('catalog.urls')),
-    path('report/', include('report.urls'))
+    path('report/', include('report.urls')),
+    path('profile/', include('profilepage.urls')),
+    path('community/', include('community.urls')),
 ]

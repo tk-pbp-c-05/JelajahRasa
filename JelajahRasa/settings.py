@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     "report",
     "profilepage",
     "community",
+    "profilepage",
 ]
 
 MIDDLEWARE = [
