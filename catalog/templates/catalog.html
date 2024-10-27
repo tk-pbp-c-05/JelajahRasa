@@ -32,9 +32,9 @@
                 {% endif %}
 
                 <div class="p-4 border-t border-gray-200 flex justify-between">
+                    <a href="{% url 'food_reviews' food_id=food.uuid %}" class=" text-white px-4 py-2 rounded" style="background-color:#983132">Review</a>
                     {% if user.is_authenticated %}
-                        <a href="{% url 'food_reviews' food_id=food.uuid %}" class=" text-white px-4 py-2 rounded" style="background-color:#983132">Review</a>
-                        <button class="text-white px-4 py-2 rounded-md transition create-report-btn" style="background-color:#983132" data-report-id="{{ food.uuid }}" onclick="openReportModal('{{ food.uuid }}')"> Report </button>
+                    <button class="text-white px-4 py-2 rounded-md transition create-report-btn" style="background-color:#983132" data-report-id="{{ food.uuid }}" onclick="openReportModal('{{ food.uuid }}')"> Report </button>
                     {% endif %}
                 </div>
                 <div class="p-4">
