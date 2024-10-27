@@ -32,7 +32,7 @@ class CustomUser(AbstractUser):
     email = models.EmailField(unique=True)
     image_url = models.CharField(max_length=255, blank=True, null=True)
     is_admin = models.BooleanField(default=False)
-
+    location = models.CharField(max_length=50, blank=True, null=True, default="Indonesia")
     groups = models.ManyToManyField(
         'auth.Group',
         verbose_name='groups',

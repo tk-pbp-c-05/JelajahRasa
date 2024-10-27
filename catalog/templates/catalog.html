@@ -13,12 +13,13 @@
 
 {% block content %}
 {% include 'navbar.html' %}
-<body class="bg-gray-100">
+<body class="bg-gray-100 pt-16">
 
     <div class="container mx-auto p-6">
         <h1 class="text-3xl font-bold text-center mb-8">Food Catalog</h1>
         
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {% if catalogs %}
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {% for food in catalogs %}
             <!-- Card Structure -->
             <div class="bg-white shadow-md rounded-lg overflow-hidden">
@@ -40,7 +41,16 @@
 
                 <!-- Card Buttons for Review and Report -->
             </div>
-            {% endfor %}
+        {% endfor %}
+            {% else %}
+            <div class="text-center py-8">
+                <p class="text-xl text-gray-600">The catalog is currently empty. Check back later for delicious food items!</p>
+                <a href="{% url 'module4:add_dish' %}" class="text-[#F18F73] hover:text-red-700 font-bold py-2 px-4 rounded transition duration-300">
+                    Want to add new food?
+                </a>
+            </div>
+        {% endif %}
+            
         </div>
     </div>
     <div id="create-report-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50">
