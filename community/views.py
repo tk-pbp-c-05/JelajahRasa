@@ -3,11 +3,24 @@ from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from .models import Comment, Reply
 from main.models import Food, CustomUser
+from django.template.loader import render_to_string
+from django.contrib.auth.decorators import login_required
+from .models import Comment, Reply
 from .forms import CommentForm, ReplyForm
+from main.models import Food, CustomUser
+from django.http import JsonResponse
 
+
+@login_required
 def community_home(request):
     comments = Comment.objects.all().order_by('-created_at')
-    return render(request, 'community.html', {'comments': comments})
+    foods = Food.objects.all()
+    context = {
+        'comments': comments,
+        'foods': foods,
+        'user': request.user
+    }
+    return render(request, 'community.html', context)
 
 @login_required
 def add_comment(request):
@@ -16,41 +29,61 @@ def add_comment(request):
         if form.is_valid():
             comment = form.save(commit=False)
             comment.user = request.user
-            if form.cleaned_data['food_name']:
-                food = get_object_or_404(Food, name=form.cleaned_data['food_name'])
-                comment.food = food
             comment.save()
-            return redirect('community:home')
-    else:
-        form = CommentForm()
-    return render(request, 'add_comment.html', {'form': form})
-
-@login_required
-def edit_comment(request, uuid):
-    comment = get_object_or_404(Comment, uuid=uuid, user=request.user)
-    if not comment.is_editable:
-        return redirect('home')
-    
-    if request.method == 'POST':
-        form = CommentForm(request.POST, instance=comment)
-        if form.is_valid():
-            form.save()
-            return redirect('community:home')  # Change this line
-    else:
-        form = CommentForm(instance=comment)
-    return render(request, 'edit_comment.html', {'form': form})
+            comments = Comment.objects.all().order_by('-created_at')
+            html = render_to_string('comments_list.html', {'comments': comments, 'user': request.user})
+            comments = Comment.objects.all().order_by('-created_at')
+            html = render_to_string('comments_list.html', {'comments': comments, 'user': request.user})
+            return JsonResponse({'success': True, 'html': html})
+    return JsonResponse({'success': False, 'error': 'Invalid request method'})
 
 @login_required
 def add_reply(request, comment_uuid):
-    comment = get_object_or_404(Comment, uuid=comment_uuid)
     if request.method == 'POST':
+        comment = get_object_or_404(Comment, uuid=comment_uuid)
         form = ReplyForm(request.POST)
         if form.is_valid():
             reply = form.save(commit=False)
             reply.user = request.user
             reply.comment = comment
             reply.save()
-            return redirect('community:home')  # Change this line
-    else:
-        form = ReplyForm()
-    return render(request, 'add_reply.html', {'form': form, 'comment': comment})
+            comments = Comment.objects.all().order_by('-created_at')
+            html = render_to_string('comments_list.html', {'comments': comments, 'user': request.user})
+            return JsonResponse({'success': True, 'html': html})
+        else:
+            return JsonResponse({'success': False, 'error': form.errors})
+    return JsonResponse({'success': False, 'error': 'Invalid request method'})
+
+@login_required
+def edit_comment(request, uuid):
+    comment = get_object_or_404(Comment, uuid=uuid)
+    if request.method == 'POST':
+        form = CommentForm(request.POST, instance=comment)
+        if form.is_valid():
+            form.save()
+            comments = Comment.objects.all().order_by('-created_at')
+            html = render_to_string('comments_list.html', {'comments': comments, 'user': request.user})
+            return JsonResponse({'success': True, 'html': html})
+        else:
+            return JsonResponse({'success': False, 'error': form.errors})
+    return JsonResponse({'success': False, 'error': 'Invalid request method'})
+
+@login_required
+def delete_comment(request, uuid):
+    comment = get_object_or_404(Comment, uuid=uuid)
+    if request.user == comment.user:
+        comment.delete()
+        comments = Comment.objects.all().order_by('-created_at')
+        html = render_to_string('comments_list.html', {'comments': comments, 'user': request.user})
+        return JsonResponse({'success': True, 'html': html})
+    return JsonResponse({'success': False, 'error': 'You are not authorized to delete this comment.'})
+
+@login_required
+def delete_reply(request, uuid):
+    reply = get_object_or_404(Reply, uuid=uuid)
+    if request.user == reply.user:
+        reply.delete()
+        comments = Comment.objects.all().order_by('-created_at')
+        html = render_to_string('comments_list.html', {'comments': comments, 'user': request.user})
+        return JsonResponse({'success': True, 'html': html})
+    return JsonResponse({'success': False, 'error': 'You are not authorized to delete this reply.'})

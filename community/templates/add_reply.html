@@ -12,7 +12,10 @@
     </div>
     <form method="post" class="bg-[#EFD19A] rounded-lg shadow-lg p-6">
         {% csrf_token %}
-        {{ form.as_p }}
+        <div class="mb-4">
+            <label for="{{ form.content.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">Your Reply</label>
+            {{ form.content }}
+        </div>
         <button type="submit" class="mt-4 px-4 py-2 bg-[#AB4A2F] text-white rounded hover:bg-[#F18F73] transition">Submit Reply</button>
     </form>
     <a href="{% url 'community:home' %}" class="inline-block mt-4 text-[#F18F73] hover:underline">Back to Community</a></div>
