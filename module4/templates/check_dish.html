@@ -14,9 +14,9 @@
   <input type="text" id="searchInput" placeholder="Search dish" class="px-4 py-2 w-full bg-gray-100 border border-gray-300 rounded-lg focus:outline-none">
 </div>
 
-<!-- Table -->
-{% if pending_dishes %}
-<div class="mx-2">
+<div class="table-placeholder flex-grow mb-16">
+  {% if pending_dishes %}
+  <div class="mx-2">
     <table class="table-auto w-full text-left bg-white shadow-md rounded-lg overflow-hidden">
       <thead class="rounded-t-lg">
         <tr class="bg-gray-200 text-gray-600 text-sm leading-normal">
@@ -72,10 +72,12 @@
         
       </tbody>
     </table>
+  </div>
+  {% else %}
+    <p>No pending dishes.</p>
+  {% endif %}
 </div>
-{% else %}
-  <p>No pending dishes.</p>
-{% endif %}
+
 <script>
     function getCookie(name) {
         let cookieValue = null;
@@ -122,7 +124,6 @@
     });
 }
 
-
 function deleteDish(dishUuid) {
     const csrftoken = getCookie('csrftoken');
     fetch(`/module4/approve-dish/${dishUuid}/`, {
@@ -153,7 +154,6 @@ function deleteDish(dishUuid) {
       });
     }
     
-  // Search Functionality
   document.addEventListener('DOMContentLoaded', function() {
       const searchInput = document.getElementById('searchInput');
       if (searchInput) {
@@ -175,6 +175,26 @@ function deleteDish(dishUuid) {
             });
         }
     });
-    </script>
+</script>
+<style>
+  body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+}
+
+.table-placeholder {
+    flex-grow: 1;
+}
+
+footer {
+    background-color: #983132;
+    color: white;
+    padding: 20px;
+    width: 100%;
+    margin-top: auto;
+}
+</style>
 
 {% endblock content %}
