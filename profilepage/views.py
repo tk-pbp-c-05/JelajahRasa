@@ -7,18 +7,21 @@ from django.urls import reverse
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from MyFavoriteDishes.models import FavoriteDish
-
+from review.models import Review
 # Create your views here.
 
 @login_required
 def profile_view(request, username):
     profile_user = get_object_or_404(CustomUser, username=username)
     favorite_dishes = FavoriteDish.objects.filter(user=profile_user)
+    reviews = Review.objects.filter(user=profile_user)
     context = {
         'profile_user': profile_user,
         'user': request.user,
         'favorite_dishes': favorite_dishes,
         'favorite_dishes_count': favorite_dishes.count(),
+        'reviews': reviews,
+        'reviews_count': reviews.count(),
     }
     return render(request, 'profile.html', context)
 
