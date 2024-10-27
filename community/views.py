@@ -7,7 +7,7 @@ from .forms import CommentForm, ReplyForm
 
 def community_home(request):
     comments = Comment.objects.all().order_by('-created_at')
-    return render(request, 'community/home.html', {'comments': comments})
+    return render(request, 'community.html', {'comments': comments})
 
 @login_required
 def add_comment(request):
@@ -20,25 +20,25 @@ def add_comment(request):
                 food = get_object_or_404(Food, name=form.cleaned_data['food_name'])
                 comment.food = food
             comment.save()
-            return redirect('community_home')
+            return redirect('community:home')
     else:
         form = CommentForm()
-    return render(request, 'community/add_comment.html', {'form': form})
+    return render(request, 'add_comment.html', {'form': form})
 
 @login_required
 def edit_comment(request, uuid):
     comment = get_object_or_404(Comment, uuid=uuid, user=request.user)
     if not comment.is_editable:
-        return redirect('community_home')
+        return redirect('home')
     
     if request.method == 'POST':
         form = CommentForm(request.POST, instance=comment)
         if form.is_valid():
             form.save()
-            return redirect('community_home')
+            return redirect('community:home')  # Change this line
     else:
         form = CommentForm(instance=comment)
-    return render(request, 'community/edit_comment.html', {'form': form})
+    return render(request, 'edit_comment.html', {'form': form})
 
 @login_required
 def add_reply(request, comment_uuid):
@@ -50,12 +50,7 @@ def add_reply(request, comment_uuid):
             reply.user = request.user
             reply.comment = comment
             reply.save()
-            return redirect('community_home')
+            return redirect('community:home')  # Change this line
     else:
         form = ReplyForm()
-    return render(request, 'community/add_reply.html', {'form': form, 'comment': comment})
-
-def user_profile(request, username):
-    user = get_object_or_404(CustomUser, username=username)
-    comments = user.comments.all().order_by('-created_at')
-    return render(request, 'community/user_profile.html', {'profile_user': user, 'comments': comments})
+    return render(request, 'add_reply.html', {'form': form, 'comment': comment})

@@ -1,29 +1,37 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
-<h1>Community</h1>
-<a href="{% url 'add_comment' %}">Add Comment</a>
+{% include 'navbar.html' %}
+<div class="max-w-6xl mx-auto px-4 py-8 pt-20">
+    <h1 class="text-3xl font-bold text-[#3C3837] mb-6">Community</h1>
+    <a href="{% url 'community:add_comment' %}" class="inline-block px-4 py-2 bg-[#AB4A2F] text-white rounded hover:bg-[#F18F73] transition mb-6">Add Comment</a>
 
-{% for comment in comments %}
-    <div class="comment">
-        <p>{{ comment.content }}</p>
-        <p>By: <a href="{% url 'user_profile' comment.user.username %}">{{ comment.user.username }}</a></p>
-        <p>Date: {{ comment.created_at }}</p>
-        {% if comment.food %}
-            <p>Food: {{ comment.food.name }}</p>
-        {% endif %}
-        {% if comment.user == request.user and comment.is_editable %}
-            <a href="{% url 'edit_comment' comment.uuid %}">Edit</a>
-        {% endif %}
-        <a href="{% url 'add_reply' comment.uuid %}">Reply</a>
-        
-        {% for reply in comment.replies.all %}
-            <div class="reply">
-                <p>{{ reply.content }}</p>
-                <p>By: {{ reply.user.username }}</p>
-                <p>Date: {{ reply.created_at }}</p>
+    <div class="space-y-6">
+        {% for comment in comments %}
+            <div class="bg-[#FDEDDA] rounded-lg shadow-lg p-6">
+                <p class="text-lg text-[#3C3837] mb-2">{{ comment.content }}</p>
+                <p class="text-sm text-[#AB4A2F]">By: <a href="{% url 'profilepage:profile' comment.user.username %}" class="font-bold hover:underline">{{ comment.user.username }}</a></p>
+                <p class="text-sm text-[#AB4A2F]">Date: {{ comment.created_at|date:"F d, Y H:i" }}</p>
+                {% if comment.food %}
+                    <p class="text-sm text-[#AB4A2F]">Food: {{ comment.food.name }}</p>
+                {% endif %}
+                <div class="mt-2 space-x-2">
+                    {% if comment.user == request.user and comment.is_editable %}
+                        <a href="{% url 'community:edit_comment' comment.uuid %}" class="text-sm text-[#F18F73] hover:underline">Edit</a>
+                    {% endif %}
+                    <a href="{% url 'community:add_reply' comment.uuid %}" class="text-sm text-[#F18F73] hover:underline">Reply</a>
+                </div>
+                
+                {% for reply in comment.replies.all %}
+                    <div class="bg-white rounded p-4 mt-2">
+                        <p class="text-[#3C3837]">{{ reply.content }}</p>
+                        <p class="text-sm text-[#AB4A2F]">By: {{ reply.user.username }}</p>
+                        <p class="text-sm text-[#AB4A2F]">Date: {{ reply.created_at|date:"F d, Y H:i" }}</p>
+                    </div>
+                {% endfor %}
             </div>
         {% endfor %}
     </div>
-{% endfor %}
+</div>
 {% endblock %}

@@ -1,10 +1,11 @@
 from django.urls import path
-from . import views
+from .views import community_home, add_comment, edit_comment, add_reply
+
+app_name = 'community'
 
 urlpatterns = [
-    path('', views.community_home, name='community_home'),
-    path('add_comment/', views.add_comment, name='add_comment'),
-    path('edit_comment/<uuid:uuid>/', views.edit_comment, name='edit_comment'),
-    path('add_reply/<uuid:comment_uuid>/', views.add_reply, name='add_reply'),
-    path('user/<str:username>/', views.user_profile, name='user_profile'),
+    path('', community_home, name='home'),
+    path('add_comment/', add_comment, name='add_comment'),
+    path('edit_comment/<uuid:uuid>/', edit_comment, name='edit_comment'),
+    path('add_reply/<uuid:comment_uuid>/', add_reply, name='add_reply'),
 ]
