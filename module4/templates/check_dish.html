@@ -94,38 +94,39 @@
   }
   
   function approveDish(dishUuid) {
-      const csrftoken = getCookie('csrftoken');
-      fetch(`/approve-dish/${dishUuid}/`, {
-          method: 'POST',
-          headers: {
-              'X-CSRFToken': csrftoken,
-              'Content-Type': 'application/x-www-form-urlencoded',
-          },
-          body: new URLSearchParams({
-              'action': 'approve'
-          })
-      })
-      .then(response => response.json())
-      .then(data => {
-          if (data.status === 'approved') {
-              const row = document.getElementById(`dish-row-${dishUuid}`);
-              if (row) {
-                  row.remove();
-                  console.log('Dish approved successfully');
-              }
-          } else {
-              alert('Failed to approve dish.');
-          }
-      })
-      .catch(error => {
-          console.error('Error:', error);
-          alert('An error occurred while approving the dish.');
-      });
-  }
+    const csrftoken = getCookie('csrftoken');
+    fetch(`/module4/approve-dish/${dishUuid}/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': csrftoken,
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({
+            'action': 'approve'
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'approved') {
+            const row = document.getElementById(`dish-row-${dishUuid}`);
+            if (row) {
+                row.remove();
+                console.log('Dish approved successfully');
+            }
+        } else {
+            alert('Failed to approve dish.');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred while approving the dish.');
+    });
+}
+
   
   function deleteDish(dishUuid) {
       const csrftoken = getCookie('csrftoken');
-      fetch(`/approve-dish/${dishUuid}/`, {
+      fetch(`/module4/approve-dish/${dishUuid}/`, {
           method: 'POST',
           headers: {
               'X-CSRFToken': csrftoken,
