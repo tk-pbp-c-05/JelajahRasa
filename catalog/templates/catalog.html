@@ -32,10 +32,10 @@
                 {% endif %}
 
                 <div class="p-4 border-t border-gray-200 flex justify-between">
-                    {% if user.is_authenticated %}
                         <a href="{% url 'review:food_reviews' food_id=food.uuid %}" class=" text-white px-4 py-2 rounded" style="background-color:#983132">Review</a>
+                        {% if user.is_authenticated %}
                         <button class="text-white px-4 py-2 rounded-md transition create-report-btn" style="background-color:#983132" data-report-id="{{ food.uuid }}" onclick="openReportModal('{{ food.uuid }}')"> Report </button>
-                    {% endif %}
+                        {% endif %}
                 </div>
                 <div class="p-4">
                     <h2 class="text-xl font-semibold">{{ food.name }}</h2>
