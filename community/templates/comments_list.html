@@ -3,7 +3,7 @@
     <div class="comment bg-[#FDEDDA] rounded-lg shadow-lg p-4 sm:p-6 relative">
         <div class="flex items-start">
             <a href="{% url 'profilepage:profile' comment.user.username %}">
-                <img src="{{ comment.user.image_url }}" alt="{{ comment.user.username }}" class="w-12 h-12 rounded-full mr-4">
+                <img src="{{ comment.user.image_url|default:"https://static.vecteezy.com/system/resources/thumbnails/009/292/244/small/default-avatar-icon-of-social-media-user-vector.jpg" }}" alt="{{ comment.user.username }}" class="w-12 h-12 rounded-full mr-4">
             </a>
             <div class="flex-grow">
                 <a href="{% url 'profilepage:profile' comment.user.username %}" class="font-bold text-[#3C3837] text-xl mb-2">{{ comment.user.username }}</a>

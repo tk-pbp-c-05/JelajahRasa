@@ -69,7 +69,7 @@ def edit_comment(request, uuid):
 @login_required
 def delete_comment(request, uuid):
     comment = get_object_or_404(Comment, uuid=uuid)
-    if request.user == comment.user:
+    if request.user == comment.user or request.user.is_admin:
         comment.delete()
         comments = Comment.objects.all().order_by('-created_at')
         html = render_to_string('comments_list.html', {'comments': comments, 'user': request.user})
@@ -79,7 +79,7 @@ def delete_comment(request, uuid):
 @login_required
 def delete_reply(request, uuid):
     reply = get_object_or_404(Reply, uuid=uuid)
-    if request.user == reply.user:
+    if request.user == reply.user or request.user.is_admin:
         reply.delete()
         comments = Comment.objects.all().order_by('-created_at')
         html = render_to_string('comments_list.html', {'comments': comments, 'user': request.user})
