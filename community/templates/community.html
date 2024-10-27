@@ -9,31 +9,39 @@
 
     <div id="comments-container" class="space-y-6">
         {% for comment in comments %}
-        <div class="comment bg-[#FDEDDA] rounded-lg shadow-lg p-4 sm:p-6 relative">
+        <div class="comment bg-[#FFF5EA] rounded-lg shadow-lg p-4 sm:p-6 relative">
             <div class="flex items-start">
-                <a href="{% url 'profilepage:profile' comment.user.username %}">
-                    <img src="{{ comment.user.image_url|default:"https://static.vecteezy.com/system/resources/thumbnails/009/292/244/small/default-avatar-icon-of-social-media-user-vector.jpg" }}" alt="{{ comment.user.username }}" class="w-12 h-12 rounded-full mr-4">
+                <a href="{% url 'profilepage:profile' comment.user.username %}" class="flex-shrink-0">
+                    <img src="{{ comment.user.image_url|default:'https://static.vecteezy.com/system/resources/thumbnails/009/292/244/small/default-avatar-icon-of-social-media-user-vector.jpg' }}" alt="{{ comment.user.username }}" class="w-12 h-12 rounded-full mr-4">
                 </a>
                 <div class="flex-grow">
-                    <a href="{% url 'profilepage:profile' comment.user.username %}" class="font-bold text-[#3C3837] text-xl mb-2">{{ comment.user.username }}</a>
+                    <div class="flex items-center justify-between mb-2">
+                        <a href="{% url 'profilepage:profile' comment.user.username %}" class="text-l">
+                            <span class="font-bold text-[#3C3837]">{{comment.user.first_name}}</span>
+                            <span class="font-bold text-[#CEB88F] hover:text-[#AB4A2F] transition duration-300">@{{ comment.user.username }}</span>
+                        </a>                
+                    </div>
                     <a href="{% url 'community:comment_detail' comment.uuid %}" class="block">
-                        <p class="comment-content text-lg text-[#3C3837] mb-2">{{ comment.content }}</p>
+                        <p class="comment-content text-lg text-[#3C3837] mb-4">{{ comment.content }}</p>
                     </a>
                     {% if comment.food %}
-                        <p class="text-sm text-[#AB4A2F] mb-2">Food Mentioned: {{ comment.food.name }}</p>
+                        <a href="{% url 'review:food_reviews' comment.food.uuid %}" class="block text-sm font-semibold text-[#AB4A2F] mb-2 hover:text-[#F18F73] transition duration-300 ease-in-out hover:underline">Food Mentioned: {{ comment.food.name }}</a>                   
                     {% endif %}
-                    <div class="flex items-center">
-                        <button class="open-reply-modal text-sm text-[#F18F73] hover:underline mr-2" data-comment-uuid="{{ comment.uuid }}">Reply</button>
-                        <span class="text-sm text-[#AB4A2F]">{{ comment.replies.count }} replies</span>
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between text-sm">
+                        <span class="text-sm text-[#AB4A2F] mb-2 sm:mb-0">{{ comment.created_at|date:"l, d F Y" }} at {{ comment.created_at|date:"H:i" }}</span>
+                        <div class="flex items-center space-x-2">
+                            <span class="text-[#AB4A2F]">{{ comment.replies.count }} replies</span>
+                            <a href="{% url 'community:comment_detail' comment.uuid %}" class="text-sm text-[#F18F73] hover:text-[#AB4A2F] transition duration-300 ease-in-out hover:underline">
+                                Reply or see more replies
+                            </a>
+                        </div>
                     </div>
-                    <p class="text-sm text-[#AB4A2F] mb-2 pt-4">{{ comment.created_at|date:"l, d F Y" }} at {{ comment.created_at|date:"H:i" }}</p>
-
                 </div>
-                <div class="absolute top-2 right-2">
+                <div class="absolute top-4 right-4">
                     <div class="relative inline-block text-left">
                         {% if user.is_admin or comment.user == user %}
                         <button class="three-dot-menu p-1 rounded-full hover:bg-gray-200 focus:outline-none" data-uuid="{{ comment.uuid }}" data-type="comment">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-[#AB4A2F]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
                             </svg>
                         </button>

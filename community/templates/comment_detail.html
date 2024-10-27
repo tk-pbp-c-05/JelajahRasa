@@ -7,29 +7,40 @@
     <h1 class="text-3xl font-bold text-[#3C3837] mb-6">Comment Detail</h1>
     
     <!-- Main Comment -->
-    <div class="comment bg-[#FDEDDA] rounded-lg shadow-lg p-4 sm:p-6 relative mb-6">
+    <div class="comment bg-[#FFF5EA] rounded-lg shadow-lg p-4 sm:p-6 relative">
         <div class="flex items-start">
-            <img src="{{ comment.user.image_url|default:"https://static.vecteezy.com/system/resources/thumbnails/009/292/244/small/default-avatar-icon-of-social-media-user-vector.jpg" }}" alt="{{ comment.user.username }}" class="w-12 h-12 rounded-full mr-4">
+            <a href="{% url 'profilepage:profile' comment.user.username %}" class="flex-shrink-0">
+                <img src="{{ comment.user.image_url|default:'https://static.vecteezy.com/system/resources/thumbnails/009/292/244/small/default-avatar-icon-of-social-media-user-vector.jpg' }}" alt="{{ comment.user.username }}" class="w-12 h-12 rounded-full mr-4">
+            </a>
             <div class="flex-grow">
-                <p class="font-bold text-[#3C3837] text-xl mb-2">{{ comment.user.username }}</p>
-                <p class="comment-content text-lg text-[#3C3837] mb-2">{{ comment.content }}</p>
-                <p class="text-sm text-[#AB4A2F]">{{ comment.created_at|date:"l, d F Y" }} at {{ comment.created_at|date:"H:i" }}</p>
+                <div class="flex items-center justify-between mb-2">
+                    <a href="{% url 'profilepage:profile' comment.user.username %}" class="text-l">
+                        <span class="font-bold text-[#3C3837]">{{comment.user.first_name}}</span>
+                        <span class="font-bold text-[#CEB88F] hover:text-[#AB4A2F] transition duration-300">@{{ comment.user.username }}</span>
+                    </a>                
+                </div>
+                <a href="{% url 'community:comment_detail' comment.uuid %}" class="block">
+                    <p class="comment-content text-lg text-[#3C3837] mb-4">{{ comment.content }}</p>
+                </a>
                 {% if comment.food %}
-                    <p class="text-sm text-[#AB4A2F] mt-2">Food Mentioned: {{ comment.food.name }}</p>
+                    <a href="{% url 'review:food_reviews' comment.food.uuid %}" class="text-sm font-semibold text-[#AB4A2F] mb-2 hover:text-[#F18F73] transition duration-300 ease-in-out hover:underline">Food Mentioned: {{ comment.food.name }}</a>                   
                 {% endif %}
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between text-sm">
+                    <span class="text-sm text-[#AB4A2F] mb-2 sm:mb-0">{{ comment.created_at|date:"l, d F Y" }} at {{ comment.created_at|date:"H:i" }}</span>
+                </div>
             </div>
-            <div class="absolute top-2 right-2">
+            <div class="absolute top-4 right-4">
                 <div class="relative inline-block text-left">
                     {% if user.is_admin or comment.user == user %}
                     <button class="three-dot-menu p-1 rounded-full hover:bg-gray-200 focus:outline-none" data-uuid="{{ comment.uuid }}" data-type="comment">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-[#AB4A2F]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
                         </svg>
                     </button>
                     <div class="three-dot-menu-content origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 hidden">
                         <div class="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
-                            <button class="edit-comment block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem" data-comment-uuid="{{ comment.uuid }}" data-food-id="{{ comment.food.uuid|default_if_none:'' }}">Edit</button>
-                            <button data-type="comment" class="delete-btn block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" data-url="{% url 'community:delete_comment' comment.uuid %}" role="menuitem">Delete</button>
+                            <button class="edit-comment block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem" data-comment-uuid="{{ comment.uuid }}" data-food-id="{{ comment.food.id|default_if_none:'' }}">Edit</button>
+                            <button class="delete-btn block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" data-url="{% url 'community:delete_comment' comment.uuid %}" role="menuitem">Delete</button>
                         </div>
                     </div>
                     {% endif %}
@@ -39,7 +50,7 @@
     </div>
 
     <!-- Replies -->
-    <h2 class="text-2xl font-bold text-[#3C3837] mb-4">Replies</h2>
+    <h2 class="text-2xl pt-8 font-bold text-[#3C3837] mb-4">Replies</h2>
     <button id="open-add-reply-modal" class="px-4 py-2 mb-8 bg-[#F18F73] text-white rounded hover:bg-[#AB4A2F] transition text-sm" data-comment-uuid="{{ comment.uuid }}">Add Reply</button>
     <div class="space-y-4">
         {% for reply in replies %}
@@ -49,7 +60,12 @@
                     <img src="{{ reply.user.image_url|default:"https://static.vecteezy.com/system/resources/thumbnails/009/292/244/small/default-avatar-icon-of-social-media-user-vector.jpg" }}" alt="{{ reply.user.username }}" class="w-12 h-12 rounded-full mr-4">
                 </a>
                 <div class="flex-grow">
-                    <a href="{% url 'profilepage:profile' reply.user.username %}" class="font-semibold text-[#3C3837] text-lg mb-1">{{ reply.user.username }}</a>
+                    <div class="flex items-center justify-between mb-2">
+                        <a href="{% url 'profilepage:profile' comment.user.username %}" class="text-l">
+                            <span class="font-bold text-[#3C3837]">{{comment.user.first_name}}</span>
+                            <span class="font-bold text-[#CEB88F] hover:text-[#AB4A2F] transition duration-300">@{{ comment.user.username }}</span>
+                        </a>                
+                    </div>                   
                     <p class="text-sm text-[#3C3837] mb-2">{{ reply.content }}</p>
                     <p class="text-xs text-[#AB4A2F]">{{ reply.created_at|date:"l, d F Y" }} at {{ reply.created_at|date:"H:i" }}</p>
                 </div>
