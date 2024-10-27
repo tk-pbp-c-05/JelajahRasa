@@ -4,6 +4,7 @@ from main.models import Food
 from module4.forms import NewDishForm
 from django.http import JsonResponse
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
 # Tampilkan home dengan hanya dish yang sudah di-approve
 def show_home(request):
@@ -11,6 +12,7 @@ def show_home(request):
     return render(request, 'home.html', {'dishes': approved_dishes})
 
 # Form untuk menambahkan dish
+@login_required
 def add_dish(request):
     form = NewDishForm(request.POST, request.FILES or None)
     if form.is_valid() and request.method == 'POST':
