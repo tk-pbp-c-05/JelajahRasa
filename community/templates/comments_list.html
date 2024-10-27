@@ -7,19 +7,26 @@
             </a>
             <div class="flex-grow">
                 <div class="flex items-center justify-between mb-2">
-                    <a href="{% url 'profilepage:profile' comment.user.username %}" class="font-bold text-[#3C3837] text-xl">{{ comment.user.username }}</a>
+                    <a href="{% url 'profilepage:profile' comment.user.username %}" class="text-l">
+                        <span class="font-bold text-[#3C3837]">{{comment.user.first_name}}</span>
+                        <span class="font-bold text-[#CEB88F] hover:text-[#AB4A2F] transition duration-300">@{{ comment.user.username }}</span>
+                    </a>                
                 </div>
-                {% if comment.food %}
-                    <p class="text-sm font-semibold text-[#AB4A2F] mb-2">Food Mentioned: {{ comment.food.name }}</p>
-                {% endif %}
                 <a href="{% url 'community:comment_detail' comment.uuid %}" class="block">
                     <p class="comment-content text-lg text-[#3C3837] mb-4">{{ comment.content }}</p>
                 </a>
+                {% if comment.food %}
+                    <a href="{% url 'review:food_reviews' comment.food.uuid %}" class="text-sm font-semibold text-[#AB4A2F] mb-2 hover:text-[#F18F73] transition duration-300 ease-in-out hover:underline">Food Mentioned: {{ comment.food.name }}</a>                   
+                {% endif %}
                 <div class="flex items-center justify-between text-sm">
                     <span class="text-sm text-[#AB4A2F]">{{ comment.created_at|date:"l, d F Y" }} at {{ comment.created_at|date:"H:i" }}</span>
                     <div class="flex items-center">
-                        <button class="open-reply-modal text-[#F18F73] hover:underline mr-4" data-comment-uuid="{{ comment.uuid }}">Reply</button>
-                        <span class="text-[#AB4A2F]">{{ comment.replies.count }} replies</span>
+                        <div class="flex items-center space-x-2">
+                            <span class="text-[#AB4A2F]">{{ comment.replies.count }} replies</span>
+                            <a href="{% url 'community:comment_detail' comment.uuid %}" class="text-sm text-[#F18F73] hover:text-[#AB4A2F] transition duration-300 ease-in-out hover:underline">
+                                Reply or see more replies
+                            </a>
+                        </div>                            
                     </div>
                 </div>
             </div>
