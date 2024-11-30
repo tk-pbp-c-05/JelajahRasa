@@ -19,7 +19,9 @@
                   Discover <span class="text-[#AB4A2F]">Malang's Culinary Gems</span>, One Dish at a Time
               </h1>
               <p class="text-gray-600 mb-6 text-center md:text-left">
-                We connect you to local culinary experiences, helping you explore a variety of dishes from small businesses while sharing reviews and recommendations from the community. Support local businesses, save your favorite dishes, and enjoy a flavorful adventure with every bite!              </p>
+                We connect you to local culinary experiences, helping you explore a variety of dishes from small businesses while sharing reviews and recommendations from the community. Support local businesses, save your favorite dishes, and enjoy a flavorful adventure with every bite!    
+              </p>
+              {% if not user.is_authenticated %}
               <div class="flex flex-col justify-center text-center lg:flex-row justify-start">
                 <a href="{% url 'main:register' %}" class="inline-block bg-[#F18F73] text-white px-8 py-3 rounded-full hover:bg-red-700 transition duration-300 font-semibold">
                   Get Started
@@ -27,7 +29,8 @@
                 <a href="{% url 'main:login' %}" class="inline-block text-red-400 px-6 py-3 rounded-full hover:text-red-800 transition duration-300">
                   Already have an account? Login
                 </a>
-              </div>
+                </div>
+              {% endif %}
             </div>
             <!-- Foto Logo -->
             <div class="w-1/2 md:w-1/2">
