@@ -1,0 +1,41 @@
+<footer class="bg-gray-800 text-white py-6 mt-auto">
+    <div class="grid grid-cols-3 mx-auto gap-8 px-20 justify-center">
+        
+        <!-- About Section -->
+        <div>
+            <h3 class="text-lg font-semibold mb-4">About Us</h3>
+            <p class="text-sm">
+                Apa ges cerita ttg kita
+            </p>
+        </div>
+
+        <div>
+            <h3 class="text-lg font-semibold mb-4">Team Members</h3>
+            <div class="flex flex-wrap mr-2">
+                <p class="w-1/3">Dion</p>
+                <p class="w-1/3">Rafif</p>
+                <p class="w-1/3">Daffa</p>
+                <p class="w-1/3">Kayla</p>
+                <p class="w-1/3">Satria</p>
+            </div>
+        </div>
+
+        <div>
+            <h3 class="text-lg font-semibold mb-4">Customer Service</h3>
+            <li class="list-none"><a href="{% url 'module4:add_dish' %}">Add a new Dish</a></li>
+            <li class="list-none"><a href="{% url 'catalog:view_catalog' %}">Report a Dish through Catalog</a></li>
+            </div>
+        </div>
+    </div>
+
+    <div class="border-t border-gray-700 mt-6 pt-4">
+        <div class="container mx-auto text-center text-sm">
+            <p>&copy; 2024 My Website. All rights reserved.</p>
+            <ul class="flex justify-center space-x-4 mt-2">
+                <li><a href="#" class="hover:underline">Privacy Policy</a></li>
+                <li><a href="#" class="hover:underline">Terms of Service</a></li>
+                <li><a href="#" class="hover:underline">Contact Us</a></li>
+            </ul>
+        </div>
+    </div>
+</footer>
