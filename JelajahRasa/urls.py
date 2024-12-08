@@ -27,4 +27,5 @@ urlpatterns = [
     path('report/', include('report.urls')),
     path('profile/', include('profilepage.urls')),
     path('community/', include('community.urls')),
+    path('auth/', include('authentication.urls')),
 ]
