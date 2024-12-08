@@ -27,7 +27,7 @@ SECRET_KEY = "django-insecure-$gnzp(_!e$t+j-)uvltadvm=ywmgm2we)25*0=exktx8mw&)6c
 PRODUCTION = os.getenv("PRODUCTION", False)
 DEBUG = not PRODUCTION
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1", "daffa-desra-jelajahrasa.pbp.cs.ui.ac.id"]
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "daffa-desra-jelajahrasa.pbp.cs.ui.ac.id", "10.0.2.2"]
 
 # Application definition
 
@@ -46,6 +46,8 @@ INSTALLED_APPS = [
     "report",
     "community",
     "profilepage",
+    "authentication",
+    "corsheaders",
 ]
 
 MIDDLEWARE = [
@@ -58,6 +60,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = "JelajahRasa.urls"
@@ -141,3 +144,10 @@ else:
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 CSRF_TRUSTED_ORIGINS = ["http://localhost","http://127.0.0.1"]
+
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SAMESITE = 'None'
+SESSION_COOKIE_SAMESITE = 'None'
