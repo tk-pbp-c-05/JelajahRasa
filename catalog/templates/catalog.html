@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block meta %}
-<title> Food Catalogue </title>
+<title>Food Catalogue</title>
 <style>
     #notification.show {
         opacity: 1;
@@ -14,47 +14,69 @@
 {% block content %}
 {% include 'navbar.html' %}
 <body class="bg-gray-100 pt-16">
-
     <div class="container mx-auto p-6">
         <h1 class="text-3xl font-bold text-center mb-8">Food Catalog</h1>
         
+        <!-- Sorting and Filtering Controls -->
+        <div class="flex justify-between mb-6">
+            <!-- Filter by Flavor -->
+            <div>
+                <span class="font-semibold mr-2">Flavor:</span>
+                <a href="?flavor=Salty" class="bg-gray-200 text-gray-700 px-2 py-1 rounded hover:bg-gray-300">Salty</a>
+                <a href="?flavor=Sweet" class="bg-gray-200 text-gray-700 px-2 py-1 rounded hover:bg-gray-300">Sweet</a>
+            </div>
+
+            <!-- Filter by Type -->
+            <div>
+                <span class="font-semibold mr-2">Type:</span>
+                <a href="?category=Beverage" class="bg-gray-200 text-gray-700 px-2 py-1 rounded hover:bg-gray-300">Beverage</a>
+                <a href="?category=Food" class="bg-gray-200 text-gray-700 px-2 py-1 rounded hover:bg-gray-300">Food</a>
+            </div>
+
+            <!-- Sort by Options -->
+            <div>
+                <span class="font-semibold mr-2">Sort by:</span>
+                <a href="?sort_by=price&order=asc" class="bg-gray-200 text-gray-700 px-2 py-1 rounded hover:bg-gray-300">Price (Low to High)</a>
+                <a href="?sort_by=price&order=desc" class="bg-gray-200 text-gray-700 px-2 py-1 rounded hover:bg-gray-300">Price (High to Low)</a>
+                <a href="?sort_by=name&order=asc" class="bg-gray-200 text-gray-700 px-2 py-1 rounded hover:bg-gray-300">A-Z</a>
+                <a href="?sort_by=name&order=desc" class="bg-gray-200 text-gray-700 px-2 py-1 rounded hover:bg-gray-300">Z-A</a>
+            </div>
+        </div>
+
         {% if catalogs %}
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {% for food in catalogs %}
-            <!-- Card Structure -->
-            <div class="bg-white shadow-md rounded-lg overflow-hidden">
-                
-                <!-- Image Section -->
-                {% if food.image %}
-                    <img src="{{ food.image }}" alt="{{ food.name }}" class="w-full h-48 object-cover">
-                {% else %}
-                    <img src="{% static 'default-image.jpg' %}" alt="Default Image" class="w-full h-48 object-cover">
-                {% endif %}
-
-                <div class="p-4 border-t border-gray-200 flex justify-between">
-                        <a href="{% url 'review:food_reviews' food_id=food.uuid %}" class=" text-white px-4 py-2 rounded" style="background-color:#983132">Review</a>
-                    {% if user.is_authenticated %}
-                    <button class="text-white px-4 py-2 rounded-md transition create-report-btn" style="background-color:#983132" data-report-id="{{ food.uuid }}" onclick="openReportModal('{{ food.uuid }}')"> Report </button>
+                {% for food in catalogs %}
+                <!-- Card Structure -->
+                <div class="bg-white shadow-md rounded-lg overflow-hidden">
+                    <!-- Image Section -->
+                    {% if food.image %}
+                        <img src="{{ food.image }}" alt="{{ food.name }}" class="w-full h-48 object-cover">
+                    {% else %}
+                        <img src="{% static 'default-image.jpg' %}" alt="Default Image" class="w-full h-48 object-cover">
                     {% endif %}
-                </div>
-                <div class="p-4">
-                    <h2 class="text-xl font-semibold">{{ food.name }}</h2>
-                    <p class="text-gray-500">Flavor: {{ food.flavor }}</p>
-                    <p class="text-gray-500">Category: {{ food.category }}</p>
-                    <p class="text-gray-500">Vendor: {{ food.vendor_name }}</p>
-                    <p class="text-gray-700 font-bold mt-2">Rp. {{ food.price }}</p>
-                    <p class="text-gray-500 mt-1">Address: {{ food.address }}</p>
-                    <a href="{{ food.map_link }}" target="_blank" class="text-blue-500 hover:underline mt-2 inline-block">View on Map</a>
-                </div>
 
+                    <div class="p-4 border-t border-gray-200 flex justify-between">
+                        <a href="{% url 'review:food_reviews' food_id=food.uuid %}" class=" text-white px-4 py-2 rounded" style="background-color:#983132">Review</a>
+                        {% if user.is_authenticated %}
+                        <button class="text-white px-4 py-2 rounded-md transition create-report-btn" style="background-color:#983132" data-report-id="{{ food.uuid }}" onclick="openReportModal('{{ food.uuid }}')">Report</button>
+                        {% endif %}
+                    </div>
+                    <div class="p-4">
+                        <h2 class="text-xl font-semibold">{{ food.name }}</h2>
+                        <p class="text-gray-500">Flavor: {{ food.flavor }}</p>
+                        <p class="text-gray-500">Category: {{ food.category }}</p>
+                        <p class="text-gray-500">Vendor: {{ food.vendor_name }}</p>
+                        <p class="text-gray-700 font-bold mt-2">Rp. {{ food.price }}</p>
+                        <p class="text-gray-500 mt-1">Address: {{ food.address }}</p>
+                        <a href="{{ food.map_link }}" target="_blank" class="text-blue-500 hover:underline mt-2 inline-block">View on Map</a>
+                    </div>
+                </div>
+                {% endfor %}
             </div>
-            {% endfor %}
-            {% else %}
+        {% else %}
             <div class="text-center py-8">
                 <p class="text-xl text-gray-600">The catalog is currently empty. Check back later for delicious food items!</p>
-                <a href="{% url 'module4:add_dish' %}" class="text-[#F18F73] hover:text-red-700 font-bold py-2 px-4 rounded transition duration-300">
-                    Want to add new food?
-                </a>
+                <a href="{% url 'module4:add_dish' %}" class="text-[#F18F73] hover:text-red-700 font-bold py-2 px-4 rounded transition duration-300">Want to add new food?</a>
             </div>
         {% endif %}
             
@@ -73,7 +95,7 @@
                     <option value="out_of_stock">Out of Stock</option>
                     <option value="other">Other</option>
                 </select>
-    
+
                 <!-- Description Textarea -->
                 <label for="description" class="block mb-2 text-sm font-medium">Description</label>
                 <textarea id="description" class="border rounded-md w-full px-4 py-2 mb-4" rows="4" placeholder="Describe the issue" required></textarea>
@@ -91,7 +113,7 @@
     <div id="notification" class="hidden fixed bottom-4 left-4 bg-green-500 text-white px-4 py-2 rounded-md shadow-lg transition-opacity duration-300 opacity-0">
         <span id="notification-message"></span>
     </div>
-</body>
+
 <script>
     function getCookie(name) {
         let cookieValue = null;
@@ -109,67 +131,59 @@
     }
 
     const csrfToken = getCookie('csrftoken');
-   // Show the modal
-function openReportModal(foodId) {
-    document.getElementById("create-report-id").value = foodId;
-    document.getElementById("create-report-modal").classList.remove("hidden");
-}
 
-// Hide the modal
-function closeReportModal() {
-    document.getElementById("create-report-modal").classList.add("hidden");
-    document.getElementById("create-report-form").reset();
-}
-
-document.getElementById("cancel-create-report").addEventListener("click", closeReportModal);
-document.getElementById("create-report-form").addEventListener("submit", function (event) {
-    event.preventDefault();
-
-    const foodId = document.getElementById("create-report-id").value;
-    const issueType = document.getElementById("issue_type").value;
-    const description = document.getElementById("description").value;
-
-    fetch(`/report/food/${foodId}/`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "X-CSRFToken": csrfToken,
-        },
-        body: JSON.stringify({ issue_type: issueType, description: description }),
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-           showNotification("Report submitted successfully.")
-            closeReportModal();
-        } else {
-            showNotification("Failed to submit report.","error")
-        }
-    })
-    .catch(error => {
-        console.error("Error:", error);
-        showNotification("An error occurred.","error");
+    // Show the modal
+    function openReportModal(foodId) {
+        document.getElementById("create-report-id").value = foodId;
+        document.getElementById("create-report-modal").classList.remove("hidden");
+    }
+    function closeReportModal() {
+        document.getElementById("create-report-modal").classList.add("hidden");
+        document.getElementById("create-report-form").reset();
+    }
+    document.getElementById("cancel-create-report").addEventListener("click", closeReportModal);
+    document.getElementById("create-report-form").addEventListener("submit", function (event) {
+        event.preventDefault();
+        const foodId = document.getElementById("create-report-id").value;
+        const issueType = document.getElementById("issue_type").value;
+        const description = document.getElementById("description").value;
+        fetch(`/report/food/${foodId}/`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": csrfToken,
+            },
+            body: JSON.stringify({ issue_type: issueType, description: description }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+            showNotification("Report submitted successfully.")
+                closeReportModal();
+            } else {
+                showNotification("Failed to submit report.","error")
+            }
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            showNotification("An error occurred.","error");
+        });
     });
-
-}); 
-
-function showNotification(message, type = "success") {
-    const notification = document.getElementById("notification");
-    const notificationMessage = document.getElementById("notification-message");
-
-    notificationMessage.textContent = message;
-    notification.classList.remove("bg-green-500", "bg-red-500");
-    notification.classList.add(type === "success" ? "bg-green-500" : "bg-red-500");
-
-    notification.classList.remove("hidden", "opacity-0");
-    notification.classList.add("show");
-    console.log(message)
-    setTimeout(() => {
-        notification.classList.remove("show");
+    function showNotification(message, type = "success") {
+        const notification = document.getElementById("notification");
+        const notificationMessage = document.getElementById("notification-message");
+        notificationMessage.textContent = message;
+        notification.classList.remove("bg-green-500", "bg-red-500");
+        notification.classList.add(type === "success" ? "bg-green-500" : "bg-red-500");
+        notification.classList.remove("hidden", "opacity-0");
+        notification.classList.add("show");
+        console.log(message)
         setTimeout(() => {
-            notification.classList.add("hidden", "opacity-0");
-        }, 300); // Matches transition duration
-    }, 3000);
-}
+            notification.classList.remove("show");
+            setTimeout(() => {
+                notification.classList.add("hidden", "opacity-0");
+            }, 300); // Matches transition duration
+        }, 3000);
+    }
 </script>
 {% endblock content %}

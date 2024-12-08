@@ -25,7 +25,7 @@ SECRET_KEY = "django-insecure-$gnzp(_!e$t+j-)uvltadvm=ywmgm2we)25*0=exktx8mw&)6c
 
 # SECURITY WARNING: don't run with debug turned on in production!
 PRODUCTION = os.getenv("PRODUCTION", False)
-DEBUG = not PRODUCTION
+DEBUG = False
 
 ALLOWED_HOSTS = ["localhost", "127.0.0.1", "daffa-desra-jelajahrasa.pbp.cs.ui.ac.id", "10.0.2.2"]
 
@@ -52,6 +52,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -142,8 +143,7 @@ else:
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-
-CSRF_TRUSTED_ORIGINS = ["http://localhost","http://127.0.0.1"]
+CSRF_TRUSTED_ORIGINS = ["http://localhost","http://127.0.0.1", "http://daffa-desra-jelajahrasa.pbp.cs.ui.ac.id", "https://daffa-desra-jelajahrasa.pbp.cs.ui.ac.id"]
 
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
@@ -151,3 +151,4 @@ CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SAMESITE = 'None'
 SESSION_COOKIE_SAMESITE = 'None'
+

@@ -11,8 +11,33 @@
     <style>
       body {
           font-family: 'Poppins', sans-serif;
+          display: flex;
+          flex-direction: column;
+          min-height: 100vh;
+          margin: 0;
+      }
+
+      .table-placeholder {
+          flex-grow: 1;
+      }
+
+      footer {
+          padding: 20px;
+          width: 100%;
+          margin-top: auto;
       }
     </style>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Poppins', 'sans-serif'],
+            },
+          },
+        },
+      }
+    </script>
   </head>
   <body>
     {% block content %} {% endblock content %}

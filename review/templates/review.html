@@ -6,7 +6,7 @@
 
 {% block content %}
 {% include 'navbar.html' %}
-<div class="flex flex-col w-full h-screen max-w-4xl mx-auto my-8 mt-20">
+<div class="table-placeholder flex flex-col w-full max-w-4xl mx-auto my-8 mt-20 flex-grow">
     <div class="flex flex-row px-20">
         <div class="w-64 h-48 overflow-hidden mr-8">
             <img src="{{ food.image }}" alt="Placeholder Image" class="object-cover h-full w-full">
@@ -31,7 +31,7 @@
     <!-- Form Section (Top) -->
     <div class="w-full bg-gray-100 p-6 mt-8">
         <h2 class="text-2xl font-bold mb-4">Leave a Review</h2>
-        {% if user.is_authenticated%}
+        {% if user.is_authenticated %}
             <form id="reviewForm" method="POST" action="{% url 'review:create_review' food.uuid %}" class="w-full">
                 {% csrf_token %}
                 <div>
@@ -39,7 +39,7 @@
                 </div>
                 
                 <!-- Star Rating -->
-                <div class="star-rating flex">
+                <div class="star-rating flex mt-4"> <!-- Added mt-4 for space -->
                     <input type="radio" id="1-stars" name="rating" value="1" required class="hidden"/>
                     <label for="1-stars" class="star text-4xl text-yellow-500 cursor-pointer">&#9734;</label>
                 
@@ -64,7 +64,6 @@
             </p>
         {% endif %}
     </div>
-    
 
     <!-- Reviews Section (Bottom) -->
     <div class="flex justify-end mt-8">
@@ -76,6 +75,8 @@
             </select>
         </form>
     </div>
+
+    <!-- Reviews Container -->
     <div id="reviewsTitle" class="w-full p-6 mt-8">
         <h2 class="text-2xl font-semibold mb-4">Past Reviews</h2>
         <div id="reviewsContainer" class="w-full">
