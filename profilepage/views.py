@@ -69,3 +69,62 @@ def edit_profile(request, username):
         'location': user.location,
         'image_url': user.image_url,
     })
+    
+def get_user_data_api(request, username):
+    """API endpoint untuk mendapatkan data profil dan aktivitas pengguna"""
+    try:
+        user = get_object_or_404(CustomUser, username=username)
+        
+        # Mengambil data favorite dishes
+        favorite_dishes = FavoriteDish.objects.filter(user=user)
+        dishes_data = [{
+            'name': dish.name,
+            'category': dish.category,
+            'flavor': dish.flavor,
+            'price': float(dish.price),
+            'vendor_name': dish.vendor_name,
+            'image': dish.image.url if dish.image else None,
+        } for dish in favorite_dishes]
+        
+        # Mengambil data reviews
+        reviews = Review.objects.filter(user=user)
+        reviews_data = [{
+            'dish_name': review.dish.name if review.dish else None,
+            'rating': review.rating,
+            'comment': review.comment,
+            'created_at': review.created_at.isoformat(),
+        } for review in reviews]
+        
+        # Mengambil data comments
+        comments = Comment.objects.filter(user=user)
+        comments_data = [{
+            'content': comment.content,
+            'created_at': comment.created_at.isoformat(),
+        } for comment in comments]
+        
+        response_data = {
+            'success': True,
+            'user_profile': {
+                'username': user.username,
+                'first_name': user.first_name,
+                'last_name': user.last_name,
+                'location': user.location,
+                'image_url': user.image_url,
+            },
+            'statistics': {
+                'favorite_dishes_count': favorite_dishes.count(),
+                'reviews_count': reviews.count(),
+                'comments_count': comments.count(),
+            },
+            'favorite_dishes': dishes_data,
+            'reviews': reviews_data,
+            'comments': comments_data,
+        }
+        
+        return JsonResponse(response_data)
+        
+    except Exception as e:
+        return JsonResponse({
+            'success': False,
+            'error': str(e)
+        }, status=400)
