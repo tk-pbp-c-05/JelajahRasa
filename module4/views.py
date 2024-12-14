@@ -206,3 +206,128 @@ def edit_dish(request, dish_uuid):
         "dish": dish
     }
     return render(request, 'edit_dish.html', context)
+
+def show_json(request):
+    # Query all dishes
+    dishes = NewDish.objects.all().values(
+        'uuid',
+        'name',
+        'flavor',
+        'category',
+        'vendor_name',
+        'price',
+        'map_link',
+        'address',
+        'image',
+        'is_approved',
+        'is_rejected',
+        'status',
+        'user__username'  # Including the username of the user who added the dish
+    )
+
+    # Convert QuerySet to a list
+    dish_list = list(dishes)
+    
+    return JsonResponse(dish_list, safe=False)
+
+@csrf_exempt
+@login_required
+def flutter_add_dish(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        form = NewDishForm(data)
+        if form.is_valid():
+            new_dish = form.save(commit=False)
+            new_dish.user = request.user
+            new_dish.status = NewDish.PENDING  # Default status
+            new_dish.save()
+            return JsonResponse({'status': 'success', 'message': 'Dish added successfully!'}, status=201)
+        else:
+            return JsonResponse({'status': 'error', 'message': form.errors}, status=400)
+    return JsonResponse({'error': 'Invalid method'}, status=405)
+
+@csrf_exempt
+@login_required
+def flutter_edit_rejected_dish(request, dish_uuid):
+    if request.method == 'PUT':
+        dish = get_object_or_404(NewDish, uuid=dish_uuid)
+        if dish.status != NewDish.REJECTED:
+            return JsonResponse({'error': 'Only rejected dishes can be edited.'}, status=403)
+        
+        data = json.loads(request.body)
+        form = NewDishForm(data, instance=dish)
+        if form.is_valid():
+            updated_dish = form.save(commit=False)
+            updated_dish.status = NewDish.PENDING  # Update status to pending
+            updated_dish.is_approved = False
+            updated_dish.is_rejected = False
+            updated_dish.save()
+            return JsonResponse({'status': 'success', 'message': 'Dish updated successfully!'}, status=200)
+        else:
+            return JsonResponse({'status': 'error', 'message': form.errors}, status=400)
+    return JsonResponse({'error': 'Invalid method'}, status=405)
+
+@csrf_exempt
+@login_required
+def flutter_delete_rejected_dish(request, dish_uuid):
+    if request.method == 'DELETE':
+        dish = get_object_or_404(NewDish, uuid=dish_uuid)
+        if dish.status != NewDish.REJECTED:
+            return JsonResponse({'error': 'Only rejected dishes can be deleted.'}, status=403)
+        dish.delete()
+        return JsonResponse({'status': 'success', 'message': 'Dish deleted successfully!'}, status=200)
+    return JsonResponse({'error': 'Invalid method'}, status=405)
+
+
+@csrf_exempt
+@login_required
+def flutter_get_pending_dishes(request):
+    pending_dishes = NewDish.objects.filter(status=NewDish.PENDING).values(
+        'uuid',
+        'name',
+        'flavor',
+        'category',
+        'vendor_name',
+        'price',
+        'map_link',
+        'address',
+        'image',
+        'status'
+    )
+    return JsonResponse(list(pending_dishes), safe=False, status=200)
+
+def flutter_get_dish_detail(request, dish_uuid):
+    dish = get_object_or_404(NewDish, uuid=dish_uuid)
+    dish_data = {
+        'uuid': dish.uuid,
+        'name': dish.name,
+        'flavor': dish.flavor,
+        'category': dish.category,
+        'vendor_name': dish.vendor_name,
+        'price': dish.price,
+        'map_link': dish.map_link,
+        'address': dish.address,
+        'image': dish.image.url if dish.image else '',
+        'status': dish.status
+    }
+    return JsonResponse(dish_data, status=200)
+
+@login_required
+def flutter_get_user_dishes(request):
+    user = request.user
+    dishes = NewDish.objects.filter(user=user).values(
+        'uuid',
+        'name',
+        'flavor',
+        'category',
+        'vendor_name',
+        'price',
+        'map_link',
+        'address',
+        'image',
+        'is_approved',
+        'is_rejected',
+        'status',
+        'user__username'
+    )
+    return JsonResponse(list(dishes), safe=False)
