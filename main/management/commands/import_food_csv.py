@@ -23,7 +23,7 @@ class Command(BaseCommand):
             
             for row in csv_reader:
                 food, created = Food.objects.get_or_create(
-                    name=row["Nama Makanan / Minuman"],
+                    name=row["Nama Food / Beverage"],
                     defaults={
                         'flavor': row["Asin/Manis"],
                         'category': row["Makanan/Minuman"],
