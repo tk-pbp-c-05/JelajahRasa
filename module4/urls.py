@@ -1,5 +1,5 @@
 from django.urls import path
-from module4.views import add_dish, check_dish, approve_dish, show_home, edit_rejected_dish, request_status, delete_dish, get_dish_data, edit_dish, show_json, flutter_add_dish, flutter_delete_rejected_dish, flutter_edit_rejected_dish, flutter_get_dish_detail, flutter_get_pending_dishes, flutter_get_user_dishes
+from module4.views import add_dish, check_dish, approve_dish, show_home, edit_rejected_dish, request_status, delete_dish, get_dish_data, edit_dish, show_json, flutter_add_dish, flutter_delete_rejected_dish, flutter_edit_rejected_dish, flutter_get_dish_detail, flutter_get_pending_dishes, flutter_get_user_dishes, flutter_approve_dish
 
 app_name = 'module4'
 
@@ -19,4 +19,5 @@ urlpatterns = [
     path('flutter-get-dish-detail/<uuid:dish_uuid>/', flutter_get_dish_detail, name='flutter_get_dish_detail'),
     path('flutter-get-pending-dishes/', flutter_get_pending_dishes, name='flutter_get_pending_dishes'),
     path('flutter-get-user-dishes/', flutter_get_user_dishes, name='flutter_get_user_dishes'),
+    path('flutter-approve-dish/<uuid:dish_uuid>/', flutter_approve_dish, name='flutter_approve_dish'),
 ]

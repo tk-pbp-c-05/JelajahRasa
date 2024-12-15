@@ -56,7 +56,7 @@ def check_dish(request):
 @require_http_methods(["POST"])
 def approve_dish(request, dish_uuid):
     if not request.user.is_admin:
-        return JsonResponse({'status': 'forbidden'}, status=403)
+        return JsonResponse({'success': False, 'status': 'forbidden'}, status=403)
 
     dish = get_object_or_404(NewDish, uuid=dish_uuid)
     
@@ -64,23 +64,22 @@ def approve_dish(request, dish_uuid):
         data = json.loads(request.body)
         action = data.get('action')
     except json.JSONDecodeError:
-        return JsonResponse({'status': 'error', 'message': 'Invalid JSON'}, status=400)
+        return JsonResponse({'success': False, 'status': 'error', 'message': 'Invalid JSON'}, status=400)
 
     if action == 'approve':
         dish.status = NewDish.APPROVED
         dish.is_approved = True
         dish.save()
         create_food_entry(dish)
-        return JsonResponse({'status': 'approved'})
+        return JsonResponse({'success': True, 'status': 'approved'})
     
     elif action == 'reject':
         dish.status = NewDish.REJECTED
         dish.is_rejected = True
         dish.save()
-        return JsonResponse({'status': 'rejected'})
+        return JsonResponse({'success': True, 'status': 'rejected'})
 
-    return JsonResponse({'status': 'error', 'message': 'Invalid action'}, status=400)
-
+    return JsonResponse({'success': False, 'status': 'error', 'message': 'Invalid action'}, status=400)
 
 # Fungsi untuk edit dish yang statusnya rejected
 @login_required
@@ -237,51 +236,73 @@ def flutter_add_dish(request):
         data = json.loads(request.body)
         form = NewDishForm(data)
         if form.is_valid():
+            
             new_dish = form.save(commit=False)
             new_dish.user = request.user
-            new_dish.status = NewDish.PENDING  # Default status
+            if request.user.is_admin:
+                new_dish.status = NewDish.APPROVED  # Admin langsung approve
+            else:
+                new_dish.status = NewDish.PENDING  # Status pending jika bukan admin
+            
             new_dish.save()
-            return JsonResponse({'status': 'success', 'message': 'Dish added successfully!'}, status=201)
+
+            # Cek apakah dish di-approve langsung atau perlu menunggu admin
+            if new_dish.status == NewDish.APPROVED:
+                create_food_entry(new_dish)
+                return JsonResponse({'success': True, 'status': 'success', 'message': 'Dish added and approved successfully!'}, status=201)
+            else:
+                return JsonResponse({'success': True, 'status': 'success', 'message': 'Dish added successfully! Please wait for our admin to approve it.'}, status=201)
         else:
-            return JsonResponse({'status': 'error', 'message': form.errors}, status=400)
-    return JsonResponse({'error': 'Invalid method'}, status=405)
+            return JsonResponse({'success': False, 'status': 'error', 'message': form.errors}, status=400)
+    return JsonResponse({'success': False, 'error': 'Invalid method'}, status=405)
 
 @csrf_exempt
 @login_required
 def flutter_edit_rejected_dish(request, dish_uuid):
-    if request.method == 'PUT':
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+        except json.JSONDecodeError:
+            return JsonResponse({'success': False, 'error': 'Invalid JSON'}, status=400)
+
         dish = get_object_or_404(NewDish, uuid=dish_uuid)
+
         if dish.status != NewDish.REJECTED:
-            return JsonResponse({'error': 'Only rejected dishes can be edited.'}, status=403)
-        
-        data = json.loads(request.body)
+            return JsonResponse({'success': False, 'error': 'Only rejected dishes can be edited.'}, status=403)
+
+        # Update fields from received data
         form = NewDishForm(data, instance=dish)
         if form.is_valid():
             updated_dish = form.save(commit=False)
-            updated_dish.status = NewDish.PENDING  # Update status to pending
+            updated_dish.status = NewDish.PENDING
             updated_dish.is_approved = False
             updated_dish.is_rejected = False
             updated_dish.save()
-            return JsonResponse({'status': 'success', 'message': 'Dish updated successfully!'}, status=200)
+            return JsonResponse({'success': True, 'message': 'Dish updated successfully!'}, status=200)
         else:
-            return JsonResponse({'status': 'error', 'message': form.errors}, status=400)
-    return JsonResponse({'error': 'Invalid method'}, status=405)
+            return JsonResponse({'success': False, 'message': form.errors}, status=400)
+
+    return JsonResponse({'success': False, 'error': 'Invalid method'}, status=405)
 
 @csrf_exempt
 @login_required
 def flutter_delete_rejected_dish(request, dish_uuid):
-    if request.method == 'DELETE':
+    # Periksa jika ini adalah POST request dengan _method sebagai DELETE
+    if request.method == 'POST' and request.POST.get('_method') == 'DELETE':
         dish = get_object_or_404(NewDish, uuid=dish_uuid)
         if dish.status != NewDish.REJECTED:
-            return JsonResponse({'error': 'Only rejected dishes can be deleted.'}, status=403)
+            return JsonResponse({'success': False, 'error': 'Only rejected dishes can be deleted.'}, status=403)
         dish.delete()
-        return JsonResponse({'status': 'success', 'message': 'Dish deleted successfully!'}, status=200)
-    return JsonResponse({'error': 'Invalid method'}, status=405)
+        return JsonResponse({'success': True, 'status': 'success', 'message': 'Dish deleted successfully!'}, status=200)
 
+    return JsonResponse({'success': False, 'error': 'Invalid method'}, status=405)
 
 @csrf_exempt
 @login_required
 def flutter_get_pending_dishes(request):
+    if not request.user.is_admin:
+        return JsonResponse({'success': False, 'status': 'forbidden', 'message': 'You are not authorized to approve dishes.'}, status=403)
+    
     pending_dishes = NewDish.objects.filter(status=NewDish.PENDING).values(
         'uuid',
         'name',
@@ -292,7 +313,10 @@ def flutter_get_pending_dishes(request):
         'map_link',
         'address',
         'image',
-        'status'
+        'is_approved',
+        'is_rejected',
+        'status',
+        'user__username'
     )
     return JsonResponse(list(pending_dishes), safe=False, status=200)
 
@@ -331,3 +355,34 @@ def flutter_get_user_dishes(request):
         'user__username'
     )
     return JsonResponse(list(dishes), safe=False)
+
+@csrf_exempt
+@login_required
+def flutter_approve_dish(request, dish_uuid):
+    if not request.user.is_admin:
+        return JsonResponse({'success': False, 'status': 'forbidden', 'message': 'You are not authorized to approve dishes.'}, status=403)
+
+    dish = get_object_or_404(NewDish, uuid=dish_uuid)
+
+    try:
+        data = json.loads(request.body)
+        action = data.get('action')
+    except json.JSONDecodeError:
+        return JsonResponse({'success': False, 'status': 'error', 'message': 'Invalid JSON'}, status=400)
+
+    if action == 'approve':
+        dish.status = NewDish.APPROVED
+        dish.is_approved = True
+        dish.is_rejected = False
+        dish.save()
+        create_food_entry(dish)
+        return JsonResponse({'success': True, 'status': 'approved', 'message': 'Dish approved successfully!'}, status=200)
+
+    elif action == 'reject':
+        dish.status = NewDish.REJECTED
+        dish.is_approved = False
+        dish.is_rejected = True
+        dish.save()
+        return JsonResponse({'success': True, 'status': 'rejected', 'message': 'Dish rejected successfully!'}, status=200)
+
+    return JsonResponse({'success': False, 'status': 'error', 'message': 'Invalid action'}, status=400)
