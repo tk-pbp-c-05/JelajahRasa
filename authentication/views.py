@@ -10,29 +10,36 @@ User = get_user_model() # untuk get user custom
 
 @csrf_exempt
 def login(request):
-    username = request.POST['username']
-    password = request.POST['password']
-    user = authenticate(username=username, password=password)
-    if user is not None:
-        if user.is_active:
-            auth_login(request, user)
-            # Status login sukses.
-            return JsonResponse({
-                "username": user.username,
-                "status": True,
-                "message": "Login sukses!"
-                # Tambahkan data lainnya jika ingin mengirim data ke Flutter.
-            }, status=200)
-        else:
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            username = data['username']
+            password = data['password']
+            
+            user = authenticate(username=username, password=password)
+            
+            if user is not None:
+                login(request, user)
+                return JsonResponse({
+                    "status": True,
+                    "message": "Successfully Logged In!",
+                    "username": user.username,
+                    "is_admin": user.is_admin,  # Include is_admin in response
+                }, status=200)
+            else:
+                return JsonResponse({
+                    "status": False,
+                    "message": "Invalid credentials."
+                }, status=401)
+        except Exception as e:
             return JsonResponse({
                 "status": False,
-                "message": "Login gagal, akun dinonaktifkan."
+                "message": str(e)
             }, status=401)
-
     else:
         return JsonResponse({
             "status": False,
-            "message": "Login gagal, periksa kembali username atau kata sandi."
+            "message": "Invalid request method."
         }, status=401)
 
 @csrf_exempt
