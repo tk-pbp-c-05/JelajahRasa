@@ -13,34 +13,40 @@ def login(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
-            username = data['username']
-            password = data['password']
+            username = data.get('username')
+            password = data.get('password')
             
             user = authenticate(username=username, password=password)
             
             if user is not None:
                 login(request, user)
-                return JsonResponse({
-                    "status": True,
+                response_data = {
+                    "status": "success",
                     "message": "Successfully Logged In!",
                     "username": user.username,
-                    "is_admin": user.is_admin,  # Include is_admin in response
-                }, status=200)
+                    "is_admin": user.is_staff  # Using is_staff instead of is_admin
+                }
+                return JsonResponse(response_data)
             else:
                 return JsonResponse({
-                    "status": False,
+                    "status": "error",
                     "message": "Invalid credentials."
-                }, status=401)
+                })
+        except json.JSONDecodeError:
+            return JsonResponse({
+                "status": "error",
+                "message": "Invalid JSON format"
+            })
         except Exception as e:
             return JsonResponse({
-                "status": False,
+                "status": "error",
                 "message": str(e)
-            }, status=401)
-    else:
-        return JsonResponse({
-            "status": False,
-            "message": "Invalid request method."
-        }, status=401)
+            })
+    return JsonResponse({
+        "status": "error",
+        "message": "Invalid request method."
+    })
+
 
 @csrf_exempt
 def register(request):
