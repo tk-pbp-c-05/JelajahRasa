@@ -6,46 +6,64 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
 import json
 
-User = get_user_model() # untuk get user custom
+User = get_user_model()
 
 @csrf_exempt
 def login(request):
     if request.method == 'POST':
         try:
+            # Debug prints
+            print("Raw request body:", request.body)
+            
             data = json.loads(request.body)
+            print("Parsed JSON data:", data)
+            
             username = data.get('username')
             password = data.get('password')
+            print(f"Username: {username}")
+            print(f"Password: {'*' * len(password)}")  # Print * for security
             
             user = authenticate(username=username, password=password)
+            print("Authenticated user:", user)
             
             if user is not None:
-                login(request, user)
+                auth_login(request, user)
                 response_data = {
                     "status": "success",
                     "message": "Successfully Logged In!",
                     "username": user.username,
-                    "is_admin": user.is_admin,
+                    "is_admin": user.is_staff,
                 }
+                print("Response data:", response_data)
                 return JsonResponse(response_data)
             else:
-                return JsonResponse({
+                error_response = {
                     "status": "error",
                     "message": "Invalid credentials."
-                })
-        except json.JSONDecodeError:
-            return JsonResponse({
+                }
+                print("Error response:", error_response)
+                return JsonResponse(error_response)
+        except json.JSONDecodeError as e:
+            error_response = {
                 "status": "error",
-                "message": "Invalid JSON format"
-            })
+                "message": f"Invalid JSON format: {str(e)}"
+            }
+            print("JSON decode error:", error_response)
+            return JsonResponse(error_response)
         except Exception as e:
-            return JsonResponse({
+            error_response = {
                 "status": "error",
                 "message": str(e)
-            })
-    return JsonResponse({
+            }
+            print("Exception:", error_response)
+            return JsonResponse(error_response)
+    
+    error_response = {
         "status": "error",
         "message": "Invalid request method."
-    })
+    }
+    print("Method error:", error_response)
+    return JsonResponse(error_response)
 
 
 @csrf_exempt
