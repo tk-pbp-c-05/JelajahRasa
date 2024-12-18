@@ -24,7 +24,7 @@ def login(request):
                     "status": "success",
                     "message": "Successfully Logged In!",
                     "username": user.username,
-                    "is_admin": user.is_staff  # Using is_staff instead of is_admin
+                    "is_admin": user.is_admin,
                 }
                 return JsonResponse(response_data)
             else:
@@ -94,6 +94,7 @@ def register(request):
             
             # Cek admin code
             if admin_code == "PBPC05ASELOLE":
+                user.is_admin = True
                 user.is_staff = True
                 user.is_superuser = True
             
