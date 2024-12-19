@@ -55,10 +55,11 @@
                 </td>
                 <td class="px-4 py-2 text-center border" style="width: 200px;">
                     {% if dish.is_rejected %}
-                    <span class="text-red-500">Your request is rejected, please change the data requested</span>
-                    {% comment %} <button class="bg-blue-500 text-white px-3 py-1 rounded-full hover:bg-blue-600 transition duration-200" onclick="editDish('{{ dish.uuid }}')">Edit</button> {% endcomment %}
-                    <a href="{% url 'module4:edit_dish' dish.uuid %}" class="bg-blue-500 text-white px-3 py-1 rounded-full hover:bg-blue-600 transition duration-200">Edit</a>
-                    <button class="bg-red-500 text-white px-3 py-1 rounded-full hover:bg-red-600 transition duration-200 delete-btn" data-uuid="{{ dish.uuid }}">Delete</button>
+                    <span class="text-red-500 block mb-2">Your request is rejected, please change the data requested</span>
+                    <div class="flex justify-center gap-2">
+                        <button class="bg-blue-500 text-white px-3 py-1 rounded-full hover:bg-blue-600 transition duration-200" onclick="editDish('{{ dish.uuid }}')">Edit</button>
+                        <button class="bg-red-500 text-white px-3 py-1 rounded-full hover:bg-red-600 transition duration-200 delete-btn" data-uuid="{{ dish.uuid }}">Delete</button>
+                    </div>
                     {% elif dish.is_approved %}
                     <span class="text-green-500">Your request is accepted.</span>
                     {% else %}
@@ -71,7 +72,7 @@
     </table>
 </div>
 
-{% comment %} <!-- Edit Dish Modal -->
+<!-- Edit Dish Modal -->
 <div id="editModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
     <div class="bg-white p-8 rounded-lg shadow-lg w-96">
         <h3 class="text-xl font-semibold mb-4">Edit Dish</h3>
@@ -108,12 +109,27 @@
                 <input type="text" id="dishImage" class="w-full px-4 py-2 border border-gray-300 rounded-md">
             </div>
             <div class="flex justify-end">
-                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600 transition duration-200">Save</button>
-                <button type="button" class="bg-gray-500 text-white px-4 py-2 rounded-full hover:bg-gray-600 transition duration-200 ml-2" onclick="closeEditModal()">Cancel</button>
+                <button type="submit" 
+                    style="background-color: #e0a85e;" 
+                    class="text-white font-semibold px-4 py-2 rounded-full transition duration-300 ease-in-out"
+                    onmouseover="this.style.backgroundColor='#fad68a';" 
+                    onmouseout="this.style.backgroundColor='#e0a85e';">
+                    Save
+                </button>
+            
+                <!-- Tombol Cancel -->
+                <button type="button" 
+                    style="background-color: #983132;" 
+                    class="text-white font-bold px-4 py-2 rounded-full transition duration-300 ease-in-out"
+                    onmouseover="this.style.backgroundColor='#FF4D4D';" 
+                    onmouseout="this.style.backgroundColor='#983132';" 
+                    onclick="closeEditModal()">
+                    Cancel
+                </button>
             </div>
         </form>
     </div>
-</div> {% endcomment %}
+</div>
 
 <!-- JavaScript for Delete, Search, and Edit -->
 <script>
@@ -164,7 +180,7 @@
         });
     });
 
-    {% comment %} function editDish(dishUuid) {
+    function editDish(dishUuid) {
         // Use AJAX to fetch the dish data by UUID from the server
         fetch(`/module4/get-dish-data/${dishUuid}/`)  // Update with your actual endpoint
             .then(response => response.json())
@@ -189,8 +205,79 @@
     
     function closeEditModal() {
         document.getElementById('editModal').classList.add('hidden');
-    }     {% endcomment %}
+    }
+
+    document.getElementById('editForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // Mencegah pengiriman form secara default
     
+        // Ambil data dari form
+        const uuid = document.getElementById('dishUuid').value;
+        const name = document.getElementById('dishName').value;
+        const flavor = document.getElementById('dishFlavor').value;
+        const category = document.getElementById('dishCategory').value;
+        const price = document.getElementById('dishPrice').value;
+        const mapLink = document.getElementById('dishMapLink').value;
+        const address = document.getElementById('dishAddress').value;
+        const image = document.getElementById('dishImage').value;
+    
+        // Buat objek data untuk dikirim
+        const formData = {
+            name: name,
+            flavor: flavor,
+            category: category,
+            price: price,
+            map_link: mapLink,
+            address: address,
+            image: image
+        };
+    
+        // Kirim data ke server menggunakan fetch API
+        fetch(`/module4/edit-dish/${uuid}/`, {
+            method: 'POST', // Atau 'PUT' tergantung pada endpoint kamu
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCSRFToken() // Fungsi untuk mengambil CSRF token
+            },
+            body: JSON.stringify(formData)
+        })
+        .then(response => {
+            if (response.ok) {
+                // Update tabel secara langsung tanpa reload
+                updateTableRow(uuid, formData);
+                alert('Dish updated successfully');
+                closeEditModal(); // Tutup modal setelah sukses
+            } else {
+                alert('Failed to update dish');
+            }
+        })
+        .catch(error => {
+            console.error('Error updating dish:', error);
+            alert('Error updating dish');
+        });
+    });
+    
+    // Fungsi untuk mendapatkan CSRF token dari cookie
+    function getCSRFToken() {
+        const cookieValue = document.cookie.match(/csrftoken=([\w-]+)/);
+        return cookieValue ? cookieValue[1] : '';
+    }
+    
+    // Fungsi untuk memperbarui baris dalam tabel
+    function updateTableRow(uuid, data) {
+        const row = document.querySelector(`button[data-uuid="${uuid}"]`).closest('tr');
+    
+        if (row) {
+            row.cells[0].textContent = data.name;
+            row.cells[1].textContent = data.flavor;
+            row.cells[2].textContent = data.category;
+            row.cells[4].textContent = `Rp${data.price}`;
+            row.cells[5].textContent = data.map_link;
+            row.cells[6].textContent = data.address;
+            row.cells[7].querySelector('img').src = data.image;
+            row.cells[8].innerHTML = '<span class="text-yellow-500">Pending</span>';
+            row.cells[9].innerHTML = '<span class="text-yellow-500">Please wait, we are checking your request.</span>';
+        }
+    }    
 </script>
 
 {% endblock content %}

@@ -84,23 +84,23 @@ def approve_dish(request, dish_uuid):
 # Fungsi untuk edit dish yang statusnya rejected
 @login_required
 def edit_rejected_dish(request, dish_uuid):
-    # Cari dish berdasarkan UUID
-    dish = get_object_or_404(NewDish, uuid=dish_uuid)
-
     if request.method == 'POST':
-            uuid = request.POST.get('uuid')
-            dish = NewDish.objects.get(uuid=uuid)
-            dish.name = request.POST.get('name')
-            dish.flavor = request.POST.get('flavor')
-            dish.category = request.POST.get('category')
-            dish.vendor_name = request.POST.get('vendor_name')
-            dish.price = request.POST.get('price')
-            dish.map_link = request.POST.get('map_link')
-            dish.address = request.POST.get('address')
-            dish.image = request.POST.get('image')
-
+        data = json.loads(request.body)
+        try:
+            dish = NewDish.objects.get(uuid=dish_uuid)
+            dish.name = data['name']
+            dish.flavor = data['flavor']
+            dish.category = data['category']
+            dish.price = data['price']
+            dish.map_link = data['map_link']
+            dish.address = data['address']
+            dish.image = data['image']
             dish.save()
-            return redirect('module4:request_status')
+            return JsonResponse({'message': 'Dish updated successfully'}, status=200)
+        except NewDish.DoesNotExist:
+            return JsonResponse({'error': 'Dish not found'}, status=404)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
 
 # Fungsi untuk membuat entry di Food model ketika dish disetujui
 def create_food_entry(dish):
@@ -178,33 +178,37 @@ def edit_dish(request, dish_uuid):
 
     # Pastikan hanya dish yang ditolak yang bisa diedit
     if dish.status != NewDish.REJECTED:
-        messages.error(request, "Only rejected dishes can be edited.")
-        return redirect('module4:request_status')
+        return JsonResponse({"error": "Only rejected dishes can be edited."}, status=400)
 
-    # Proses form jika metode request POST
+    # Proses request jika metode adalah POST
     if request.method == 'POST':
-        form = NewDishForm(request.POST, request.FILES, instance=dish)
-        if form.is_valid():
-            updated_dish = form.save()
+        try:
+            # Load data dari request body
+            data = json.loads(request.body)
 
-            # Jika dish diubah, update status menjadi 'Pending' untuk menunggu review ulang oleh admin
-            updated_dish.status = NewDish.PENDING  # Ubah status menjadi Pending setelah edit
-            updated_dish.is_approved = False  # Pastikan dish belum disetujui
-            updated_dish.is_rejected = False  # Reset status rejection
-            updated_dish.save()
+            # Update field dish dengan data dari request
+            dish.name = data.get('name', dish.name)
+            dish.flavor = data.get('flavor', dish.flavor)
+            dish.category = data.get('category', dish.category)
+            dish.price = data.get('price', dish.price)
+            dish.map_link = data.get('map_link', dish.map_link)
+            dish.address = data.get('address', dish.address)
+            dish.image = data.get('image', dish.image)
 
-            messages.success(request, "Dish updated and is now pending approval!")
-            return redirect('module4:request_status')  # Redirect ke halaman request status
-        else:
-            messages.error(request, "Please correct the errors below.")
-    else:
-        form = NewDishForm(instance=dish)  # Menampilkan form dengan data dish yang sudah ada
+            # Ubah status menjadi Pending setelah edit
+            dish.status = NewDish.PENDING
+            dish.is_approved = False
+            dish.is_rejected = False
 
-    context = {
-        "form": form,
-        "dish": dish
-    }
-    return render(request, 'edit_dish.html', context)
+            dish.save()
+
+            return JsonResponse({"message": "Dish updated and is now pending approval!"}, status=200)
+
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=400)
+
+    # Jika bukan metode POST, kembalikan error
+    return JsonResponse({"error": "Invalid request method."}, status=405)
 
 def show_json(request):
     # Query all dishes
