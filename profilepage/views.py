@@ -10,6 +10,9 @@ from MyFavoriteDishes.models import FavoriteDish
 from review.models import Review
 from community.models import Comment
 from profilepage.models import UserProfile
+from django.core import serializers
+from django.http import HttpResponse
+
 # Create your views here.
 
 @login_required
@@ -76,7 +79,6 @@ def get_user_profile_api(request, username):
     try:
         user = get_object_or_404(CustomUser, username=username)
         response_data = {
-            'success': True,
             'user_profile': {
                 'username': user.username,
                 'first_name': user.first_name,
@@ -85,11 +87,9 @@ def get_user_profile_api(request, username):
                 'image_url': user.image_url,
                 'is_admin': user.is_admin,
             },
-            'statistics': {
-                'favorite_dishes_count': FavoriteDish.objects.filter(user=user).count(),
-                'reviews_count': Review.objects.filter(user=user).count(),
-                'comments_count': Comment.objects.filter(user=user).count(),
-            }
+            'favorite_dishes_count': FavoriteDish.objects.filter(user=user).count(),
+            'reviews_count': Review.objects.filter(user=user).count(),
+            'comments_count': Comment.objects.filter(user=user).count(),
         }
         return JsonResponse(response_data)
     except Exception as e:
@@ -100,19 +100,9 @@ def get_user_favorites_api(request, username):
     try:
         user = get_object_or_404(CustomUser, username=username)
         favorite_dishes = FavoriteDish.objects.filter(user=user)
-        dishes_data = [{
-            'name': dish.name,
-            'category': dish.category,
-            'flavor': dish.flavor,
-            'price': float(dish.price),
-            'vendor_name': dish.vendor_name,
-            'image': dish.image.url if dish.image else None,
-        } for dish in favorite_dishes]
         
-        return JsonResponse({
-            'success': True,
-            'favorite_dishes': dishes_data
-        })
+        return HttpResponse(serializers.serialize("json", favorite_dishes), content_type="application/json")
+
     except Exception as e:
         return JsonResponse({'success': False, 'error': str(e)}, status=400)
 
@@ -121,17 +111,8 @@ def get_user_reviews_api(request, username):
     try:
         user = get_object_or_404(CustomUser, username=username)
         reviews = Review.objects.filter(user=user)
-        reviews_data = [{
-            'dish_name': review.dish.name if review.dish else None,
-            'rating': review.rating,
-            'comment': review.comment,
-            'created_at': review.created_at.isoformat(),
-        } for review in reviews]
         
-        return JsonResponse({
-            'success': True,
-            'reviews': reviews_data
-        })
+        return HttpResponse(serializers.serialize("json", reviews), content_type="application/json")
     except Exception as e:
         return JsonResponse({'success': False, 'error': str(e)}, status=400)
 
@@ -140,14 +121,7 @@ def get_user_comments_api(request, username):
     try:
         user = get_object_or_404(CustomUser, username=username)
         comments = Comment.objects.filter(user=user)
-        comments_data = [{
-            'content': comment.content,
-            'created_at': comment.created_at.isoformat(),
-        } for comment in comments]
         
-        return JsonResponse({
-            'success': True,
-            'comments': comments_data
-        })
+        return HttpResponse(serializers.serialize("json", comments), content_type="application/json")
     except Exception as e:
         return JsonResponse({'success': False, 'error': str(e)}, status=400)
