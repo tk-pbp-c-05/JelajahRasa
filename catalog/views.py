@@ -2,6 +2,8 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from django.core import serializers
 from main.models import Food
+from django.core import serializers
+from django.http import HttpResponse
 
 def view_catalog(request):
     # Ambil semua objek Food
@@ -32,6 +34,6 @@ def view_catalog(request):
     }
     return render(request, 'catalog.html', context)
 
-def show_json(request):
+def show_katalog_json(request):
     data = Food.objects.all()
     return HttpResponse(serializers.serialize("json", data), content_type="application/json")

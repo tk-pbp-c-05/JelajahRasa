@@ -5,5 +5,5 @@ app_name = 'catalog'
 
 urlpatterns = [
     path('', view_catalog, name='view_catalog'),
-    path('json/', show_json, name='show_json'),
+    path('json/', show_katalog_json, name='show_json')
 ]
