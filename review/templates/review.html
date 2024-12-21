@@ -36,6 +36,7 @@
                 {% csrf_token %}
                 <div>
                     <textarea name="comment" placeholder="Leave a review..." class="w-full p-2 border rounded" required></textarea>
+                    <p id="commentError" class="text-red-500 text-sm hidden"></p>
                 </div>
                 
                 <!-- Star Rating -->
@@ -95,7 +96,12 @@
                     </span>
                     <p class="mt-2">{{ review.comment }}</p>
                     <span class="text-gray-500 text-sm">{{ review.timestamp|date:"F j, Y, g:i a" }}</span>
-                    {% if user.is_admin %}
+                    {% if review.user == user %}
+                        <button class="py-1 px-3 bg-green-500 text-white rounded hover:bg-green-600 update-review-btn" data-review-id="{{ review.uuid }}">
+                            Update
+                        </button>
+                    {% endif %}
+                    {% if user.is_admin or review.user == user %}
                         <form method="POST" action="{% url 'review:delete_review' review.uuid %}">
                             {% csrf_token %}
                             <button type="submit" 
@@ -114,6 +120,42 @@
     </div>
 </div>
 
+<!-- Update Review Modal -->
+<div id="updateReviewModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
+    <div class="bg-white rounded-lg p-6 w-11/12 max-w-md">
+        <h2 class="text-2xl font-bold mb-4">Update Review</h2>
+        <form id="updateReviewForm" method="POST" action="" class="w-full">
+            {% csrf_token %}
+            <input type="hidden" name="review_id" id="updateReviewId">
+            <div>
+                <textarea name="comment" id="updateReviewComment" placeholder="Update your review..." class="w-full p-2 border rounded" required></textarea>
+                <p id="updateCommentError" class="text-red-500 text-sm hidden"></p>
+            </div>
+
+            <!-- Star Rating for Update -->
+            <div class="star-rating flex mt-4">
+                <input type="radio" id="update-1-stars" name="rating" value="1" class="hidden"/>
+                <label for="update-1-stars" class="star text-4xl text-yellow-500 cursor-pointer">&#9734;</label>
+
+                <input type="radio" id="update-2-stars" name="rating" value="2" class="hidden"/>
+                <label for="update-2-stars" class="star text-4xl text-yellow-500 cursor-pointer">&#9734;</label>
+
+                <input type="radio" id="update-3-stars" name="rating" value="3" class="hidden"/>
+                <label for="update-3-stars" class="star text-4xl text-yellow-500 cursor-pointer">&#9734;</label>
+
+                <input type="radio" id="update-4-stars" name="rating" value="4" class="hidden"/>
+                <label for="update-4-stars" class="star text-4xl text-yellow-500 cursor-pointer">&#9734;</label>
+
+                <input type="radio" id="update-5-stars" name="rating" value="5" class="hidden"/>
+                <label for="update-5-stars" class="star text-4xl text-yellow-500 cursor-pointer">&#9734;</label>
+            </div>
+            <button type="submit" class="bg-blue-500 text-white mt-2 py-2 px-4 rounded">Update Review</button>
+            <button type="button" class="mt-2 bg-gray-300 text-black py-2 px-4 rounded" id="closeModal">Cancel</button>
+        </form>
+    </div>
+</div>
+
+
 <script>
     // Star Rating
     function updateStars() {
@@ -130,7 +172,129 @@
             });
         });
     }
-    updateStars()
+
+    // Modal handling
+    document.addEventListener('DOMContentLoaded', function() {
+        const modal = document.getElementById('updateReviewModal');
+        const closeModal = document.getElementById('closeModal');
+        
+        // Update buttons click handler
+        document.querySelectorAll('.update-review-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const reviewId = this.dataset.reviewId;
+                const reviewContainer = this.closest('.mb-4');
+                const comment = reviewContainer.querySelector('p').textContent;
+                const rating = reviewContainer.querySelectorAll('.text-yellow-500 ★').length;
+                
+                // Set form values
+                document.getElementById('updateReviewId').value = reviewId;
+                document.getElementById('updateReviewComment').value = comment;
+                document.getElementById('updateReviewForm').action = `/review/food/${reviewId}/update-review`;
+                
+                // Set rating in modal
+                const ratingInput = document.getElementById(`update-${rating}-stars`);
+                if (ratingInput) {
+                    ratingInput.checked = true;
+                    // Update star display
+                    updateStarDisplayInModal(rating);
+                }
+                
+                // Show modal
+                modal.classList.remove('hidden');
+            });
+        });
+        
+        // Close modal handler
+        closeModal.addEventListener('click', () => {
+            modal.classList.add('hidden');
+        });
+        
+        // Close modal when clicking outside
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.classList.add('hidden');
+            }
+        });
+        
+        // Update form submission
+        document.getElementById('updateReviewForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const reviewId = document.getElementById('updateReviewId').value;
+            
+            try {
+                const response = await fetch(this.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    const errorMessage = data.error || 'An error occurred.';
+                    const updateCommentError = document.getElementById('updateCommentError');
+                    updateCommentError.textContent = errorMessage;
+                    updateCommentError.classList.remove('hidden');
+                    throw new Error(errorMessage);
+                }
+                
+                // Update the review in the list
+                const reviewElement = document.querySelector(`[data-review-id="${reviewId}"]`).closest('.mb-4');
+                reviewElement.innerHTML = `
+                    <strong>${data.user}</strong><br>
+                    <span class="text-yellow-500">
+                        ${'★'.repeat(data.rating)}${'☆'.repeat(5 - data.rating)}
+                    </span>
+                    <p class="mt-2">${data.comment}</p>
+                    <span class="text-gray-500 text-sm">${data.timestamp}</span>
+                    <button class="py-1 px-3 bg-green-500 text-white rounded hover:bg-green-600 update-review-btn" data-review-id="${data.uuid}">
+                        Update
+                    </button>
+                    <form method="POST" action="/review/delete-review/${data.uuid}">
+                        <input type="hidden" name="csrfmiddlewaretoken" value="${formData.get('csrfmiddlewaretoken')}">
+                        <button type="submit" 
+                                class="py-1 px-3 bg-red-500 text-white rounded hover:bg-red-600"
+                                onclick="return confirm('Are you sure you want to delete this review?');">
+                            Delete
+                        </button>
+                    </form>
+                `;
+                
+                // Update average rating
+                updateAverageRating(data.average_rating);
+                
+                // Close modal
+                modal.classList.add('hidden');
+                
+                // Reset form
+                this.reset();
+                
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error: ' + error.message);
+            }
+        });
+
+        // Handle star rating in modal
+        const starInputs = document.querySelectorAll('#updateReviewModal .star-rating input');
+        starInputs.forEach(input => {
+            input.addEventListener('change', function() {
+                const ratingValue = this.value;
+                updateStarDisplayInModal(ratingValue);
+            });
+        });
+    });
+
+    function updateStarDisplayInModal(rating) {
+        const stars = document.querySelectorAll('#updateReviewModal .star-rating .star');
+        stars.forEach((star, index) => {
+            star.innerHTML = index < rating ? '&#9733;' : '&#9734;'; // Filled or empty star
+        });
+    }
 
     function updateAverageRating(newAverage) {
         const averageRatingStarsElement = document.querySelector('.average-rating-stars');
@@ -152,12 +316,16 @@
                 body: formData,
             });
 
+            const data = await response.json();
             if (!response.ok) {
-                const data = await response.json();
-                throw new Error(data.error);
+                // Display error message
+                const errorMessage = data.error || 'An error occurred.';
+                const commentErrorElement = document.getElementById('commentError');
+                commentErrorElement.textContent = errorMessage;
+                commentErrorElement.classList.remove('hidden');
+                throw new Error(errorMessage);
             }
 
-            const data = await response.json();
             // Create a new review entry in HTML
             const newReview = `
                 <div class="mb-4 p-4 border-4 border-[#EFD19A] rounded-lg" >
@@ -198,5 +366,6 @@
             alert('Error: ' + error.message); // Handle errors
         }
     });
+    updateStars()
 </script>
 {% endblock content %}

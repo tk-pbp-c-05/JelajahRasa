@@ -13,3 +13,5 @@ class Review(models.Model):
     rating = models.IntegerField(choices=RATING_CHOICES)
     comment = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
+    class Meta:
+        unique_together = ('user', 'food')  # Ensures one review per user-food pair
