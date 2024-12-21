@@ -53,8 +53,10 @@
             </a>
             <a href="{% url 'report:report_list' %}" class="text-black py-1 px-2 rounded-lg transition duration-300 w-full block text-center text-lg" style="background-color: #fad68a;">
               Report List
-            </a> 
-          {% endif %}
+            </a>
+            {% else %}
+              <a href="{% url 'module4:request_status' %}" class="text-black py-1 px-2 rounded-lg transition duration-300 w-full block text-center text-lg" style="background-color: #fad68a;">Request Status</a>
+            {% endif %}
           <a href="{% url 'profilepage:profile' username=user.username %}" class="text-black py-1 px-2 rounded-lg transition duration-300 w-full block text-center text-lg" style="background-color: #fad68a;">
             Profile
           </a>
@@ -114,7 +116,9 @@
             </a>
             <a href="{% url 'report:report_list' %}" class="text-black py-1 px-2 rounded-lg transition duration-300 w-full block text-center text-sm" style="background-color: #fad68a;">
               Report List
-            </a> 
+            </a>
+            {% else %}
+            <a href="{% url 'module4:request_status' %}" class="text-black py-1 px-2 rounded-lg transition duration-300 w-full block text-center text-sm" style="background-color: #fad68a;">Request Status</a>
           {% endif %}
         <a href="{% url 'profilepage:profile' username=user.username %}" class="text-black py-1 px-2 rounded-lg transition duration-300 w-full block text-center text-sm" style="background-color: #fad68a;">
           Profile

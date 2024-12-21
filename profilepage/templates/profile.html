@@ -1,6 +1,10 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block meta %}
+<title> {{profile_user.username}}'s profile page </title>
+{% endblock meta %}
+
 {% block content %}
 {% include 'navbar.html' %}
 <div class="max-w-6xl mx-auto px-4 py-8">

@@ -20,48 +20,50 @@
     <table class="table-auto w-full text-left bg-white shadow-md rounded-lg overflow-hidden">
       <thead class="rounded-t-lg">
         <tr class="bg-gray-200 text-gray-600 text-sm leading-normal">
-          <th class="px-4 py-2">Name</th>
-          <th class="px-4 py-2">Vendor Name</th>
-          <th class="px-4 py-2">Price</th>
-          <th class="px-4 py-2" style="width: 100px;">Category</th>
-          <th class="px-4 py-2">Address</th>
-          <th class="px-4 py-2">Image</th>
+        <th class="px-4 py-2 border" style="width: 120px;">Name</th>
+        <th class="px-4 py-2 border" style="width: 100px;">Flavor</th> <!-- Reduced width -->
+        <th class="px-4 py-2 border" style="width: 100px;">Category</th> <!-- Reduced width -->
+        <th class="px-4 py-2 border" style="width: 130px;">Vendor Name</th> <!-- Slightly increased width -->
+        <th class="px-4 py-2 border" style="width: 80px;">Price</th> <!-- Reduced width -->
+        <th class="px-4 py-2 border" style="width: 100px;">Map Link</th> <!-- Reduced width -->
+        <th class="px-4 py-2 border" style="width: 200px;">Address</th> <!-- Increased width -->
+        <th class="px-4 py-2 border" style="width: 120px;">Image</th> <!-- Slightly increased width -->
           <th class="px-4 py-2" style="width: 80px; text-align:center">Approve</th>
-          <th class="px-2 py-2" style="width: 80px; text-align:center">Delete</th>
+          <th class="px-2 py-2" style="width: 80px; text-align:center">Reject</th>
         </tr>
       </thead>
       <tbody id="dishesTable" class="rounded-b-lg">
         {% for dish in pending_dishes %}
         <tr id="dish-row-{{ dish.uuid }}" class="hover:bg-gray-100 border-b border-gray-200">
-            <td class="border px-4 py-2">{{ dish.name }}</td>
-            <td class="border px-4 py-2">{{ dish.vendor_name }}</td>
-            <td class="border px-4 py-2">{{ dish.price }}</td>
-            <td class="border px-4 py-2" style="width: 100px;">{{ dish.category }}</td>
-            <td class="border px-4 py-2">{{ dish.address }}</td>
-            <td class="border px-4 py-4">
-              <img src="{{ dish.image }}" alt="Dish Image" class="h-16 w-16 object-cover">
-            </td>
+            <td class="px-4 py-2 border" style="width: 120px;">{{ dish.name }}</td>
+            <td class="px-4 py-2 border" style="width: 100px;">{{ dish.flavor }}</td> <!-- Reduced width -->
+            <td class="px-4 py-2 border" style="width: 100px;">{{ dish.category }}</td> <!-- Reduced width -->
+            <td class="px-4 py-2 border" style="width: 130px;">{{ dish.vendor_name }}</td> <!-- Slightly increased width -->
+            <td class="px-4 py-2 border" style="width: 80px;">Rp{{ dish.price }}</td> <!-- Reduced width -->
+            <td class="px-4 py-2 border" style="width: 100px;">{{ dish.map_link }}</td> <!-- Reduced width -->
+            <td class="px-4 py-2 border" style="width: 200px;">{{ dish.address }}</td> <!-- Increased width -->
+            <td class="px-4 py-4 border" style="width: 120px;">
+                <img src="{{ dish.image }}" alt="Dish Image" class="h-16 w-16 object-cover" onerror="this.onerror=null;this.src='https://i.imgur.com/qCP9R4y.jpeg';">
+            </td> 
             
             <!-- Approve Button -->
             <td class="border px-4 py-2 text-center" style="width: 80px;">
               <button 
                   type="button" 
                   class="bg-green-500 hover:bg-green-700 text-white rounded-full p-2 transition duration-300 shadow-md approve-dish-btn"
-                  data-dish-uuid="{{ dish.uuid }}"
-                  onclick="approveDish('{{ dish.uuid }}')">
+                  data-dish-uuid="{{ dish.uuid }}" data-action="approve">
                   <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                       <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 00-1.414 0L9 11.586 6.707 9.293a1 1 0 10-1.414 1.414l3 3a1 1 0 001.414 0l7-7a1 1 0 000-1.414z" clip-rule="evenodd" />
                   </svg>
               </button>
           </td>
       
-          <!-- Delete Button -->
+          <!-- Reject Button -->
           <td class="border px-4 py-2 text-center">
               <button 
                   type="button" 
                   class="bg-red-500 hover:bg-red-700 text-white rounded-full p-2 transition duration-300 shadow-md delete-dish-btn"
-                  data-dish-uuid="{{ dish.uuid }}"
-                  onclick="deleteDish('{{ dish.uuid }}')">
+                  data-dish-uuid="{{ dish.uuid }}" data-action="reject">
                   <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                       <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 011.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
                   </svg>
@@ -69,132 +71,93 @@
           </td>
         </tr>
         {% endfor %}
-        
       </tbody>
     </table>
   </div>
   {% else %}
-    <p>No pending dishes.</p>
+  <p>No pending dishes.</p>
   {% endif %}
 </div>
 
 <script>
-    function getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            const cookies = document.cookie.split(';');
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i].trim();
-                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
+    document.addEventListener('DOMContentLoaded', function() {
+      // Event listener for Approve buttons
+      document.querySelectorAll('.approve-dish-btn').forEach(button => {
+        button.addEventListener('click', function() {
+          const dishUuid = this.getAttribute('data-dish-uuid');
+          const action = this.getAttribute('data-action');
+          const csrfToken = document.querySelector('[name="csrfmiddlewaretoken"]').value;
+  
+          // Send AJAX request to approve the dish
+          fetch(`/module4/approve-dish/${dishUuid}/`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-CSRFToken': csrfToken
+            },
+            body: JSON.stringify({ action: action })
+          })
+          .then(response => response.json())
+          .then(data => {
+            if (data.status === 'approved') {
+              // Hide the row or update the UI to reflect the change
+              document.getElementById(`dish-row-${dishUuid}`).style.display = 'none';
+            } else {
             }
-        }
-      return cookieValue;
+          })
+          .catch(error => console.error('Error:', error));
+        });
+      });
+  
+      // Event listener for Reject buttons
+      document.querySelectorAll('.delete-dish-btn').forEach(button => {
+        button.addEventListener('click', function() {
+          const dishUuid = this.getAttribute('data-dish-uuid');
+          const action = this.getAttribute('data-action');
+          const csrfToken = document.querySelector('[name="csrfmiddlewaretoken"]').value;
+  
+          // Send AJAX request to reject the dish
+          fetch(`/module4/approve-dish/${dishUuid}/`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-CSRFToken': csrfToken
+            },
+            body: JSON.stringify({ action: action })
+          })
+          .then(response => response.json())
+          .then(data => {
+            if (data.status === 'rejected') {
+              // Hide the row or update the UI to reflect the change
+              document.getElementById(`dish-row-${dishUuid}`).style.display = 'none';
+            } else {
+            }
+          })
+          .catch(error => console.error('Error:', error));
+        });
+      });
+    });
+  </script>
+  
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      margin: 0;
   }
   
-  function approveDish(dishUuid) {
-      const csrftoken = getCookie('csrftoken');
-      fetch(`/module4/approve-dish/${dishUuid}/`, {
-          method: 'POST',
-          headers: {
-              'X-CSRFToken': csrftoken,
-              'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: new URLSearchParams({
-                'action': 'approve'
-        })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.status === 'approved') {
-            const row = document.getElementById(`dish-row-${dishUuid}`);
-            if (row) {
-                row.remove();
-                console.log('Dish approved successfully');
-            }
-        } else {
-            alert('Failed to approve dish.');
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('An error occurred while approving the dish.');
-    });
-}
-
-function deleteDish(dishUuid) {
-    const csrftoken = getCookie('csrftoken');
-    fetch(`/module4/approve-dish/${dishUuid}/`, {
-        method: 'POST',
-        headers: {
-            'X-CSRFToken': csrftoken,
-            'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: new URLSearchParams({
-            'action': 'delete'
-        })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.status === 'deleted') {
-            const row = document.getElementById(`dish-row-${dishUuid}`);
-            if (row) {
-                row.remove();
-                console.log('Dish deleted successfully');
-            }
-        } else {
-            alert('Failed to delete dish.');
-        }
-    })
-    .catch(error => {
-          console.error('Error:', error);
-          alert('An error occurred while deleting the dish.');
-      });
-    }
-    
-  document.addEventListener('DOMContentLoaded', function() {
-      const searchInput = document.getElementById('searchInput');
-      if (searchInput) {
-          searchInput.addEventListener('input', function() {
-              const searchValue = this.value.toLowerCase().trim();
-              const rows = document.querySelectorAll('#dishesTable tr');
-              
-              rows.forEach(row => {
-                  const nameCell = row.querySelector('td:first-child');
-                  if (nameCell) {
-                      const name = nameCell.textContent.toLowerCase().trim();
-                      if (name.includes(searchValue)) {
-                          row.style.display = '';
-                        } else {
-                            row.style.display = 'none';
-                        }
-                    }
-                });
-            });
-        }
-    });
-</script>
-<style>
-  body {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    margin: 0;
-}
-
-.table-placeholder {
-    flex-grow: 1;
-}
-
-footer {
-    background-color: #983132;
-    color: white;
-    padding: 20px;
-    width: 100%;
-    margin-top: auto;
-}
-</style>
-
+  .table-placeholder {
+      flex-grow: 1;
+  }
+  
+  footer {
+      background-color: #983132;
+      color: white;
+      padding: 20px;
+      width: 100%;
+      margin-top: auto;
+  }
+  </style>
+  
 {% endblock content %}

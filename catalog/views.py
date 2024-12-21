@@ -1,4 +1,6 @@
+from django.http import HttpResponse
 from django.shortcuts import render
+from django.core import serializers
 from main.models import Food
 
 def view_catalog(request):
@@ -9,13 +11,11 @@ def view_catalog(request):
     flavor = request.GET.get('flavor')  # 'salty' atau 'sweet'
     if flavor:
         catalogs = catalogs.filter(flavor=flavor)
-        print(f"Filtered by flavor: {flavor}")  
 
     # Filter berdasarkan type (jenis)
     category_ = request.GET.get('category')  # 'beverage' atau 'food'
     if category_:
         catalogs = catalogs.filter(category=category_)
-        print(f"Filtered by category: {category_}")  
 
     # Sorting berdasarkan harga atau nama, dan urutan ascend/descend
     sort_by = request.GET.get('sort_by')  # 'price' atau 'name'
@@ -31,3 +31,7 @@ def view_catalog(request):
         'catalogs': catalogs,
     }
     return render(request, 'catalog.html', context)
+
+def show_json(request):
+    data = Food.objects.all()
+    return HttpResponse(serializers.serialize("json", data), content_type="application/json")

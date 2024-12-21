@@ -4,7 +4,6 @@ import uuid
 
 User = get_user_model()
 
-# Create your models here.
 class NewDish(models.Model):
     uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True)
     name = models.CharField(max_length=100)
@@ -15,5 +14,25 @@ class NewDish(models.Model):
     map_link = models.CharField(max_length=255, default="")
     address = models.CharField(max_length=255, default="")
     image = models.CharField(max_length=255, default="")
-    is_approved = models.BooleanField(default=False)  # Status approval oleh admin
+    is_approved = models.BooleanField(default=False)
+    is_rejected = models.BooleanField(default=False)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    
+    PENDING = 'Pending'
+    APPROVED = 'Approved'
+    REJECTED = 'Rejected'
+
+    STATUS_CHOICES = [
+        (PENDING, 'Pending'),
+        (APPROVED, 'Approved'),
+        (REJECTED, 'Rejected'),
+    ]
+    
+    status = models.CharField(
+        max_length=10,
+        choices=STATUS_CHOICES,
+        default=PENDING,
+    )
+
+    def __str__(self):
+        return self.name
