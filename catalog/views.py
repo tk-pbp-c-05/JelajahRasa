@@ -9,11 +9,13 @@ def view_catalog(request):
     flavor = request.GET.get('flavor')  # 'salty' atau 'sweet'
     if flavor:
         catalogs = catalogs.filter(flavor=flavor)
+        print(f"Filtered by flavor: {flavor}")  
 
     # Filter berdasarkan type (jenis)
-    type_ = request.GET.get('type')  # 'beverage' atau 'food'
-    if type_:
-        catalogs = catalogs.filter(type=type_)
+    category_ = request.GET.get('category')  # 'beverage' atau 'food'
+    if category_:
+        catalogs = catalogs.filter(category=category_)
+        print(f"Filtered by category: {category_}")  
 
     # Sorting berdasarkan harga atau nama, dan urutan ascend/descend
     sort_by = request.GET.get('sort_by')  # 'price' atau 'name'
