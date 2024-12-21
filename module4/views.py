@@ -225,6 +225,8 @@ def flutter_add_dish(request):
             new_dish.user = request.user
             if request.user.is_admin:
                 new_dish.status = NewDish.APPROVED
+                new_dish.is_approved = True
+                new_dish.is_rejected = False
             else:
                 new_dish.status = NewDish.PENDING
             
