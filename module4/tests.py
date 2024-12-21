@@ -9,12 +9,10 @@ User = get_user_model()
 class AddDishViewTest(TestCase):
 
     def setUp(self):
-        # Membuat user admin dan user biasa
         self.admin_user = User.objects.create_user(username='admin', email='admin@test.com', password='admin123', is_admin=True)
         self.regular_user = User.objects.create_user(username='user', email='user@test.com', password='user123')
 
     def test_add_dish_as_admin(self):
-        # Login sebagai admin
         self.client.login(username='admin', password='admin123')
         response = self.client.post(reverse('module4:add_dish'), {
             'name': 'Test Dish',
@@ -53,11 +51,9 @@ class AddDishViewTest(TestCase):
 
 class CheckDishViewTest(TestCase):
     def setUp(self):
-        # Membuat user admin dan user biasa
         self.admin_user = User.objects.create_user(username='admin', email='admin@test.com', password='admin123', is_admin=True)
         self.regular_user = User.objects.create_user(username='user', email='user@test.com', password='user123')
         
-        # Membuat dish yang belum di-approve
         self.pending_dish = NewDish.objects.create(
             name='Pending Dish',
             flavor='sweet',
@@ -85,7 +81,6 @@ class CheckDishViewTest(TestCase):
 
 class ApproveDishViewTest(TestCase):
     def setUp(self):
-        # Membuat user admin dan user biasa
         self.admin_user = User.objects.create_user(username='admin', email='admin@test.com', password='admin123', is_admin=True)
         self.regular_user = User.objects.create_user(username='user', email='user@test.com', password='user123')
 
@@ -102,7 +97,6 @@ class ApproveDishViewTest(TestCase):
         )
 
     def test_approve_dish_as_admin(self):
-        # Login sebagai admin
         self.client.login(username='admin', password='admin123')
         response = self.client.post(reverse('module4:approve_dish', args=[self.pending_dish.uuid]), {
             'action': 'approve'

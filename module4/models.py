@@ -14,11 +14,10 @@ class NewDish(models.Model):
     map_link = models.CharField(max_length=255, default="")
     address = models.CharField(max_length=255, default="")
     image = models.CharField(max_length=255, default="")
-    is_approved = models.BooleanField(default=False)  # Status approval oleh admin
+    is_approved = models.BooleanField(default=False)
     is_rejected = models.BooleanField(default=False)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     
-    # Menambahkan status baru untuk mencatat status approval
     PENDING = 'Pending'
     APPROVED = 'Approved'
     REJECTED = 'Rejected'
@@ -32,7 +31,7 @@ class NewDish(models.Model):
     status = models.CharField(
         max_length=10,
         choices=STATUS_CHOICES,
-        default=PENDING,  # Status default adalah Pending
+        default=PENDING,
     )
 
     def __str__(self):

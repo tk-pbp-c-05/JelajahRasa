@@ -9,7 +9,6 @@ from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_exempt
 import json
 
-# Tampilkan home dengan hanya dish yang sudah di-approve
 def show_home(request):
     approved_dishes = NewDish.objects.filter(status=NewDish.APPROVED)
     return render(request, 'home.html', {'dishes': approved_dishes})
@@ -24,25 +23,23 @@ def add_dish(request):
             new_dish.user = request.user
             
             if request.user.is_admin:
-                new_dish.status = NewDish.APPROVED  # Admin langsung approve
+                new_dish.status = NewDish.APPROVED  #admin langsung approve
             else:
-                new_dish.status = NewDish.PENDING  # Status pending jika bukan admin
+                new_dish.status = NewDish.PENDING  #pending kalo bukan admin
             
             new_dish.save()
 
-            # Cek apakah dish di-approve langsung atau perlu menunggu admin
             if new_dish.status == NewDish.APPROVED:
-                create_food_entry(new_dish)  # Panggil fungsi untuk membuat entri di Food
+                create_food_entry(new_dish)
                 messages.success(request, 'Dish added and approved successfully!')
             else:
                 messages.success(request, 'Dish added successfully! Please wait for our admin to approve it.')
             
-            return redirect('module4:add_dish')  # Redirect ke halaman 'add_dish' setelah berhasil
+            return redirect('module4:add_dish')
             
     context = {"form": form}
     return render(request, 'add_dish.html', context)
 
-# Menampilkan dish yang belum di-approve
 @login_required
 def check_dish(request):
     if not request.user.is_admin:
@@ -52,7 +49,6 @@ def check_dish(request):
     context = {'pending_dishes': pending_dishes}
     return render(request, 'check_dish.html', context)
 
-# Fungsi untuk approve atau reject dish dengan AJAX
 @require_http_methods(["POST"])
 def approve_dish(request, dish_uuid):
     if not request.user.is_admin:
@@ -81,30 +77,28 @@ def approve_dish(request, dish_uuid):
 
     return JsonResponse({'success': False, 'status': 'error', 'message': 'Invalid action'}, status=400)
 
-# Fungsi untuk edit dish yang statusnya rejected
+#gadipake
 @login_required
 def edit_rejected_dish(request, dish_uuid):
-    # Cari dish berdasarkan UUID
-    dish = get_object_or_404(NewDish, uuid=dish_uuid)
-
     if request.method == 'POST':
-            uuid = request.POST.get('uuid')
-            dish = NewDish.objects.get(uuid=uuid)
-            dish.name = request.POST.get('name')
-            dish.flavor = request.POST.get('flavor')
-            dish.category = request.POST.get('category')
-            dish.vendor_name = request.POST.get('vendor_name')
-            dish.price = request.POST.get('price')
-            dish.map_link = request.POST.get('map_link')
-            dish.address = request.POST.get('address')
-            dish.image = request.POST.get('image')
-
+        data = json.loads(request.body)
+        try:
+            dish = NewDish.objects.get(uuid=dish_uuid)
+            dish.name = data['name']
+            dish.flavor = data['flavor']
+            dish.category = data['category']
+            dish.price = data['price']
+            dish.map_link = data['map_link']
+            dish.address = data['address']
+            dish.image = data['image']
             dish.save()
-            return redirect('module4:request_status')
+            return JsonResponse({'message': 'Dish updated successfully'}, status=200)
+        except NewDish.DoesNotExist:
+            return JsonResponse({'error': 'Dish not found'}, status=404)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
 
-# Fungsi untuk membuat entry di Food model ketika dish disetujui
 def create_food_entry(dish):
-    # Cek apakah sudah ada Food dengan UUID yang sama
     if not Food.objects.filter(uuid=dish.uuid).exists():
         Food.objects.create(
             uuid=dish.uuid,
@@ -123,32 +117,26 @@ def create_food_entry(dish):
         
 @login_required
 def request_status(request):
-    # Pastikan user sudah login
     if not request.user.is_authenticated:
         print("User is not authenticated, redirecting to login...")
-        return redirect('login')  # Ganti dengan URL login yang sesuai
+        return redirect('login')
 
-    # Ambil daftar dish yang belum disetujui atau ditolak
     pending_dishes = NewDish.objects.filter(user=request.user)
 
-    # Debug: Cek data pending_dishes yang didapatkan
     print(f"Found {len(pending_dishes)} pending dishes for user {request.user.username}")
 
     return render(request, 'request_status_page.html', {
         'pending_dishes': pending_dishes
     })
     
-    # Fungsi untuk menghapus dish
 @login_required
 @csrf_exempt
 def delete_dish(request, dish_uuid):
     print(f"Deleting dish with UUID: {dish_uuid}")
     if request.method == 'DELETE':
-        # Cek apakah dish dengan UUID tersebut ada
         print (f"Deleting dish with UUID: {dish_uuid}")
         dish = get_object_or_404(NewDish, uuid=dish_uuid)
         
-        # Hapus dish
         dish.delete()
         
         return JsonResponse({'status': 'deleted'})
@@ -173,41 +161,38 @@ def get_dish_data(request, dish_uuid):
     
 @login_required
 def edit_dish(request, dish_uuid):
-    # Cari dish berdasarkan UUID
     dish = get_object_or_404(NewDish, uuid=dish_uuid)
 
-    # Pastikan hanya dish yang ditolak yang bisa diedit
     if dish.status != NewDish.REJECTED:
-        messages.error(request, "Only rejected dishes can be edited.")
-        return redirect('module4:request_status')
+        return JsonResponse({"error": "Only rejected dishes can be edited."}, status=400)
 
-    # Proses form jika metode request POST
     if request.method == 'POST':
-        form = NewDishForm(request.POST, request.FILES, instance=dish)
-        if form.is_valid():
-            updated_dish = form.save()
+        try:
+            # Load data dari request body
+            data = json.loads(request.body)
 
-            # Jika dish diubah, update status menjadi 'Pending' untuk menunggu review ulang oleh admin
-            updated_dish.status = NewDish.PENDING  # Ubah status menjadi Pending setelah edit
-            updated_dish.is_approved = False  # Pastikan dish belum disetujui
-            updated_dish.is_rejected = False  # Reset status rejection
-            updated_dish.save()
+            dish.name = data.get('name', dish.name)
+            dish.flavor = data.get('flavor', dish.flavor)
+            dish.category = data.get('category', dish.category)
+            dish.price = data.get('price', dish.price)
+            dish.map_link = data.get('map_link', dish.map_link)
+            dish.address = data.get('address', dish.address)
+            dish.image = data.get('image', dish.image)
 
-            messages.success(request, "Dish updated and is now pending approval!")
-            return redirect('module4:request_status')  # Redirect ke halaman request status
-        else:
-            messages.error(request, "Please correct the errors below.")
-    else:
-        form = NewDishForm(instance=dish)  # Menampilkan form dengan data dish yang sudah ada
+            dish.status = NewDish.PENDING
+            dish.is_approved = False
+            dish.is_rejected = False
 
-    context = {
-        "form": form,
-        "dish": dish
-    }
-    return render(request, 'edit_dish.html', context)
+            dish.save()
+
+            return JsonResponse({"message": "Dish updated and is now pending approval!"}, status=200)
+
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=400)
+
+    return JsonResponse({"error": "Invalid request method."}, status=405)
 
 def show_json(request):
-    # Query all dishes
     dishes = NewDish.objects.all().values(
         'uuid',
         'name',
@@ -221,10 +206,9 @@ def show_json(request):
         'is_approved',
         'is_rejected',
         'status',
-        'user__username'  # Including the username of the user who added the dish
+        'user__username'
     )
 
-    # Convert QuerySet to a list
     dish_list = list(dishes)
     
     return JsonResponse(dish_list, safe=False)
@@ -240,13 +224,12 @@ def flutter_add_dish(request):
             new_dish = form.save(commit=False)
             new_dish.user = request.user
             if request.user.is_admin:
-                new_dish.status = NewDish.APPROVED  # Admin langsung approve
+                new_dish.status = NewDish.APPROVED
             else:
-                new_dish.status = NewDish.PENDING  # Status pending jika bukan admin
+                new_dish.status = NewDish.PENDING
             
             new_dish.save()
 
-            # Cek apakah dish di-approve langsung atau perlu menunggu admin
             if new_dish.status == NewDish.APPROVED:
                 create_food_entry(new_dish)
                 return JsonResponse({'success': True, 'status': 'success', 'message': 'Dish added and approved successfully!'}, status=201)
@@ -270,7 +253,6 @@ def flutter_edit_rejected_dish(request, dish_uuid):
         if dish.status != NewDish.REJECTED:
             return JsonResponse({'success': False, 'error': 'Only rejected dishes can be edited.'}, status=403)
 
-        # Update fields from received data
         form = NewDishForm(data, instance=dish)
         if form.is_valid():
             updated_dish = form.save(commit=False)
@@ -287,7 +269,6 @@ def flutter_edit_rejected_dish(request, dish_uuid):
 @csrf_exempt
 @login_required
 def flutter_delete_rejected_dish(request, dish_uuid):
-    # Periksa jika ini adalah POST request dengan _method sebagai DELETE
     if request.method == 'POST' and request.POST.get('_method') == 'DELETE':
         dish = get_object_or_404(NewDish, uuid=dish_uuid)
         if dish.status != NewDish.REJECTED:
